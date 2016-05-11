@@ -85,7 +85,7 @@ public class ArticleDaoImpl implements ArticleDao {
         return sessionFactory.getCurrentSession()
                 .createCriteria(Article.class)
                 .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
-//                .add(Restrictions.eq("isPrintable", true))
+                .add(Restrictions.eq("isPrintable", true))
                 .addOrder(Order.desc("articleId"))
                 .setMaxResults(10)//todo
                 .list();

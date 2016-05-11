@@ -29,6 +29,7 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JsonIgnore(true)
     private Set<UserRole> userRoles = new HashSet<>();
 
     @Column(name="username")
@@ -96,7 +97,7 @@ public class User implements UserDetails {
     @JsonIgnore(true)
     private Set<UserInterest> interests = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)//todo was chanted to EAGER
     @Fetch(FetchMode.SELECT)
     @JsonIgnore(true)
     private Set<Article> articlesSet = new HashSet<>();

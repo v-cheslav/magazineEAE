@@ -54,16 +54,11 @@ public class ArticlesController {
     public @ResponseBody List<Article> articleList(@RequestBody String chosenSection) {
         log.info("/getArticles controller");
         List<Article> articles = articleService.findPublishArticleBySection(chosenSection);
+
 //        List<Article> newArticles = new ArrayList<>();
-//
 //        for (Article article : articles){
 //            Article newArticle = article.getArticleForTables(article);
-////            newArticle.setArticleId(article.getArticleId());
-////            newArticle.setArticleName(article.getArticleName());
-////            newArticle.setArticlePublicationDate(article.getArticlePublicationDate());
 //            User user = article.getUser();
-////            User newUser = user.getUserForTables(user);
-//
 //            User newUser = new User();
 //
 //            newUser.setUserId(user.getUserId());
@@ -71,9 +66,7 @@ public class ArticlesController {
 //            newUser.setSurname(user.getSurname());
 //            newUser.setMiddleName(user.getMiddleName());
 //            newArticle.setUser(newUser);
-//            newArticles.add(newArticle);
-//
-//            System.err.println(article.toString());
+//            newArticles.add(article);
 //        }
         return articles;
     }

@@ -1,5 +1,6 @@
 package magazine.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import magazine.utils.MySimpleDateFormat;
@@ -52,7 +53,7 @@ public class Article {
     @JsonIgnore(true)
     private List<Review> articleReviewers = new LinkedList<>();//todo rename to articleReviews
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User user;
 
     @OneToMany(mappedBy = "article", fetch= FetchType.EAGER, cascade = CascadeType.ALL)
