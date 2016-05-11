@@ -1,0 +1,384 @@
+.sectionName {
+    width: 410px;
+    margin: 0px 5px 19px 27px;
+    padding-top: 13px;
+    font-size: 19px;
+    float: left;
+}
+
+.headerPublishDate {
+    font-size: 18px;
+    padding: 0px;
+    margin: 0px 12px 5px 5px;
+    padding-top: 13px;
+    width: 180px;
+    float: left;
+}
+.headerPublishDateSem {
+    font-size: 18px;
+    padding: 0px;
+    margin: 0px 5px 19px 448px;
+    padding-top: 13px;
+    width: 180px;
+    float: left;
+}
+
+
+.userPhoto {
+    background: darkgrey;
+    background-size: 90px 90px;
+    max-width: 90px;
+    max-height: 90px;
+    margin-left: 35px;
+    float: left;
+}
+
+#userDetails {
+    width: 300px;
+    height: 90px;
+    margin-left: 10px;
+    float: left;
+    font-size: 16px;
+    font-style: italic;
+    border-right: solid;
+    border-color: #d1d1d1;
+    border-width: 1px;
+}
+.paddingBottom {
+    padding-bottom: 5px;
+}
+
+#articleNameHeader {
+    float: left;
+    margin-left: 10px;
+    font-size: 20px;
+    width: 280px;
+    height: 90px;
+}
+.mainContent {
+    /*border: solid #ff0000 thin;*/
+    float: left;
+}
+
+.mainContentHeader {
+    width: 740px;
+}
+
+#annotationUaContent {
+    text-indent: 20px;
+    width: 735px;
+}
+
+#articlePdf {
+    z-index: 100;
+    width: 100%;
+    height: 650px;
+}
+#articlePdf embed {
+    z-index: 100;
+    width: 100%;
+    height: 650px;
+    border-bottom: solid;
+    border-width: 20px;
+    border-color: #7F7F7F;
+}
+
+#articleSizeSwitcher {
+    z-index: 100;
+    padding: 8px 0px 8px 22px;
+    color: blue;
+    cursor: pointer;
+    background-color: #ffffff;
+}
+#articleSizeSwitcher:hover {
+    text-decoration: underline;
+}
+
+.leftSideBar {
+    float: right;
+    width: 248px;
+}
+
+.currentDateHeader {
+    width: 235px;
+}
+.accordionMenuWrapper {
+    min-height: 307px;
+    margin-top: 10px;
+}
+
+.accordionMenuWrapper ul {
+    list-style-type: none;
+}
+
+.accordionMenu {
+    width: 246px;
+}
+
+
+.menuHeader {
+    width: 235px;
+    margin-top: 0px;
+}
+
+.menuContent {
+    padding: 8px;
+    width: 230px;
+    font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+    font-size: 13px;
+    font-style: italic;
+}
+
+.menuContent ul {
+    list-style-type: none;
+}
+
+.menuContent p {
+    text-indent: 20px;
+}
+
+.leftMenuList li{
+    padding-top: 3px;
+    padding-bottom: 4px;
+}
+
+.reviewerPhoto {
+    width: 70px;
+    height: auto;
+    float: left;
+}
+
+.reviewerDetails {
+    width: 155px;
+    color: #000008;
+    margin-left: 5px;
+    float: left;
+}
+.reviewerDetails p {
+    font-size: 11px;
+}
+
+
+.readReviewLink {
+    padding: 10px 0px 0px 5px;
+    clear: both;
+    color: blue;
+    cursor: pointer;
+}
+
+.readReviewLink:hover {
+    text-decoration: underline;
+}
+
+.delimiter {
+    clear: both;
+    margin: 8px;
+}
+
+.comments {
+    clear: both;
+    padding-top: 15px;
+}
+
+#commentsContent {
+    width: 735px;
+}
+
+.commentBox {
+    padding: 10px 0px 5px 10px;
+    border-bottom: solid;
+    border-width: 1px;
+    border-color: #d1d1d1;
+    font-size: 15px;
+}
+.commentator {
+    float: left;
+    color: blue;
+}
+.commentDate {
+    float: right;
+}
+
+.allCommentsText {
+    clear: both;
+    padding-top: 5px;
+}
+
+.deleteComment {
+    color: grey;
+    font-size: 14px;
+    margin: 10px 0px 0px 580px;
+}
+
+.deleteComment:hover {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+
+.newComment {
+    width: 700px;
+    margin: 10px auto 15px 18px;
+    height: 80px;
+    border: solid;
+    border-width: 1px;
+    border-radius: 3px;
+    border-color: #d1d1d1;
+}
+
+#addCommentBtn {
+    margin-left: 18px;
+}
+
+#commentsHeader, #annotationUaHeader {
+    cursor: pointer;
+}
+
+
+
+#userDetails p a:link, #userDetails p a:visited {
+    color: #E8E8E8;
+    text-decoration: none;
+}
+
+#userDetails p a:hover {
+    color: #FBB03B;
+    text-decoration: underline;
+}
+
+.reviewerDetails div a:link, .reviewerDetails div a:visited {
+    color: blue;
+    text-decoration: none;
+}
+
+.reviewerDetails div a:hover{
+    text-decoration: underline;
+}
+body.addReview {
+    overflow: hidden;
+}
+
+.addReview {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       70%;
+    height:     100%;
+    width:      30%;
+    background-color: #FAF8F5;
+    padding: 30px 10px 30px 10px;
+}
+
+#reviewText {
+    width: 95%;
+    height: 350px;
+    font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+    font-size: 14px;
+    font-style: italic;
+    letter-spacing: 1px;
+}
+
+#publReviewBtn, #cancelBtn {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+#dennyReviewBtn {
+    margin: 10px ;
+}
+
+.body .confirmation {
+    overflow: hidden;
+}
+.confirmation {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background-color: rgba( 255, 255, 255, 0.5 );
+}
+
+.confirmationMessage {
+    border: solid;
+    border-width: 1px;
+    border-color: #000008;
+    border-radius: 3px;
+    width: 450px;
+    height: 130px;
+    margin: 200px auto 0px auto;
+    background-color: #FAF8F5;
+}
+
+.confirmationMessage p {
+    margin-top: 30px;
+    margin-left: 40px;
+}
+.confirmationMessage div {
+    margin-top: 30px;
+    margin-left: 60px;
+}
+
+
+.body .reviewSection {
+    overflow: hidden;
+}
+
+.reviewSection {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background-color: rgba( 255, 255, 255, 0.8 );
+}
+
+.readReview {
+    border: solid;
+    border-width: 1px;
+    border-color: #000008;
+    border-radius: 3px;
+    width: 850px;
+    min-height: 500px;
+    overflow:auto;
+    max-height: 600px;
+    margin: 20px auto 0px auto;
+    background-color: #FAF8F5;
+}
+
+.closeSign {
+    float: right;
+    width: 15px;
+    height: 15px;
+    margin: 3px;
+    padding-bottom: 2px;
+    color: #2D2D2D;
+    text-align: center;
+    background-color: lightgray;
+    cursor: pointer;
+}
+.closeSign:hover {
+    color: lightgray;
+    background-color: #ff0000;
+}
+
+#reviewMessage {
+    margin: 20px;
+    font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+    font-size: 15px;
+    text-align: justify;
+}
+
+#reviewMessage p {
+    margin-top: 3px;
+    text-indent: 20px;
+}
+
+
+

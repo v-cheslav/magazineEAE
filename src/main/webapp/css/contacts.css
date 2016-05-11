@@ -1,0 +1,755 @@
+
+
+.version.contacts /* version checker */
+{
+	color: #0000E9;
+	background-color: #AB4228;
+}
+
+.html
+{
+	background-color: #FFFFFF;
+}
+
+
+#page
+{
+	z-index: 1;
+	width: 1020px;
+	min-height: 1080px;
+	background-image: none;
+	border-style: none;
+	border-color: #000000;
+	background-color: transparent;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#nameAndMenu
+{
+	z-index: 56;
+	width: 582px;
+	min-height: 72px;
+	margin-right: -10000px;
+	left: 438px;
+}
+
+#magazineName
+{
+	z-index: 59;
+	width: 438px;
+	min-height: 72px;
+	margin-right: -10000px;
+}
+
+#magazineMenu
+{
+	z-index: 63;
+	width: 578px;
+	margin-right: -10000px;
+	margin-top: 20px;
+	left: 438px;
+}
+
+#homeButtonMenu
+{
+	width: 114px;
+	min-height: 32px;
+	margin-right: -10000px;
+}
+
+#homeButton
+{
+	width: 114px;
+	padding-bottom: 15px;
+}
+
+#homeButton:active
+{
+	width: 114px;
+	min-height: 0px;
+	margin: 0px;
+}
+
+#homeButTxt
+{
+	width: 114px;
+	min-height: 17px;
+	margin-right: -10000px;
+	top: 7px;
+}
+
+#homeButton:hover #homeButTxt
+{
+	padding-top: 0px;
+	padding-bottom: 0px;
+	min-height: 17px;
+	width: 114px;
+	margin: 0px -10000px 0px 0px;
+}
+
+#homeButton:active #homeButTxt
+{
+	padding-top: 0px;
+	padding-bottom: 0px;
+	min-height: 17px;
+	width: 114px;
+	margin: 0px -10000px 0px 0px;
+}
+
+#publicationsButtonMenu
+{
+	width: 114px;
+	min-height: 32px;
+	margin-right: -10000px;
+	left: 116px;
+}
+
+#publicationsButton
+{
+	width: 114px;
+	padding-bottom: 15px;
+}
+
+#homeButton.menuActive, #publicationsButton:active
+{
+	width: 114px;
+	min-height: 0px;
+	margin: 0px;
+}
+
+#publicationsButTxt
+{
+	width: 114px;
+	min-height: 17px;
+	margin-right: -10000px;
+	top: 7px;
+}
+
+#homeButton.menuActive #homeButTxt, #publicationsButton:hover #publicationsButTxt
+{
+	padding-top: 0px;
+	padding-bottom: 0px;
+	min-height: 17px;
+	width: 114px;
+	margin: 0px -10000px 0px 0px;
+}
+
+#publicationsButton:active #publicationsButTxt
+{
+	padding-top: 0px;
+	padding-bottom: 0px;
+	min-height: 17px;
+	width: 114px;
+	margin: 0px -10000px 0px 0px;
+}
+
+#seminarButtonMenu
+{
+	width: 114px;
+	min-height: 32px;
+	margin-right: -10000px;
+	left: 232px;
+}
+
+#seminarButton
+{
+	width: 114px;
+	padding-bottom: 15px;
+}
+
+#publicationsButton.menuActive, #seminarButton:active
+{
+	width: 114px;
+	min-height: 0px;
+	margin: 0px;
+}
+
+#seminarButTxt
+{
+	width: 114px;
+	min-height: 17px;
+	margin-right: -10000px;
+	top: 7px;
+}
+
+#publicationsButton.menuActive #publicationsButTxt, #seminarButton:hover #seminarButTxt
+{
+	padding-top: 0px;
+	padding-bottom: 0px;
+	min-height: 17px;
+	width: 114px;
+	margin: 0px -10000px 0px 0px;
+}
+
+#seminarButton:active #seminarButTxt
+{
+	padding-top: 0px;
+	padding-bottom: 0px;
+	min-height: 17px;
+	width: 114px;
+	margin: 0px -10000px 0px 0px;
+}
+
+#publishButtonMenu
+{
+	width: 114px;
+	min-height: 32px;
+	margin-right: -10000px;
+	left: 348px;
+}
+
+#publishButton
+{
+	width: 114px;
+	padding-bottom: 15px;
+}
+
+#seminarButton.menuActive, #publishButton:active
+{
+	width: 114px;
+	min-height: 0px;
+	margin: 0px;
+}
+
+#publishButTxt
+{
+	width: 114px;
+	min-height: 17px;
+	margin-right: -10000px;
+	top: 7px;
+}
+
+#seminarButton.menuActive #seminarButTxt, #publishButton:hover #publishButTxt
+{
+	padding-top: 0px;
+	padding-bottom: 0px;
+	min-height: 17px;
+	width: 114px;
+	margin: 0px -10000px 0px 0px;
+}
+
+#publishButton:active #publishButTxt
+{
+	padding-top: 0px;
+	padding-bottom: 0px;
+	min-height: 17px;
+	width: 114px;
+	margin: 0px -10000px 0px 0px;
+}
+
+#contactsButtonMenu
+{
+	width: 114px;
+	min-height: 32px;
+	margin-right: -10000px;
+	left: 464px;
+}
+
+#contactsButton
+{
+	width: 114px;
+	padding-bottom: 15px;
+}
+
+#publishButton.menuActive, #contactsButton:active
+{
+	width: 114px;
+	min-height: 0px;
+	margin: 0px;
+}
+
+#contactsButton.menuActive
+{
+	width: 114px;
+	min-height: 0px;
+	margin: 0px;
+}
+
+#contactsButTxt
+{
+	width: 114px;
+	min-height: 17px;
+	margin-right: -10000px;
+	top: 7px;
+}
+
+#publishButton.menuActive #publishButTxt, #contactsButton:hover #contactsButTxt
+{
+	padding-top: 0px;
+	padding-bottom: 0px;
+	min-height: 17px;
+	width: 114px;
+	margin: 0px -10000px 0px 0px;
+}
+
+#contactsButton:active #contactsButTxt
+{
+	padding-top: 0px;
+	padding-bottom: 0px;
+	min-height: 17px;
+	width: 114px;
+	margin: 0px -10000px 0px 0px;
+}
+
+#contactsButton.menuActive #contactsButTxt
+{
+	padding-top: 0px;
+	padding-bottom: 0px;
+	min-height: 17px;
+	width: 114px;
+	margin: 0px -10000px 0px 0px;
+}
+
+#headerTop, #headerBottom
+{
+	width: 0.01px;
+}
+
+#headerFontDark
+{
+	z-index: 54;
+	width: 1020px;
+	padding-bottom: 126px;
+	margin-right: -10000px;
+}
+
+#headerFontTopPart
+{
+	z-index: 55;
+	width: 1020px;
+	height: 2px;
+	margin-right: -10000px;
+	margin-top: 65px;
+}
+
+#headerContent
+{
+	z-index: 94;
+	width: 994px;
+	padding-bottom: 5px;
+	margin-right: -10000px;
+	margin-top: 16px;
+	left: 13px;
+}
+
+#headerNamesInformation
+{
+	width: 0.01px;
+	padding-bottom: 0px;
+	margin-right: -10000px;
+	margin-top: 10px;
+	margin-left: 14px;
+}
+
+#headerUniversityName
+{
+	z-index: 136;
+	width: 652px;
+	min-height: 29px;
+}
+
+#headerInsitute
+{
+	width: 0.01px;
+	margin-left: 6px;
+	margin-top: 17px;
+}
+
+#institutePict
+{
+	z-index: 140;
+	width: 81px;
+	height: 98px;
+	margin-right: -10000px;
+}
+
+#headerInstituteName
+{
+	z-index: 130;
+	width: 562px;
+	min-height: 78px;
+	margin-right: -10000px;
+	margin-top: 9px;
+	left: 84px;
+}
+
+#advancedSearchButton
+{
+	z-index: 126;
+	width: 78px;
+	min-height: 10px;
+	margin-right: -10000px;
+	margin-top: 119px;
+	left: 915px;
+}
+
+#advancedSearchButton:hover
+{
+	padding-top: 0px;
+	padding-bottom: 0px;
+	min-height: 10px;
+	width: 78px;
+	margin: 119px -10000px 0px 0px;
+}
+
+#advancedSearchButton:active
+{
+	padding-top: 0px;
+	padding-bottom: 0px;
+	min-height: 10px;
+	width: 78px;
+	margin: 119px -10000px 0px 0px;
+}
+
+#searchingForm
+{
+	z-index: 95;
+	width: 0.01px;
+	height: 59px;
+	margin-right: -10000px;
+	margin-top: 100px;
+	left: 735px;
+}
+
+#searchingArea
+{
+	z-index: 96;
+	width: 192px;
+	height: 28px;
+	margin-bottom: -1px;
+	margin-right: -10000px;
+	margin-top: 32px;
+	left: -1px;
+}
+
+#searchingArea.fld-err-st
+{
+	width: 192px;
+	height: 28px;
+	min-height: 0px;
+	margin: 32px -10000px -1px 0px;
+}
+
+#searchingBox
+{
+	z-index: 97;
+	width: 162px;
+	min-height: 14px;
+	margin-right: -10000px;
+	padding: 6px 6px 6px 22px;
+}
+
+#searchingArea:hover #searchingBox
+{
+	padding-top: 6px;
+	padding-bottom: 6px;
+	min-height: 14px;
+	width: 162px;
+	margin: 0px -10000px 0px 0px;
+}
+
+#searchingArea.focus-st #searchingBox
+{
+	padding-top: 6px;
+	padding-bottom: 6px;
+	min-height: 14px;
+	width: 162px;
+	margin: 0px -10000px 0px 0px;
+}
+
+#searchingArea.fld-err-st #searchingBox
+{
+	padding-top: 6px;
+	padding-bottom: 6px;
+	min-height: 14px;
+	width: 162px;
+	margin: 0px -10000px 0px 0px;
+}
+
+#searchingTxt
+{
+	width: 162px;
+	min-height: 14px;
+	padding: 6px 6px 6px 22px;
+}
+
+#searchingArea:hover #searchingTxt, #searchingArea.focus-st #searchingTxt, #searchingArea.fld-err-st #searchingTxt
+{
+	padding-top: 6px;
+	padding-bottom: 6px;
+}
+
+#sendingSearchingForm
+{
+	z-index: 101;
+	width: 152px;
+	min-height: 14px;
+	padding-top: 4px;
+	margin-right: -10000px;
+}
+
+#searchingError
+{
+	z-index: 105;
+	width: 152px;
+	min-height: 28px;
+	padding-top: 4px;
+	margin-right: -10000px;
+}
+
+#searchingForm.frm-subm-err-st #searchingError
+{
+	min-height: 32px;
+}
+
+#u465-3
+{
+	z-index: 109;
+	width: 152px;
+	min-height: 14px;
+	padding-top: 4px;
+	margin-right: -10000px;
+}
+
+#searchingForm.frm-sub-st #sendingSearchingForm, #searchingForm.frm-subm-ok-st #u465-3
+{
+	min-height: 18px;
+}
+
+#searchButton
+{
+	z-index: 112;
+	min-height: 25px;
+	width: 24px;
+	margin-right: -10000px;
+	margin-top: 36px;
+	left: 4px;
+}
+
+#searchingSign
+{
+	z-index: 125;
+	width: 15px;
+	height: 15px;
+	margin-right: -10000px;
+	margin-top: 140px;
+	left: 739px;
+}
+
+#u5167
+{
+	z-index: 40;
+	width: 1020px;
+	background-color: transparent;
+	padding-top: 16px;
+	padding-bottom: 37px;
+	position: relative;
+}
+
+#u5168-4
+{
+	z-index: 41;
+	width: 1020px;
+	min-height: 57px;
+	background-color: transparent;
+	line-height: 30px;
+	color: #000000;
+	font-size: 20px;
+	text-indent: 10px;
+	font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+	position: relative;
+}
+
+#u5170-8
+{
+	z-index: 45;
+	width: 595px;
+	min-height: 76px;
+	background-color: transparent;
+	line-height: 24px;
+	color: #000000;
+	font-size: 16px;
+	text-indent: 10px;
+	font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+	margin-top: 32px;
+	position: relative;
+}
+
+#u5168-2,#u5170-2,#u5170-4,#u5170-6
+{
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+#u5172
+{
+	z-index: 53;
+	width: 1020px;
+	min-height: 400px;
+	border-style: none;
+	border-color: transparent;
+	background-color: transparent;
+	margin-top: 32px;
+	position: relative;
+}
+
+#footer
+{
+	z-index: 2;
+	width: 1002px;
+	margin-top: 25px;
+	padding: 29px 5px 2.4999999999998863px 13px;
+}
+
+#footerUniversityInform
+{
+	z-index: 3;
+	width: 1002px;
+	min-height: 20px;
+}
+
+#footerContacts
+{
+	width: 0.01px;
+	margin-top: 8px;
+}
+
+#addressIcon
+{
+	z-index: 19;
+	width: 13px;
+	height: 23px;
+	margin-right: -10000px;
+	margin-top: 5px;
+}
+
+#footerAdsressInform
+{
+	width: 0.01px;
+	margin-right: -10000px;
+	margin-top: 6px;
+	margin-left: 17px;
+}
+
+#addressFooter
+{
+	z-index: 7;
+	width: 369px;
+	min-height: 20px;
+}
+
+#designerName
+{
+	z-index: 11;
+	width: 369px;
+	min-height: 20px;
+	margin-top: 8px;
+}
+
+#footerVline
+{
+	z-index: 20;
+	width: 1px;
+	height: 79px;
+	margin-right: -10000px;
+	left: 395px;
+}
+
+#callIcon
+{
+	z-index: 22;
+	width: 20px;
+	height: 25px;
+	margin-right: -10000px;
+	margin-top: 3px;
+	left: 405px;
+}
+
+#fotterPhones
+{
+	width: 0.01px;
+	margin-right: -10000px;
+	margin-top: 6px;
+	margin-left: 434px;
+}
+
+#institutePhone
+{
+	z-index: 24;
+	width: 106px;
+	min-height: 20px;
+}
+
+#designerPhone
+{
+	z-index: 28;
+	width: 106px;
+	min-height: 20px;
+	margin-top: 8px;
+}
+
+#fotterVline2
+{
+	z-index: 21;
+	width: 1px;
+	height: 79px;
+	margin-right: -10000px;
+	left: 549px;
+}
+
+#emailIcon
+{
+	z-index: 23;
+	width: 31px;
+	height: 20px;
+	margin-right: -10000px;
+	margin-top: 5px;
+	left: 559px;
+}
+
+#footerEmails
+{
+	width: 0.01px;
+	margin-right: -10000px;
+	margin-top: 5px;
+	margin-left: 598px;
+}
+
+#instituteEmail
+{
+	z-index: 32;
+	width: 126px;
+	min-height: 20px;
+}
+
+#designerEmail
+{
+	z-index: 36;
+	width: 126px;
+	min-height: 20px;
+	margin-top: 8px;
+}
+
+#allRightsInform
+{
+	z-index: 15;
+	width: 369px;
+	min-height: 20px;
+	margin-left: 17px;
+	margin-top: 6px;
+}
+
+body
+{
+	position: relative;
+	min-width: 1020px;
+	padding-top: 36px;
+	padding-bottom: 36px;
+}
+
+#page .verticalspacer
+{
+	clear: both;
+}
+

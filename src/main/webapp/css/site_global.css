@@ -1,0 +1,656 @@
+html
+{
+	min-height: 100%;
+	min-width: 100%;
+	-ms-text-size-adjust: none;
+}
+
+
+body,div,dl,dt,dd,ul,ol,li,nav,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote
+{
+	margin: 0;
+	padding: 0;
+	border-width: 0;
+	-webkit-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-o-transform-origin: left top;
+	transform-origin: left top;
+}
+body
+{
+    font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+    text-align: left;
+    font-size: 14px;
+    line-height: 17px;
+    word-wrap: break-word;
+    text-rendering: optimizeLegibility;/* kerning, primarily */
+    -moz-font-feature-settings: 'liga';
+    -ms-font-feature-settings: 'liga';
+    -webkit-font-feature-settings: 'liga';
+    font-feature-settings: 'liga';
+}
+
+h1,h2,h3,h4,h5,h6
+{
+    font-size: 100%;
+    font-weight: inherit;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0)
+{
+    body { text-rendering:auto; }
+}
+
+.colelem /* a child element of a column */
+{
+    display: inline;
+    float: left;
+    clear: both;
+}
+
+.grpelem /* a child element of a group */
+{
+    display: inline;
+    float: left;
+}
+
+
+
+
+
+
+.button{
+    width: 157px;
+    height: 31px;
+    box-shadow: 6px 6px 8px rgba(0, 58, 72, 0.376);
+    background: transparent linear-gradient(to right, #EAEAEA, rgba(126, 126, 126, 0.5) 100%) repeat scroll 0% 0%;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #7F7F7F;
+    border-radius: 4px;
+    line-height: 25px;
+    color: #474747;
+    text-align: center;
+    font-family: Georgia,Palatino,Palatino Linotype,Times,Times New Roman,serif;
+    font-style: italic;
+    position: relative;
+    cursor: pointer;
+
+}
+
+.button:active{
+    box-shadow: 4px 4px 4px rgba(0, 58, 72, 0.376);
+    background: transparent linear-gradient(to right, #F2F3FF, rgba(130, 139, 170, 0.5) 100%) repeat scroll 0% 0%;
+    text-decoration:underline;
+    color: #000;
+}
+
+.button:hover{
+    box-shadow: 4px 4px 4px rgba(0, 58, 72, 0.376);
+    background: transparent linear-gradient(to right, #F2F3FF, rgba(130, 139, 170, 0.5) 100%) repeat scroll 0% 0%;
+    text-decoration:underline
+}
+
+/*//general//////general//////////general//////////general/////////////general///////////*/
+body {
+    width: 1020px;
+    margin: 36px auto 36px auto;
+}
+
+#magazineName {
+    width: 435px;
+    line-height: 36px;
+    font-size: 36px;
+    text-align: left;
+    letter-spacing: -4px;
+    position: relative;
+    display: inline;
+    float: left;
+}
+
+#MenuBar{
+    width: 585px;
+    height: 35px;
+    margin-top: 18px;
+    display: inline;
+    float: left;
+}
+
+#MenuBar ul{
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+#MenuBar ul li{
+    float: left;
+}
+
+.menuButton {
+    width: 113px;
+    height: 24px;
+    box-shadow: 0px 0px 4px rgba(89,89,89,0.5),0px 0px 4px rgba(89,89,89,0.5), 4px 4px 5px rgba(0,58,72,0.5);
+    background-color: #595959;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    color: #FFFFFF;
+    letter-spacing: -1px;
+    display: block;
+    padding-top: 8px;
+    margin: 2px;
+    position: relative;
+}
+
+.menuButton::before {
+    content: "";
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    border-radius: 4px;
+    box-shadow: inset -1px 1px 2px rgba(255,255,255,0.6), inset 1px -1px 2px rgba(0, 0, 0, 0.60);
+}
+
+.menuButton:hover {
+    color: #FBB03B;
+    text-decoration: underline;
+}
+
+.menuActive {
+    box-shadow: 0px 0px 4px rgba(0,125,249,0.5),0px 0px 4px rgba(0,125,249,0.5)/* glow */,
+    4px 4px 5px rgba(0,58,72,0.5)/* drop shadow*/;
+    background-color: #007DF9;
+}
+
+.horizontalLine {
+    height: 3px;
+    clear: both;
+    border: none;
+    background-color: #d1d1d1;
+}
+
+.banner {
+    color: #E8E8E8;
+    font-family: Times, Times New Roman, Georgia, serif;
+    font-weight: bold;
+    height: 159px;
+    margin: 13px 0px 13px 0px;
+    background: transparent url("../images/headerImg.jpg") no-repeat left top;
+}
+
+.headerUniversityName {
+    margin: 0px 12px 19px 27px;
+    padding-top: 13px;
+    font-size: 19px;
+    float: left;
+    position: relative;
+}
+
+#authForm {
+    width: 358px;
+    margin-right: 6px;
+    padding-top: 13px;
+    font-size: 16px;
+    text-align: right;
+    position: relative;
+    float: right;
+}
+
+#authForm p a:link {
+    margin: 15px;
+    text-decoration: none;
+}
+
+#authForm p a:visited {
+    color: #E8E8E8;
+    text-decoration: none;
+}
+
+#authForm p a:active {
+    color: #FBB03B;
+    text-decoration: underline;
+}
+
+#authForm p a:hover {
+    color: #FBB03B;
+    text-decoration: underline;
+}
+
+#bannerLine {
+    height: 2px;
+}
+
+.instituteLogo {
+    width: 81px;
+    height: 98px;
+    background: transparent url("../images/nniSign.png") no-repeat left top;
+    margin-left: 35px;
+    float: left;
+}
+
+.instituteHeaderName {
+    line-height: 38px;
+    font-size: 32px;
+    margin: 10px 0px 0px 5px;
+    float: left;
+}
+
+.searchingArea {
+    margin: 60px 0px 0px 0px;
+    padding-left: 4px;
+    padding-right: 22px;
+    width: 150px;
+    height: 22px;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 4px;
+    border-color: #7F7F7F;
+    background-color: #FAF8F5;
+    color: #999999;
+    line-height: 1;
+    font-size: 14px;
+    font-style: italic;
+    font-weight: normal;
+    position: relative;
+    float: right;
+}
+
+.searchingSign {
+    z-index: 2;
+    margin: 65px 15px 0px -22px;
+    width: 15px;
+    height: 15px;
+    position: relative;
+    background: transparent url("../images/searchSign.png") no-repeat left top;
+    float: right;
+    cursor: pointer;
+}
+
+.searchingSign:hover {
+    background: #FBB03B url("../images/searchSign.png") no-repeat left top;
+}
+
+#searchingButton {
+    width: auto;
+    height: 18px;
+    margin: 60px 15px 0px 0px;
+    padding: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    font-style: normal;
+    color: inherit;
+    float: right;
+    position: relative;
+}
+
+#searchingButton:hover {
+    color: #FBB03B;
+    text-decoration: underline;
+}
+
+
+.content {
+    margin-top: 10px;
+}
+
+.currentDateHeader, .leftButtonsHeader, .mainContentHeader {
+    height: 35px;
+    box-shadow: 6px 6px 8px rgba(0,58,72,0.5);
+    background: linear-gradient(to right,#FFFFFF ,#B3B3B7 100%);
+    border-width: 2px;
+    border-style: solid;
+    border-color: #7F7F7F;
+    line-height: 22px;
+    font-size: 18px;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+    padding-left: 10px;
+    padding-top: 15px;
+}
+.currentDateHeader {
+    width: 235px;
+    text-align: left;
+}
+
+.leftButtonsHeader {
+    width: 283px;
+    text-align: left;
+}
+.mainContentHeader {
+    width: 700px;
+    text-align: center;
+}
+
+
+.leftSideBar {
+    float: left;
+    width: 295px;
+}
+
+.leftButtonsMenu {
+    position: relative;
+    margin-top: 20px;
+    margin-bottom: 10px;
+
+}
+
+.leftButtonName {
+    display: block;
+    float: left;
+    position: relative;
+}
+
+.leftButtonName > input {
+    display: none;
+}
+
+.leftButtonName > label, .menuHeader {
+    width: 283px;
+    min-height: 17px;
+    box-shadow: 6px 6px 8px rgba(0,58,72,0.5);
+    background: linear-gradient(to right,#ABABAB ,#EBEDEB 100%);
+    border-width: 2px;
+    border-style: solid;
+    border-color: #7F7F7F;
+    margin-top: 10px;
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    line-height: 18px;
+    color: #2D2D2D;
+    font-size: 15px;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+    cursor: pointer;
+}
+
+.leftButtonName > label {
+    top: 10px;
+    float: left;
+}
+
+.leftButtonName > label:hover, .menuHeader:hover {
+    box-shadow: inset 0px 0px 5px rgba(45, 43, 41, 0.50);
+    background: linear-gradient(to right,#FFFFFF ,#EBEBEB 100%);
+    text-decoration: underline;
+}
+
+.leftButtonName > input:checked + label {
+    box-shadow: inset 0px 0px 5px rgba(45, 43, 41, 0.75);
+    background: linear-gradient(to right,#FFFFFF ,#EBEBEB 100%);
+}
+
+.mainContent {
+    position: relative;
+    float: right;
+    /*margin-left: 10px;*/
+}
+
+/*todo set the text fields to resize none*/
+textarea {
+    resize: none;
+}
+
+/*thead {*/
+    /*height: 51px;*/
+/*}*/
+
+.innerTable {
+    border-spacing: 0;
+    background: #FAF8F5;
+    margin-top: 3px;
+    font-size: 15px;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+}
+
+table, thead, tr, th, tbody, td {
+    border: 1px solid #7F7F7F;
+}
+
+
+.tableHead, thead, th{
+    height: 48px;
+}
+
+.innerTableHead {
+    text-align: center;
+    background: #dddddd;
+}
+
+.innerTableBody {
+    padding-left: 3px;
+}
+
+.menuContent {
+    min-height: 42px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #7F7F7F;
+    background-color: #FAF8F5;
+    line-height: 16px;
+    color: #4A4A4A;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+    padding-left: 20px;
+    margin-bottom: 20px;
+}
+
+
+
+
+
+
+#footer {
+    /*z-index: 2;*/
+    width: 1002px;
+    margin-top: 13px;
+    padding: 9px 5px 3px 13px;
+    position: relative;
+    background: transparent url("../images/footerPict.jpg") repeat-x left top;
+    display: inline;
+    float: left;
+    clear: both;
+}
+
+#addressIcon
+{
+    display: inline;
+    float: left;
+    position: relative;
+    background: transparent url("../images/addressSign.png") no-repeat left top;
+}
+
+#callIcon
+{
+    display: inline;
+    float: left;
+    position: relative;
+    background: transparent url("../images/phoneSign.png") no-repeat left top;
+}
+
+#footerVline, #fotterVline2
+{
+    display: inline;
+    float: left;
+    background-color: #B3B3B5;
+    position: relative;
+}
+
+#emailIcon
+{
+    display: inline;
+    float: left;
+    position: relative;
+    background: transparent url("../images/maleSign.png") no-repeat left top;
+}
+
+#footerUniversityInform, #institutePhone, #designerPhone, #instituteEmail, #designerEmail
+{
+    background-color: transparent;
+    color: #A8A9A9;
+    position: relative;
+}
+
+#addressFooter, #designerName, #allRightsInform
+{
+    background-color: transparent;
+    font-size: 12px;
+    line-height: 14px;
+    color: #A8A9A9;
+    position: relative;
+}
+
+
+#footerUniversityInform
+{
+    z-index: 3;
+    width: 1002px;
+    min-height: 20px;
+}
+
+#footerContacts
+{
+    width: 0.01px;
+    margin-top: 8px;
+}
+
+#addressIcon
+{
+    z-index: 19;
+    width: 13px;
+    height: 23px;
+    margin-right: -10000px;
+    margin-top: 5px;
+}
+
+#footerAdsressInform
+{
+    width: 0.01px;
+    margin-right: -10000px;
+    margin-top: 6px;
+    margin-left: 17px;
+}
+
+#addressFooter
+{
+    z-index: 7;
+    width: 369px;
+    min-height: 20px;
+}
+
+#designerName
+{
+    z-index: 11;
+    width: 369px;
+    min-height: 20px;
+    margin-top: 8px;
+}
+
+#footerVline
+{
+    z-index: 20;
+    width: 1px;
+    height: 79px;
+    margin-right: -10000px;
+    left: 395px;
+}
+
+#callIcon
+{
+    z-index: 22;
+    width: 20px;
+    height: 25px;
+    margin-right: -10000px;
+    margin-top: 3px;
+    left: 405px;
+}
+
+#fotterPhones
+{
+    width: 0.01px;
+    margin-right: -10000px;
+    margin-top: 6px;
+    margin-left: 434px;
+}
+
+#institutePhone
+{
+    z-index: 24;
+    width: 106px;
+    min-height: 20px;
+}
+
+#designerPhone
+{
+    z-index: 28;
+    width: 106px;
+    min-height: 20px;
+    margin-top: 8px;
+}
+
+#fotterVline2
+{
+    z-index: 21;
+    width: 1px;
+    height: 79px;
+    margin-right: -10000px;
+    left: 549px;
+}
+
+#emailIcon
+{
+    z-index: 23;
+    width: 31px;
+    height: 20px;
+    margin-right: -10000px;
+    margin-top: 5px;
+    left: 559px;
+}
+
+#footerEmails
+{
+    width: 0.01px;
+    margin-right: -10000px;
+    margin-top: 5px;
+    margin-left: 598px;
+}
+
+#instituteEmail
+{
+    z-index: 32;
+    width: 126px;
+    min-height: 20px;
+}
+
+#designerEmail
+{
+    z-index: 36;
+    width: 126px;
+    min-height: 20px;
+    margin-top: 8px;
+}
+
+#allRightsInform
+{
+    z-index: 15;
+    width: 369px;
+    min-height: 20px;
+    margin-left: 17px;
+    margin-top: 6px;
+}
+
+.uploading {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, 0 )
+    url('../images/uploading.gif') 50% 50% no-repeat;
+}
+
+body.uploading {
+    overflow: hidden;
+}
+

@@ -1,0 +1,185 @@
+.headerUserName {
+    width: 450px;;
+    margin: 0px 12px 19px 27px;
+    padding-top: 13px;
+    font-size: 19px;
+    float: left;
+    position: relative;
+}
+
+.headerUniversityName {
+    font-size: 19px;
+    padding: 0px;
+    margin: 5px 12px 5px 12px;
+    width: 400px;
+}
+
+#authForm {
+    width: 100px;
+    float: right;
+}
+
+.userPhoto {
+    background: darkgrey;
+    background-size: 90px 90px;
+    max-width: 90px;
+    max-height: 90px;
+    margin-left: 35px;
+    float: left;
+}
+
+#aStatAndSDegree {
+    width: 355px;
+    height: 90px;
+    margin-left: 10px;
+    float: left;
+    font-size: 15px;
+    font-style: italic;
+}
+
+#instituteAndChair {
+    float: left;
+    margin-left: 10px;
+}
+.paddingBottom {
+    padding-bottom: 5px;
+}
+
+#instituteNameHeader {
+    /*float: left;*/
+    margin-left: 500px;
+    font-size: 19px;
+    width: 500px;
+    height: 40px;
+}
+
+
+#searchingButton {
+    margin-top: 20px;
+}
+.searchingArea {
+    margin-top: 20px;
+}
+.searchingSign {
+    margin-top: 25px;
+}
+
+#information {
+    margin-bottom: 15px;
+}
+#information hr {
+    margin-right: 15px;
+    /*margin-bottom: -15px;*/
+}
+
+#information div p {
+    width: 680px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.menuContent {
+    font-size: 16px;
+
+}
+
+.newReviewer {
+    display: inline;
+    color: blue;
+}
+.newReviewer:hover {
+   text-decoration: underline;
+    cursor: pointer;
+}
+
+.body .confirmation {
+    overflow: hidden;
+}
+.confirmation {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background-color: rgba( 255, 255, 255, 0.5 );
+}
+
+.confirmationMessage {
+    border: solid;
+    border-width: 1px;
+    border-color: #000008;
+    border-radius: 3px;
+    width: 450px;
+    height: 130px;
+    margin: 200px auto 0px auto;
+    background-color: #FAF8F5;
+}
+
+.confirmationMessage p {
+    margin-top: 30px;
+    margin-left: 40px;
+}
+.confirmationMessage div {
+    margin-top: 30px;
+    margin-left: 60px;}
+
+
+#keyWords {
+    width: 200px;
+}
+
+.photoFrame {
+    margin-top: 20px;
+    margin-left: 55px;
+}
+
+.photoAddress {
+    width: 210px;
+}
+
+#btnUpload {
+    float: none;
+    margin: 10px 0px 0px 30px;
+}
+#btnClear {
+    float: none;
+    margin: 10px 0px 0px 50px;
+}
+
+#newSeminarTheme {
+    margin-top: 0px;
+    margin-left: 30px;
+    width: 640px;
+    height: 50px;
+    padding: 8px;
+}
+
+#datepickerContainer {
+    margin: 20px 20px 20px 90px;
+    width: 300px;
+    height: 30px;
+    float:left;
+}
+
+#datepicker {
+    margin: 6px 10px 0px 5px;
+}
+
+#applySeminarBtn {
+    margin: 20px;
+}
+
+.messageField {
+    margin-top: 240px;
+}
+
+.fileForm  {
+    margin-top: -480px;
+}
+#regBtn {
+    top: -45px;
+    margin-left: 40px;
+}
+

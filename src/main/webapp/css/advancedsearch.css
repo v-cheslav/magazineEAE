@@ -1,0 +1,69 @@
+.menuContent {
+    padding-left: 0px;
+}
+
+.wordLabels {
+    width: 250px;
+}
+
+.textField {
+    width: 260px;
+}
+
+#searchTypeBt {
+    width: 270px;
+    padding-bottom: 7px;
+    border-bottom: solid;
+    border-width: 2px;
+    border-color: #aaaaaa;
+}
+
+#searchTypeBt label {
+    margin-top: -3px;
+    margin-left: 2px;
+}
+
+#datepickerContainer {
+    height: 65px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+#datepickerContainer p {
+    margin-left: 20px;
+}
+
+#dateFrom {
+    background-color: #FAF8F5;
+    margin-left: 5px;
+    margin-top: 4px;
+    padding: 1px;
+}
+
+#dateTo {
+    background-color: #FAF8F5;
+    margin-left: 9px;
+    margin-top: 4px;
+    padding: 1px;
+}
+
+.select .textField {
+    width: 270px;
+}
+
+#acadStatus, #sciDegree {
+    width: 270px;
+}
+
+.button {
+    margin: 10px 0px 20px 65px;
+}
+
+table {
+    margin-bottom: 15px;
+}
+
+.errorMessage {
+    margin-left: 20px;
+    width: 260px;
+    color: red;
+}

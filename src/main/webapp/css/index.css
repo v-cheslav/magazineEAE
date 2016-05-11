@@ -1,0 +1,148 @@
+
+.leftSideBar{
+    width: 257px;
+}
+
+.menuHeader {
+    width: 235px;
+    margin-top: 0px;
+}
+
+.menuContent {
+    width: 226px;
+}
+
+.menuContent ul {
+    list-style-type: none;
+}
+
+.leftMenuList li{
+    padding-top: 3px;
+    padding-bottom: 4px;
+}
+
+.accordionMenuWrapper {
+    min-height: 307px;
+    margin-top: 10px;
+}
+
+.accordionMenuWrapper ul {
+    list-style-type: none;
+}
+
+.accordionMenu {
+    width: 246px;
+}
+.mainContent {
+    float: left;
+}
+
+
+.mainContentHeader {
+    width: 540px;
+    height: 50px;
+    box-shadow: 6px 6px 8px rgba(0,58,72,0.5);
+    background: linear-gradient(to right,#FAF8F5 ,#EBEBEB 100%);
+    border-width: 2px;
+    border-style: solid;
+    border-color: #7F7F7F;
+    line-height: 34px;
+    font-size: 28px;
+    text-align: center;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+    padding-top: 10px;
+}
+
+.article {
+    width: 520px;
+    margin: 10px 7px;
+    padding: 10px;
+    border-top: solid;
+    border-bottom: solid;
+    border-width: 2px;
+    border-color: #CFCFCF;
+    background-color: #FAF8F5;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+
+}
+
+.articleName {
+    font-size: 20px;
+    margin-left: 50px;
+}
+
+.articleName :visited, .articleAuthor :visited {
+    color: blue;
+}
+
+.articleName :hover{
+    text-decoration: underline;
+}
+
+.articleName a:link, .articleAuthor a:link {
+    text-decoration: none;
+}
+
+.articlePubDate {
+    font-size: 16px;
+    float: right;
+    padding: 5px;
+}
+.annotation {
+    clear: both;
+    font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+    font-style: italic;
+    text-align: justify;
+    text-indent: 20px;
+}
+
+.articleAuthor {
+    font-size: 16px;
+    margin-left: 50px;
+    padding-top: 10px;
+}
+
+
+
+.rightPanel {
+    width: 200px;
+    float: left;
+    margin-left: 8px;
+}
+
+.rightPanel .menuHeader {
+    background: linear-gradient(to right,#FAF8F5 ,#EBEBEB 100%);
+    width: 188px;
+    height: 53px;
+    text-align: center;
+    padding: 3px;
+}
+
+.rightPanel .menuContent {
+    width: 189px;
+    padding: 3px;
+}
+
+.seminars, .theme {
+    margin-left: 10px;
+    text-decoration: underline;
+    padding: 3px;
+}
+
+.nearestSeminarName {
+    font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+    font-style: italic;
+}
+
+.seminar {
+    border-top: solid;
+    border-width: 2px;
+    border-color: #CFCFCF;
+    margin: 5px 0px 5px 0px;
+}
+
+.nearestSeminarUser {
+    margin-left: 5px;
+}
+
+
