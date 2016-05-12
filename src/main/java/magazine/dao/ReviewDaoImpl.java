@@ -60,6 +60,7 @@ public class ReviewDaoImpl implements ReviewDao {
         return sessionFactory.getCurrentSession()
                 .createCriteria(Review.class)
                 .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                .add(Restrictions.eq("status", false))
                 .add(Restrictions.eq("user", user))
                 .list();
     }

@@ -176,10 +176,14 @@
 
                 <c:if test="${reviews != null}">
                     <p>
-                        Вам надійшла заявка на рецензування статті
-                        <a href="articlePage?articleId=${reviews.get(0).article.articleId}">
-                            <c:out value="${reviews.get(0).article.articleName}"/> <%--todo--%>
-                        </a>
+                        Вам надійшла заявка на рецензування статті:<br>
+                        <c:forEach var="review" items="${reviews}">
+                            <a href="articlePage?articleId=${review.article.articleId}">
+                                <c:out value="${review.article.articleName}"/> <%--todo--%>
+                            </a>
+                            <br>
+                        </c:forEach>
+
                     </p>
                     <hr>
                 </c:if>
