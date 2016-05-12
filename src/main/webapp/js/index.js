@@ -11,4 +11,11 @@ $(document).ready(function(){
     });
 
 })
-
+//
+//function toFullPage (){
+//    alert("toFullPage");
+//    $('#mainContentHeader').css({
+//        "width":      "749px"
+//    });
+//
+//}

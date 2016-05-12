@@ -4,6 +4,7 @@ import magazine.Exeptions.DataNotFoundException;
 import magazine.Exeptions.SearchException;
 import magazine.Exeptions.SeminarCreationException;
 //import magazine.dao.PublishedSeminarDao;
+import magazine.Exeptions.SeminarNotFoundException;
 import magazine.dao.SeminarDao;
 import magazine.dao.SeminarKeyWordDao;
 import magazine.dao.UserDao;
@@ -301,10 +302,24 @@ public class SeminarServiceImpl implements SeminarService {
 
 
     @Override
-    public List<Seminar> findNearestSeminars() {
+    public List<Seminar> findNearestSeminars() throws SeminarNotFoundException {
         Calendar calendar = Calendar.getInstance();
-        return seminarDao.findNearestSeminars(calendar);
-    }
+        calendar.set(Calendar.HOUR_OF_DAY,0);
+        calendar.set(Calendar.MINUTE,0);
+        calendar.set(Calendar.SECOND,0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        Seminar seminar;
+//        try {
+            seminar = seminarDao.findNearestSeminar(calendar);
+            Calendar date = seminar.getSeminarPublicationDate();
+            List<Seminar> seminars = seminarDao.findSeminarsByDate(date);
+            return seminars;
+//        } catch (SeminarNotFoundException e){
+//            e.printStackTrace();
+//            return null;
+//        }
+    }//todo виправити 3 звернення в БД
 
     @Override
     public List<Seminar> searchSeminars(String articleStr) throws SearchException {

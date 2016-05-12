@@ -1,5 +1,6 @@
 package magazine.dao;
 
+import magazine.Exeptions.SeminarNotFoundException;
 import magazine.domain.Seminar;
 import magazine.domain.User;
 import org.apache.log4j.Logger;
@@ -99,16 +100,32 @@ public class SeminarDaoImpl implements SeminarDao {
     }
 
     @Override
-    public List<Seminar> findNearestSeminars(Calendar date) {
+    public List<Seminar> findSeminarsByDate(Calendar date) {
         return sessionFactory.getCurrentSession()
                 .createCriteria(Seminar.class)
                 .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                 .add(Restrictions.eq("isPublished", false))
-                .add(Restrictions.gt("seminarPublicationDate", date))
+                .add(Restrictions.eq("seminarPublicationDate", date))
                 .addOrder(Order.asc("seminarPublicationDate"))
-                .setMaxResults(2)
-
                 .list();
+    }
+
+
+    @Override
+    public Seminar findNearestSeminar(Calendar currentDate) throws SeminarNotFoundException{
+         List<Seminar> seminars = sessionFactory.getCurrentSession()
+                .createCriteria(Seminar.class)
+                .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                .add(Restrictions.eq("isPublished", false))
+                .add(Restrictions.ge("seminarPublicationDate", currentDate))
+                .addOrder(Order.asc("seminarPublicationDate"))
+                .setMaxResults(1)
+                .list();
+        if (seminars.size() == 0){
+            throw new SeminarNotFoundException("Семінар не знайдено");
+        }
+        Seminar seminar = seminars.get(0);
+        return seminar;
     }
 
     @Override

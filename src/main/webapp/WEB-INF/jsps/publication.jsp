@@ -15,7 +15,7 @@
         автоматика і енергозбереження&quot;</title>
     <!-- Scripts -->
     <script src="../../js/jquery-1.11.2.min.js"></script>
-    <%--<script src="../../js/siteGlobal.js" type="text/javascript"></script>--%>
+    <script src="../../js/siteGlobal.js" type="text/javascript"></script>
     <script src="../../js/publications.js" type="text/javascript"></script>
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="../../css/site_global.css"/>

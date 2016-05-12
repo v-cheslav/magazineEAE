@@ -25,7 +25,6 @@ $(document).ready(function() {
     $('#seminarPublishForm').validate({
         rules: {
             seminarName: {
-                minlength: 10,
                 required: true
             },
             seminarKeyWords: {
@@ -35,7 +34,6 @@ $(document).ready(function() {
         },
         messages: {
             seminarName:{
-                minlength: "Введіть коректно назву семінару.",
                 required: "Введіть назву семінару."
             },
             seminarKeyWords:{

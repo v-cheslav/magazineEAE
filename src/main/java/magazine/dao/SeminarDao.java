@@ -1,5 +1,6 @@
 package magazine.dao;
 
+import magazine.Exeptions.SeminarNotFoundException;
 import magazine.domain.Article;
 import magazine.domain.Seminar;
 import magazine.domain.User;
@@ -21,12 +22,12 @@ public interface SeminarDao {
     public List<Seminar> findAllAnnounced();
     public List<Seminar> findAllAnnouncedByDate(Calendar date);
     public List<Seminar> findAllApplyied();
-    public List<Seminar> findNearestSeminars(Calendar date);
+    public Seminar findNearestSeminar(Calendar currentDate)throws SeminarNotFoundException;
     public Seminar findSeminarByName(String seminarName);
     public Seminar findAnnouncedByUser(User user);
     public  List<Seminar> findByUserId(Long userId);
     public void createOrUpdate(Seminar seminar);
     public List<Seminar> findBySearchQuery(Map query);
-
+    public List<Seminar> findSeminarsByDate(Calendar date);
 
 }

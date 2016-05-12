@@ -3,6 +3,7 @@ package magazine.controller;
 
 
 import magazine.Exeptions.ArticleNotFoundException;
+import magazine.Exeptions.SeminarNotFoundException;
 import magazine.domain.*;
 import magazine.servise.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,10 +65,15 @@ public class ApplicationController {
             message = e.getMessage();
         }
 
-        List <Seminar> nearestSeminars = seminarService.findNearestSeminars();
+        List <Seminar> nearestSeminars = null;
+        try {
+            nearestSeminars = seminarService.findNearestSeminars();
+        } catch (SeminarNotFoundException e){
+            log.info(e.getMessage());
+        }
+        map.addAttribute("nearestSeminars", nearestSeminars);
         map.addAttribute("articles", articles);
         map.addAttribute("annotations", annotations);
-        map.addAttribute("nearestSeminars", nearestSeminars);
         map.addAttribute("message", message);
 
         return "index";
@@ -177,9 +183,7 @@ public class ApplicationController {
                     map.addAttribute("article", article);
 
                 List<Review> reviews = reviewService.findByUser(user);
-//                for (Review review : reviews){
-//                    System.err.println(review.toString());
-//                }
+
                 if (reviews.get(0) != null) {
                     map.addAttribute("reviews", reviews);
                 }

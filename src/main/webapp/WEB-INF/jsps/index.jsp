@@ -128,8 +128,8 @@
         </div>
     </div>
         <div class="mainContent">
-            <div class="mainContentHeader">
-                <h2 id="mainContentHeader">Останні публікації</h2>
+            <div class="mainContentHeader"<%-- id="mainContentHeader"--%>>
+                <h2 <%--id="mainContentHeader"--%>>Останні публікації</h2>
             </div>
             <c:if test="${message != null}">
                 <c:out value="${message}"></c:out>
@@ -169,7 +169,7 @@
 
         </div>
 
-        <c:if test="${nearestSeminars.size() != 0}">
+        <c:if test="${nearestSeminars != null}">
 
             <div class="rightPanel">
                 <div class="menuHeader">
@@ -206,8 +206,15 @@
 
             </div>
         </c:if>
-        <c:if test="${nearestSeminars.size() == 0}">
-            розгорнути статті на всю сторінку
+        <c:if test="${nearestSeminars == null}">
+            <script>
+                $('.mainContentHeader').css({
+                    "width":      "749px"
+                });
+                $('.article').css({
+                    "width":      "729px"
+                });
+            </script>
         </c:if>
 </div>
 

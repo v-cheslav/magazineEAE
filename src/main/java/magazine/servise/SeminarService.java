@@ -3,6 +3,7 @@ package magazine.servise;
 import magazine.Exeptions.DataNotFoundException;
 import magazine.Exeptions.SearchException;
 import magazine.Exeptions.SeminarCreationException;
+import magazine.Exeptions.SeminarNotFoundException;
 import magazine.domain.Seminar;
 import magazine.domain.User;
 
@@ -23,7 +24,7 @@ public interface SeminarService  {
     public List<Seminar> findPublishedSeminarByUserId(Long userId);
     public List<Seminar> findAllAppyied();
     public void applySeminar(User currentUser, String seminarStr) throws SeminarCreationException;
-    public List<Seminar> findNearestSeminars();
+    public List<Seminar> findNearestSeminars()throws SeminarNotFoundException;
     public List<Seminar> searchSeminars(String seminarStr) throws SearchException;
 
 }
