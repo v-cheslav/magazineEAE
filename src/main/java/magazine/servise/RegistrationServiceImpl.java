@@ -10,6 +10,7 @@ import magazine.domain.*;
 //import magazine.domain.Message;
 import magazine.utils.PasswordHelper;
 import org.apache.log4j.Logger;
+import org.hibernate.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -24,6 +25,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 import javax.mail.*;
+import javax.mail.Session;
 import javax.mail.internet.*;
 import javax.activation.*;
 import javax.mail.internet.InternetAddress;
@@ -63,6 +65,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Autowired
     PasswordHelper passwordHelper;
 
+    @Value("${domainName}")
+    private String domainName;
+
     @Value("${initialPath}")
     private String initialPath;
 
@@ -84,8 +89,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         Object obj = null;
         try {
             User user = new User();
+            sendMessage(user);
+
             obj = parser.parse(userStr);
             JSONObject jsonObj = (JSONObject) obj;
+
+
 
             String username = (String) jsonObj.get("username");
             try {//спробуємо знайти юзера за username
@@ -177,9 +186,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             user.setInterests(interests);
             user.setUserRoles(userRoles);
 
+
             try {
-                userService.createUser(user);
-//                sendMessage(user);
+//                userService.createUser(user);
             } catch (Exception ex) {
                 ex.printStackTrace();
                 throw new RegistrationException("Виникли проблеми з реєстрацією." +
@@ -262,9 +271,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             }
 
             String newPassword = (String) jsonObj.get("password");
-            System.err.println("newPassword = '"+newPassword+"'");
             if (!newPassword.equals("")) {
-                user.setPassword(newPassword);
+                String encodedPassword = passwordHelper.encode(newPassword);
+                user.setPassword(encodedPassword);
             }
 
             String newAcadStatus = (String) jsonObj.get("acadStatus");
@@ -394,62 +403,44 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
 
-    private void sendMessage(User user){
+    private String sendMessage(User user){
+        log.info("sendMessage.method");
 
-        Properties props = new Properties();
-        Session session = Session.getDefaultInstance(props, null);
+//        String receiver = user.getUsername();
+        String receiver = "v_cheslav@ukr.net";
 
-        String msgBody = "HELLO";
+        Properties mailServerProperties;
+        Session getMailSession;
+        MimeMessage generateMailMessage;
+        Integer random = 1111 + (int)(Math.random() * ((9999 - 1111) + 1));
+        String capcha = random.toString();
 
-        String to = user.getUsername();
-        String from = "v.cheslav84@gmail.com";
-
+        mailServerProperties = System.getProperties();
+        mailServerProperties.put("mail.smtp.port", "587");
+        mailServerProperties.put("mail.smtp.auth", "true");
+        mailServerProperties.put("mail.smtp.starttls.enable", "true");
 
         try {
-            javax.mail.Message msg = new MimeMessage(session);
-            msg.setFrom(new InternetAddress(from, "Example.com Admin"));
-            msg.addRecipient(javax.mail.Message.RecipientType.TO,
-                    new InternetAddress(to, "Mr. User"));
-            msg.setSubject("Your Example.com account has been activated");
-            msg.setText(msgBody);
-            Transport.send(msg);
+            getMailSession = Session.getDefaultInstance(mailServerProperties, null);
+            generateMailMessage = new MimeMessage(getMailSession);
+            generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(receiver));
+            generateMailMessage.setSubject("Реєстрація в журналі Енергетика, автоматика і енергозбереження");
+            String emailBody = "Ви реєструвались в журналі Енергетика, автоматика і енергозбереження."
+                    + "<br> для підтердження реєстрації перейдіть за посиланням "
+                    + domainName + "confirmRegistration та введіть пароль "
+                    + capcha
+                    + "<br><br> Regards, Admin";
+                generateMailMessage.setContent(emailBody, "text/html; charset=UTF-8");
 
-        } catch (AddressException e) {
-            e.printStackTrace();
+            Transport transport = getMailSession.getTransport("smtp");
+            transport.connect("smtp.gmail.com", "magazineeae@gmail.com", "eaepassword");
+            transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
+            transport.close();
+
         } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e){
             e.printStackTrace();
         }
 
-
-
-//        String to = user.getUsername();
-//        String from = "v.cheslav84@gmail.com";
-//
-//        String host = "localhost";
-//
-//        Properties properties = System.getProperties();
-//
-//        properties.setProperty("mail.smtp.host", host);
-//
-//        Session session = Session.getDefaultInstance(properties);
-//
-//
-//        try{
-//            MimeMessage message = new MimeMessage(session);
-//
-//            message.setFrom(new InternetAddress(from));
-//            message.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(to));
-//
-//            message.setSubject("This is the Subject Line!");
-//
-//            message.setText("This is actual message");
-//
-//            Transport.send(message);
-//            System.out.println("Sent message successfully....");
-//        }catch (MessagingException mex) {
-//            mex.printStackTrace();
-//        }
+        return capcha;
     }
 }
