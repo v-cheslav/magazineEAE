@@ -224,10 +224,26 @@ public class ApplicationController {
     }
 
 
-
     @RequestMapping(value = "/login", method = {RequestMethod.GET})
     public String login (Model model) {
         log.info("/login controller");
+        return "login";
+    }
+
+    @RequestMapping(value = "/confirmRegistration", method = {RequestMethod.GET})
+    public String confirmRegistration (@RequestParam String userName, Integer regCode, Model map) {
+        log.info("/confirmRegistration controller");
+
+        User user = userService.getUserByUserName(userName);
+
+        if (user.getRestoreCode().equals(regCode)){
+            user.setValid(true);
+            System.err.println(user.toString());
+            userService.changeUser(user);
+            map.addAttribute("errorMessage", "Реєстрація відбулася успішно.");
+        } else {
+            map.addAttribute("errorMessage", "Помилка авторизації.");
+        }
         return "login";
     }
 

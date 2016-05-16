@@ -8,6 +8,7 @@ import magazine.dao.UserRoleDao;
 import magazine.domain.*;
 //import magazine.utils.TemporaryPhotoAddresses;
 //import magazine.domain.Message;
+import magazine.utils.Messenger;
 import magazine.utils.PasswordHelper;
 import org.apache.log4j.Logger;
 import org.hibernate.*;
@@ -65,15 +66,14 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Autowired
     PasswordHelper passwordHelper;
 
-    @Value("${domainName}")
-    private String domainName;
-
     @Value("${initialPath}")
     private String initialPath;
 
     @Value("${adminPassword}")
     private String adminPassword;
 
+    @Value("${domainName}")
+    private String domainName;
 
     public RegistrationServiceImpl() {
     }
@@ -89,12 +89,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         Object obj = null;
         try {
             User user = new User();
-            sendMessage(user);
 
             obj = parser.parse(userStr);
             JSONObject jsonObj = (JSONObject) obj;
-
-
 
             String username = (String) jsonObj.get("username");
             try {//спробуємо знайти юзера за username
@@ -186,9 +183,26 @@ public class RegistrationServiceImpl implements RegistrationService {
             user.setInterests(interests);
             user.setUserRoles(userRoles);
 
+            Integer random = 1111 + (int)(Math.random() * ((9999 - 1111) + 1));
+            user.setRestoreCode(random);
+
+            String receiver = "v_cheslav@ukr.net";
+            String regCode = random.toString();
+            String message = "Ви реєструвались в журналі Енергетика, автоматика і енергозбереження."
+                    + "<br> для підтердження реєстрації перейдіть за посиланням "
+                    + domainName + "confirmRegistration?" + "userName=" + receiver + "&regCode=" + regCode
+                    + "<br><br> Regards, Admin";
 
             try {
-//                userService.createUser(user);
+            Messenger messenger = new Messenger();
+            messenger.sendMessage(receiver, message);
+            } catch (MessagingException ex) {
+                ex.printStackTrace();
+                throw new RegistrationException("Неможливо відправити повідомлення на пошту. " +
+                        "Перевірте правильність вашої електронної адреси і повторіть спробу реєстрації");
+            }
+            try {
+                userService.createUser(user);
             } catch (Exception ex) {
                 ex.printStackTrace();
                 throw new RegistrationException("Виникли проблеми з реєстрацією." +
@@ -403,44 +417,5 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
 
-    private String sendMessage(User user){
-        log.info("sendMessage.method");
 
-//        String receiver = user.getUsername();
-        String receiver = "v_cheslav@ukr.net";
-
-        Properties mailServerProperties;
-        Session getMailSession;
-        MimeMessage generateMailMessage;
-        Integer random = 1111 + (int)(Math.random() * ((9999 - 1111) + 1));
-        String capcha = random.toString();
-
-        mailServerProperties = System.getProperties();
-        mailServerProperties.put("mail.smtp.port", "587");
-        mailServerProperties.put("mail.smtp.auth", "true");
-        mailServerProperties.put("mail.smtp.starttls.enable", "true");
-
-        try {
-            getMailSession = Session.getDefaultInstance(mailServerProperties, null);
-            generateMailMessage = new MimeMessage(getMailSession);
-            generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(receiver));
-            generateMailMessage.setSubject("Реєстрація в журналі Енергетика, автоматика і енергозбереження");
-            String emailBody = "Ви реєструвались в журналі Енергетика, автоматика і енергозбереження."
-                    + "<br> для підтердження реєстрації перейдіть за посиланням "
-                    + domainName + "confirmRegistration та введіть пароль "
-                    + capcha
-                    + "<br><br> Regards, Admin";
-                generateMailMessage.setContent(emailBody, "text/html; charset=UTF-8");
-
-            Transport transport = getMailSession.getTransport("smtp");
-            transport.connect("smtp.gmail.com", "magazineeae@gmail.com", "eaepassword");
-            transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
-            transport.close();
-
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-
-        return capcha;
-    }
 }

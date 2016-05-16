@@ -74,6 +74,10 @@ public class User implements UserDetails {
     @Column(name="restoreCode")
     private Integer restoreCode;
 
+    @Column(name="isValid")
+    private boolean isValid = false;
+
+
 //    @OneToOne
 //    @JoinColumn(name = "message")
 //    @JsonIgnore(true)
@@ -140,13 +144,13 @@ public class User implements UserDetails {
         this.interests = interests;
     }
 
-    public User getUserForTables (User user){
-        this.userId = user.getUserId();
-        this.name = user.getName();
-        this.surname = user.getSurname();
-        this.middleName = user.getMiddleName();
-        return this;
-    }
+//    public User getUserForTables (User user){
+//        this.userId = user.getUserId();
+//        this.name = user.getName();
+//        this.surname = user.getSurname();
+//        this.middleName = user.getMiddleName();
+//        return this;
+//    }
 
 
     @Override
@@ -158,6 +162,8 @@ public class User implements UserDetails {
         return result;
     }
 
+
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -165,7 +171,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return isValid;
     }
 
     @Override
@@ -309,6 +315,10 @@ public class User implements UserDetails {
 
     public void setSciDegree(UserSciDegree sciDegree) {
         this.sciDegree = sciDegree;
+    }
+
+    public void setValid(boolean isValid){
+        this.isValid = isValid;
     }
 
     public UserSex getUserSex() {

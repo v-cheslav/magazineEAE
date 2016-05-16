@@ -21,6 +21,6 @@ public interface UserDao {
     public List<User> findByUniversity(String university);
     public List<User> findByAcademicStatus(String acadStatus);
     public List<User> findByScientificDegree(String sciDegree);
-    public List<User> findByUsername (String username);
+    public List<User> findByUsername (String username);//todo return User
     public List<User> findBySearchQuery(Map searchQueryMap);
 }

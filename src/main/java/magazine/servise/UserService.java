@@ -13,6 +13,7 @@ import java.util.List;
 public interface UserService {
     public Long createUser(User user)throws RegistrationException;
     public User getUser(Long id);
+    public User getUserByUserName(String userName);
     public void changeUser(User user);
     public void removeUser(User user);
     public List<User> getAllUsers();
