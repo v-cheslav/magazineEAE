@@ -3,10 +3,15 @@ package magazine.controller;
 
 
 import magazine.Exeptions.ArticleNotFoundException;
+import magazine.Exeptions.RegistrationException;
 import magazine.Exeptions.SeminarNotFoundException;
 import magazine.domain.*;
 import magazine.servise.*;
+import magazine.utils.Messenger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,6 +22,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.apache.log4j.Logger;
 
+import javax.mail.MessagingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -246,7 +252,40 @@ public class ApplicationController {
         }
         return "login";
     }
+    @RequestMapping(value = "/remindPassword", method = RequestMethod.POST)
+    public ResponseEntity<String> remindPassword(@RequestBody String email, Model map){
+        log.info("/remindPassword controller");
+        email = email.replaceAll("\"", "");
 
+        System.err.println("-"+email+"-");
 
+        ResponseEntity<String> entity;
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "text/html; charset=utf-8");
+        try {
+            User user = userService.getUserByUserName(email);
+
+            Messenger messenger = new Messenger();
+
+            String message = "Ви надіслали запит на відновлення парлю в журнал Енергетика, автоматика і енергозбереження."
+                    + "<br> Ваш пароль:" + user.getPassword()
+                    + "<br><br> Regards, Admin";
+            System.err.println(message);
+
+        try {
+            messenger.sendMessage(email, message);
+        } catch (MessagingException ex) {
+            ex.printStackTrace();
+            map.addAttribute("errorMessage", "Неможливо відправити повідомлення на пошту. " +
+                    "Перевірте правильність вашої електронної адреси і повторіть спробу.");
+        }
+
+            entity = new ResponseEntity<String>("OK", headers, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            entity = new ResponseEntity<String>(e.getMessage(), headers, HttpStatus.OK);
+        }
+        return entity;
+    }
 
 }

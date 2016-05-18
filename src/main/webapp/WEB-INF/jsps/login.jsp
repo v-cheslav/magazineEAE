@@ -14,9 +14,11 @@
     <link rel="stylesheet" type="text/css" href="../../css/login.css" charset="utf-8"/>
     <!-- Other scripts -->
     <script src="../../js/jquery-1.11.2.min.js"></script>
-    <script src="../../js/jquery.validate.min.js"></script>
-    <script src="../../js/jquery.ajax.upload.js"></script>
-    <script src="../../js/siteGlobal.js"></script>
+    <script src="../../js/login.js"></script>
+
+    <%--<script src="../../js/jquery.validate.min.js"></script>--%>
+    <%--<script src="../../js/jquery.ajax.upload.js"></script>--%>
+    <%--<script src="../../js/siteGlobal.js"></script>--%>
     <script src="../../js/registration.js" type="text/javascript"></script>
 </head>
 <body>
@@ -52,12 +54,12 @@
 </div>
 <div class="clearfix" id="page">
 
-    <div class="content">
+    <div class="contentLeft">
         <h3 class="loginTitle">
             <p id="titleText">Увійдіть використовуючи електронну пошту та пароль!</p>
         </h3>
 
-        <c:if test="${SPRING_SECURITY_LAST_EXCEPTION !=null}"> <%--<!-- ${not empty error} -->--%>
+        <c:if test="${SPRING_SECURITY_LAST_EXCEPTION != null}"> <%--<!-- ${not empty error} -->--%>
             <div class="errorBlock">
                 Помилка авторизації.
                 <br/> Причина:
@@ -70,12 +72,9 @@
             <div class="login">
                 <div class="tips">Електронна пошта:</div>
                 <div class="userFiller">
-                    <input type="text" name="j_username" value="v_cheslav@ukr.net">
+                    <input type="text" name="j_username" id="j_username" value="v_cheslav@ukr.net">
                 </div>
             </div>
-            <input id="_spring_security_remember_me"
-                   name="_spring_security_remember_me" type="checkbox"/>
-            <label for="_spring_security_remember_me">Remember Me?</label>
 
             <div class="password">
                 <div class="tips">Пароль:</div>
@@ -91,6 +90,16 @@
                        value="Реєстрація">
             </div>
         </form>
+    </div>
+
+    <div class="contentRight">
+        <input id="_spring_security_remember_me"
+               name="_spring_security_remember_me" type="checkbox"/>
+        <label for="_spring_security_remember_me">Запам'ятати?</label>
+
+        <div id="remindPassword">Нагадати пароль.</div>
+
+
     </div>
 
     <hr class="horizontalLine">

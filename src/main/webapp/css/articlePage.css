@@ -115,7 +115,6 @@
     width: 246px;
 }
 
-
 .menuHeader {
     width: 235px;
     margin-top: 0px;
@@ -127,6 +126,7 @@
     font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
     font-size: 13px;
     font-style: italic;
+    text-align: justify;
 }
 
 .menuContent ul {

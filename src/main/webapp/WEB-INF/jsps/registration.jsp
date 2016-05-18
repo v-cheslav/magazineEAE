@@ -57,146 +57,152 @@
     <p id="titleText">Реєстрація</p>
 </div>
 
-<div class="objectFont">
+<div id="regContent">
 
-    <form class="registrationForm" id="registrationForm" method="post" action="null">
-        <div class="leftField">
-            <div>
-                <label for="surname" class="label"></label>
-                <input class="textField" type="text"
-                       id="surname" name="surname" placeholder="Прізвище" value="Surname"/>
-            </div>
+    <div class="objectFont">
 
-            <div>
-                <label for="name" class="label"></label>
-                <input class="textField" type="text"
-                       id="name" name="name" placeholder="Ім'я" value="Name"/>
-            </div>
+        <form class="registrationForm" id="registrationForm" method="post" action="null">
+            <div class="leftField">
+                <div>
+                    <label for="surname" class="label"></label>
+                    <input class="textField" type="text"
+                           id="surname" name="surname" placeholder="Прізвище" value="Surname"/>
+                </div>
 
-            <div>
-                <label for="middleName" class="label"></label>
-                <input class="textField" type="text"
-                       id="middleName" name="middleName" placeholder="По батькові" value="middleName"/>
-            </div>
+                <div>
+                    <label for="name" class="label"></label>
+                    <input class="textField" type="text"
+                           id="name" name="name" placeholder="Ім'я" value="Name"/>
+                </div>
 
-            <div>
-                <label for="university" class="label"></label>
-                <input class="textField" type="text"
-                       id="university" name="university" placeholder="Університет" value="university"/>
-            </div>
+                <div>
+                    <label for="middleName" class="label"></label>
+                    <input class="textField" type="text"
+                           id="middleName" name="middleName" placeholder="По батькові" value="middleName"/>
+                </div>
 
-            <div>
-                <label for="institute" class="label"></label>
-                <input class="textField" type="text"
-                       id="institute" name="institute" placeholder="Інститут" value="Insitute"/>
-            </div>
+                <div>
+                    <label for="university" class="label"></label>
+                    <input class="textField" type="text"
+                           id="university" name="university" placeholder="Університет" value="university"/>
+                </div>
 
-            <div>
-                <label for="chair" class="label"></label>
-                <input class="textField" type="text"
-                       id="chair" name="chair" placeholder="Кафедра" value="Chair"/>
-            </div>
+                <div>
+                    <label for="institute" class="label"></label>
+                    <input class="textField" type="text"
+                           id="institute" name="institute" placeholder="Інститут" value="Insitute"/>
+                </div>
 
-            <div>
-                <label for="acadStatus" class="label"></label>
-                <select class="textField" id="acadStatus" name="acadStatus">
-                    <option value="" selected="selected" class="selected">Вчене звання</option>
-                    <option value="DOCENT">Доцент</option>
-                    <option value="RESEARCHER">Старший науковий співробітник</option>
-                    <option value="PROFESSOR">Професор</option>
-                </select>
-            </div>
+                <div>
+                    <label for="chair" class="label"></label>
+                    <input class="textField" type="text"
+                           id="chair" name="chair" placeholder="Кафедра" value="Chair"/>
+                </div>
 
-            <div>
-                <label for="sciDegree" class="label"></label>
-                <select class="textField" id="sciDegree" name="sciDegree">
-                    <option value="" selected="selected" id="selected">Науковий ступінь</option>
-                    <option value="CANDIDATE">Кандидат наук</option>
-                    <option value="DOCTOR">Доктор наук</option>
-                    <option value="PHD">Doctor of Philosophy</option>
-                </select>
-            </div>
+                <div>
+                    <label for="acadStatus" class="label"></label>
+                    <select class="textField" id="acadStatus" name="acadStatus">
+                        <option value="" selected="selected" class="selected">Вчене звання</option>
+                        <option value="DOCENT">Доцент</option>
+                        <option value="RESEARCHER">Старший науковий співробітник</option>
+                        <option value="PROFESSOR">Професор</option>
+                    </select>
+                </div>
 
-            <div>
-                <label for="position" class="label"></label>
-                <input class="textField" type="text"
-                       id="position" name="position" placeholder="Посада" value="Position"/>
-            </div>
+                <div>
+                    <label for="sciDegree" class="label"></label>
+                    <select class="textField" id="sciDegree" name="sciDegree">
+                        <option value="" selected="selected" id="selected">Науковий ступінь</option>
+                        <option value="CANDIDATE">Кандидат наук</option>
+                        <option value="DOCTOR">Доктор наук</option>
+                        <option value="PHD">Doctor of Philosophy</option>
+                    </select>
+                </div>
 
-            <div>
-                <label for="phone" class="label"></label>
-                <input class="textField" type="text"
-                       id="phone" name="phone" placeholder="Телефон"/>
-            </div>
+                <div>
+                    <label for="position" class="label"></label>
+                    <input class="textField" type="text"
+                           id="position" name="position" placeholder="Посада" value="Position"/>
+                </div>
 
-            <div>
-                <label for="username" class="label" require="true"></label>
-                <input class="textField" type="text"
-                       id="username" name="username" placeholder="Електронна адреса" value="user@com"/>
-            </div>
+                <div>
+                    <label for="phone" class="label"></label>
+                    <input class="textField" type="text"
+                           id="phone" name="phone" placeholder="Телефон"/>
+                </div>
 
-            <div>
-                <label for="password" class="label"></label>
-                <input class="textField" type="password" required="true"
-                       id="password" name="password" placeholder="Пароль" value="QwQw1212"/>
-            </div>
+                <div>
+                    <label for="username" class="label" require="true"></label>
+                    <input class="textField" type="text"
+                           id="username" name="username" placeholder="Електронна адреса" value="user@com"/>
+                </div>
 
-            <div>
-                <label for="passwordConfirm" class="label"></label>
-                <input class="textField" type="password" required="true" value="QwQw1212"
-                       id="passwordConfirm" name="passwordConfirm" placeholder="Підтвердження паролю"/>
-            </div>
-        </div>
+                <div>
+                    <label for="password" class="label"></label>
+                    <input class="textField" type="password" required="true"
+                           id="password" name="password" placeholder="Пароль" value="QwQw1212"/>
+                </div>
 
-        <div class="rightField">
-
-
-            <div>
-                <label for="keyWords" class="wordLabels">Наукові інтереси</label>
-                        <textarea class="textField" id="keyWords" name="keyWords"
-                                  placeholder="Введіть не більше 5-ти ключових слів."></textarea>
-            </div>
-
-            <div>
-                <label for="userSex" class="wordLabels">Стать</label>
-
-                <div class="radioButtons" id="userSex" name="userSex" data-required="false" data-type="group">
-                    <span><input type="radio" class="radioButtons" name="userSex" value="MALE">Чоловіча</span><br>
-                    <span><input type="radio" class="radioButtons" name="userSex" value="FEMALE">Жіноча  </span>
+                <div>
+                    <label for="passwordConfirm" class="label"></label>
+                    <input class="textField" type="password" required="true" value="QwQw1212"
+                           id="passwordConfirm" name="passwordConfirm" placeholder="Підтвердження паролю"/>
                 </div>
             </div>
 
-            <div class="messageField">
-                <p id="regErrorMessage" class="regMessage" name="message">
-                    <c:if test="${message!=null}">
-                        <c:out value="${message}"/>
-                    </c:if>
-                </p>
+            <div class="rightField">
+
+
+                <div>
+                    <label for="keyWords" class="wordLabels">Наукові інтереси</label>
+                            <textarea class="textField" id="keyWords" name="keyWords"
+                                      placeholder="Введіть не більше 5-ти ключових слів."></textarea>
+                </div>
+
+                <div>
+                    <label for="userSex" class="wordLabels">Стать</label>
+
+                    <div class="radioButtons" id="userSex" name="userSex" data-required="false" data-type="group">
+                        <span><input type="radio" class="radioButtons" name="userSex" value="MALE">Чоловіча</span><br>
+                        <span><input type="radio" class="radioButtons" name="userSex" value="FEMALE">Жіноча  </span>
+                    </div>
+                </div>
+
+                <div class="messageField">
+                    <p id="regErrorMessage" class="regMessage" name="message">
+                        <c:if test="${message!=null}">
+                            <c:out value="${message}"/>
+                        </c:if>
+                    </p>
+                </div>
+
+                <div class="adminCheck">
+                    <input class="adminChBox" type="checkbox" id="adminChBox" name="adminChBox" value="Administrator">Адміністратор</input>
+                </div>
+                <input class="button" id="regBtn" type="button" value="Зареєструватись"/>
             </div>
-
-            <div class="adminCheck">
-                <input class="adminChBox" type="checkbox" id="adminChBox" name="adminChBox" value="Administrator">Адміністратор</input>
+        </form>
+        <form id="fileForm" class="fileForm">
+            <div>
+                <label id="newImgContainer" for="photo" class="photoFrame">
+                    <img src="../images/noPhotoMan.png">
+                </label>
+                <input type="file" class="photoAddress" id="photo" name="file" accept="image/*">
+                <button id="btnUpload" class="button" type="button">Завантажити фото</button>
+                <button id="btnClear" class="button" type="button">Очистити</button>
             </div>
-            <input class="button" id="regBtn" type="button" value="Зареєструватись"/>
-        </div>
-    </form>
-    <form id="fileForm" class="fileForm">
-        <div>
-            <label id="newImgContainer" for="photo" class="photoFrame">
-                <img src="../images/noPhotoMan.png">
-            </label>
-            <input type="file" class="photoAddress" id="photo" name="file" accept="image/*">
-            <button id="btnUpload" class="button" type="button">Завантажити фото</button>
-            <button id="btnClear" class="button" type="button">Очистити</button>
-        </div>
-    </form>
+        </form>
+    </div>
+
+    <div class="regInf" id="regInf">
+        <p>Особисту інформацію можна буде доповнити або змінити в налаштуваннях профілю.</p>
+    </div>
+
 </div>
-
-
-<div class="regInf" id="regInf">
-    <p>Облікові дані можна буде доповнити або змінити в налаштуваннях профілю.</p>
+<div id="message">
+    На вашу електронну адресу було відправлено повідомлення.
+    Для завершення реєстрації перейдійть за надісланим листом посиланням.
 </div>
-
 
 <div class="clearfix colelem" id="footer"><!-- column -->
     <div class="clearfix colelem" id="footerUniversityInform"><!-- content -->

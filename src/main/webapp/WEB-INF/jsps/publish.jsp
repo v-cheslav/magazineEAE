@@ -19,8 +19,6 @@
     <!-- Other scripts -->
     <script src="../../js/jquery-1.11.2.min.js"></script>
     <script src="../../js/jquery.validate.min.js"></script>
-    <%--<script src="../../js/publishArticle.js" type="text/javascript"></script>--%>
-    <%--<script src="../../js/publishSeminar.js" type="text/javascript"></script>--%>
     <script src="../../js/publish.js" type="text/javascript"></script>
 
 

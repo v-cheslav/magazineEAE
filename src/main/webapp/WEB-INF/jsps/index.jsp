@@ -116,14 +116,6 @@
                         </ul>
                     </div>
                 </li>
-                <li>
-                    <div class="menuHeader" id="scheduleMenuHeader">
-                        <p>Розклад семінарів</p>
-                    </div>
-                    <div class="menuContent" id="scheduleMenuContent">
-                        <p>&nbsp;</p>
-                    </div>
-                </li>
             </ul>
         </div>
     </div>

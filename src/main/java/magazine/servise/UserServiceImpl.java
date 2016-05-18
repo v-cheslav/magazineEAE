@@ -152,7 +152,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User getUserByUserName(String userName) {
-        return userDao.findByUsername(userName).get(0);
+    public User getUserByUserName(String userName) throws UsernameNotFoundException{
+        try {
+            return userDao.findByUsername(userName).get(0);
+        } catch (IndexOutOfBoundsException ex){
+            throw  new UsernameNotFoundException("Користувача " + userName + "не знайдено.");
+        }
     }
 }

@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    $('#message').hide();
 
     $('#registrationForm').validate({
         rules: {
@@ -64,7 +65,9 @@ function addUser(){
             success: function (data) {
                 var message = $('#regErrorMessage');
                 if (data =="OK"){
-                    window.location.href = '/login'
+                    $('#regContent').hide();
+                    $('#message').show();
+                    //window.location.href = '/login'
                 } else {
                     message.html(data);
                 };

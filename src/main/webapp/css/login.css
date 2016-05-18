@@ -41,7 +41,7 @@
 
 .loginForm {
     float: left;
-    margin-left: 280px;
+    margin-left: 180px;
 }
 .login, .password {
     margin: 10px;
@@ -110,4 +110,18 @@
 }
 .button {
     margin: 10px;
+}
+
+.contentRight {
+    margin-top: 25px;
+}
+
+#remindPassword {
+    margin-top: 32px;
+    color: blue;
+    cursor: pointer;
+}
+
+#remindPassword:hover {
+    text-decoration: underline;
 }

@@ -62,7 +62,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> findByUsername(String username) {
-            return sessionFactory.getCurrentSession()
+        return sessionFactory.getCurrentSession()
                     .createCriteria(User.class)
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .add(Restrictions.eq("username", username))
