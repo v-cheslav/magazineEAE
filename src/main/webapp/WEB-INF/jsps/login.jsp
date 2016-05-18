@@ -15,10 +15,6 @@
     <!-- Other scripts -->
     <script src="../../js/jquery-1.11.2.min.js"></script>
     <script src="../../js/login.js"></script>
-
-    <%--<script src="../../js/jquery.validate.min.js"></script>--%>
-    <%--<script src="../../js/jquery.ajax.upload.js"></script>--%>
-    <%--<script src="../../js/siteGlobal.js"></script>--%>
     <script src="../../js/registration.js" type="text/javascript"></script>
 </head>
 <body>
@@ -42,12 +38,7 @@
         <div class="bannerBottom">
             <div class="instituteLogo"></div>
             <h3 class="instituteHeaderName">ННІ Енергетики, автоматики <br>і енергозбереження</h3>
-            <a href="advancedSearch.html" class="menuButton" id="searchingButton">Розширений</a>
-
-            <form class="searchingForm" id="searchingForm">
-                <div class="searchingSign"></div>
-                <input class="searchingArea" type="text" id="searchingTxt" name="customSearch"/>
-            </form>
+            <a href="advancedSearch.html" class="menuButton" id="searchingButton">Пошук</a>
         </div>
     </div>
     <hr class="horizontalLine">
@@ -59,7 +50,7 @@
             <p id="titleText">Увійдіть використовуючи електронну пошту та пароль!</p>
         </h3>
 
-        <c:if test="${SPRING_SECURITY_LAST_EXCEPTION != null}"> <%--<!-- ${not empty error} -->--%>
+        <c:if test="${SPRING_SECURITY_LAST_EXCEPTION != null}">
             <div class="errorBlock">
                 Помилка авторизації.
                 <br/> Причина:

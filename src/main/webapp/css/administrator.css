@@ -1,5 +1,6 @@
 .leftPanel {
     float: left;
+    margin-bottom: 20px;
 }
 
 .menuHeader {
@@ -27,11 +28,6 @@
 
 }
 
-
-.menuContent {
-    width: 226px;
-}
-
 .accordionMenuWrapper {
     min-height: 307px;
     margin-top: 10px;
@@ -50,6 +46,10 @@
 .accordionMenuWrapper ul li .menuContent {
     width: 226px;
     /*margin-top: 0px;*/
+}
+
+.menuContent {
+    padding-bottom: 15px;
 }
 
 .menuContent ul li:hover {
@@ -74,7 +74,7 @@
     margin-left: 10px;
 }
 .contentContainer {
-    margin-top: 20px;
+    /*margin-top: 20px;/*/
 }
 
 #information .mainContentHeader, .contentContainer  .mainContentHeader {
@@ -83,16 +83,17 @@
 
 #information .menuContent, .contentContainer .menuContent {
     width: 731px;
-    min-height: 0px;
+    height: auto
 }
 
 .innerContent .mainContentHeader {
     margin-top: 10px;
     width: 740px;
 }
-.innerContent .menuContent {
-    width: 731px;
-}
+
+/*.innerContent .menuContent {*/
+    /*width: 731px;*/
+/*}*/
 
 .innerHeader {
     width: 753px;
@@ -196,7 +197,9 @@
 }
 
 
-
+#deleteUserBtn{
+    margin: 10px;
+}
 
 
 .error {

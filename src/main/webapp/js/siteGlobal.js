@@ -14,4 +14,11 @@ $(document).ready(function() {
     if ($("#currentDate") != null) {
         document.getElementById('currentDate').innerHTML = localDate;
     }
+
+    $('#searchingForm').click(function(){
+        alert("search");
+    });
+
 });
+
+

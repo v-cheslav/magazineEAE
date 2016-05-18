@@ -273,7 +273,7 @@ body {
 }
 
 #searchingButton {
-    width: auto;
+    width: 80px;
     height: 18px;
     margin: 60px 15px 0px 0px;
     padding: 4px;
@@ -326,6 +326,7 @@ body {
 .leftSideBar {
     float: left;
     width: 295px;
+    margin-bottom: 20px;
 }
 
 .leftButtonsMenu {
@@ -431,7 +432,6 @@ table, thead, tr, th, tbody, td {
     color: #4A4A4A;
     font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     padding-left: 20px;
-    margin-bottom: 20px;
 }
 
 

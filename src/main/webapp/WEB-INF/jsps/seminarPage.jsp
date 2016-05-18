@@ -76,12 +76,7 @@
             <div id="articleNameHeader">
                 ${seminar.seminarName}
             </div>
-            <a href="advancedSearch.html" class="menuButton" id="searchingButton">Розширений</a>
-
-            <form class="searchingForm" id="searchingForm">
-                <div class="searchingSign"></div>
-                <input class="searchingArea" type="text" id="searchingTxt" name="customSearch"/>
-            </form>
+            <a href="advancedSearch.html" class="menuButton" id="searchingButton">Пошук</a>
         </div>
     </div>
     <hr class="horizontalLine">

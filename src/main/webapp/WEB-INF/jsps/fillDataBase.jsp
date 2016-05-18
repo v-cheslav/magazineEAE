@@ -57,11 +57,6 @@
         <div class="bannerBottom">
             <div class="instituteLogo"></div>
             <h3 class="instituteHeaderName">ННІ Енергетики, автоматики <br>і енергозбереження</h3>
-            <a href="advancedSearch.html" class="menuButton" id="searchingButton">Розширений</a>
-            <form class="searchingForm" id="searchingForm">
-                <div class="searchingSign"></div>
-                <input class="searchingArea" type="text" id="searchingTxt" name="customSearch"/>
-            </form>
         </div>
     </div>
     <hr class="horizontalLine">

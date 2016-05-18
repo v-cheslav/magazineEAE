@@ -68,11 +68,7 @@
         <div class="bannerBottom">
             <div class="instituteLogo"></div>
             <h3 class="instituteHeaderName">ННІ Енергетики, автоматики <br>і енергозбереження</h3>
-            <a href="advancedSearch.html" class="menuButton" id="searchingButton">Розширений</a>
-            <form class="searchingForm" id="searchingForm">
-                <div class="searchingSign"></div>
-                <input class="searchingArea" type="text" id="searchingTxt" name="customSearch"/>
-            </form>
+            <a href="advancedSearch.html" class="menuButton" id="searchingButton">Пошук</a>
         </div>
     </div>
     <hr class="horizontalLine">
@@ -89,33 +85,15 @@
             <ul class="accordionMenu">
                 <li>
                     <div class="menuHeader" id="sectionsMenuHeader">
-                        <p>Рубрики</p>
+                        <p>Інформація</p>
                     </div>
                     <div class="menuContent" id="sectionsMenuContent">
                         <ul class="leftMenuList">
-                            <li id="automationSection">Автоматика та робототехнічні системи</li>
-                            <li id="exploitationSection">Експлуатація електрообладнання</li>
-                            <li id="machinesSection">Електричні машини</li>
-                            <li id="supplyingSection">Електропостачання</li>
-                            <li id="drivingsSection">Електропривід</li>
-                            <li id="mathematicsSection">Математика</li>
-                            <li id="heatEnergySection">Теплоенергетика</li>
-                            <li id="physicsSection">Фізика</li>
-                            <li id="allSections">Всі секції</li>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                         </ul>
                     </div>
                 </li>
-                <li>
-                    <div class="menuHeader" id="publishMenuHeader">
-                        <p>Опублікувати</p>
-                    </div>
-                    <div class="menuContent" id="publishMenuContent">
-                        <ul class="leftMenuList">
-                            <li id="publishArticle">Статтю</li>
-                            <li id="publishSeminar">Доповідь семінару</li>
-                        </ul>
-                    </div>
-                </li>
+
             </ul>
         </div>
     </div>
