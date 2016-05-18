@@ -90,11 +90,11 @@ public class AdministratorController {
     }
 
 
-//    @RequestMapping(value = "/fillDataBase", method = RequestMethod.GET)
-//    public String superAdminPage(ModelMap map) {
-//        log.info("/fillDataBase controller");
-//        return "fillDataBase";
-//    }
+    @RequestMapping(value = "/fillDataBase", method = RequestMethod.GET)
+    public String superAdminPage(ModelMap map) {
+        log.info("/fillDataBase controller");
+        return "fillDataBase";
+    }
 
 
 
