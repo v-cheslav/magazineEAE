@@ -120,7 +120,7 @@
                 <c:if test="${article != null}">
                     <p>
                         Заявка на публікацію статті
-                        "<c:out value="${article.articleName}"/>"
+                        "<c:out value="${article.publicationName}"/>"
                         прийнята.
                     </p>
 
@@ -173,8 +173,8 @@
                     <p>
                         Вам надійшла заявка на рецензування статті:<br>
                         <c:forEach var="review" items="${reviews}">
-                            <a href="articlePage?articleId=${review.article.articleId}">
-                                <c:out value="${review.article.articleName}"/> <%--todo--%>
+                            <a href="articlePage?publicationId=${review.article.id}">
+                                <c:out value="${review.article.publicationName}"/> <%--todo--%>
                             </a>
                             <br>
                         </c:forEach>

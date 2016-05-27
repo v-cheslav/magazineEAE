@@ -134,8 +134,8 @@
                     <p>Надійшли заявки на часть в семінарі:</p>
                     <c:forEach var="seminar" items="${applyiedSeminars}">
                         <span>від ${seminar.user.toString()}</span>
-                        <span>на тему "${seminar.seminarName}".</span>
-                        <span>Заявлена дата: ${seminar.seminarDateToString()}</span>
+                        <span>на тему "${seminar.publicationName}".</span>
+                        <span>Заявлена дата: ${seminar.publicationDateToString()}</span>
                         <br>
                     </c:forEach>
                 </div>
@@ -161,7 +161,7 @@
                             <select class="textField" id="chooseSeminarName">
                                 <option value="" selected="selected"  class="selected">Виберіть семінар зі списку</option>
                                 <c:forEach var="seminar" items="${applyiedSeminars}">
-                                    <option name="selectedName" value="${seminar.seminarId}">${seminar.seminarName}</option>
+                                    <option name="selectedName" value="${seminar.id}">${seminar.publicationName}</option>
                                 </c:forEach>
                             </select>
                         </div>

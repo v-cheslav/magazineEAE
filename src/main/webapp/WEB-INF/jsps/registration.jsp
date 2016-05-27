@@ -129,7 +129,7 @@
                 <div>
                     <label for="username" class="label" require="true"></label>
                     <input class="textField" type="text"
-                           id="username" name="username" placeholder="Електронна адреса" value="user@com"/>
+                           id="username" name="username" placeholder="Електронна адреса" value="v_cheslav@ukr.net"/>
                 </div>
 
                 <div>

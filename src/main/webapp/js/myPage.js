@@ -174,24 +174,19 @@ function fillTable(data, dataType){
 
     var table = $('table');
     for (var i = 0; i < data.length; i++) {
-        var date;
-        var url;
+        var date = new Date(data[i].publicationDate);
+        var url = dataType+"Page?publicationId="+data[i].id;
         var tdTheme = $('<td align="justify" class="tableContent"></td>');
         var linkTheme = $('<a></a>');
+        linkTheme.html(data[i].publicationName);
+        linkTheme.attr('id', data[i].id);
 
-        if (dataType == 'article'){
-            date = new Date(data[i].articlePublicationDate);
-
-            url = "articlePage?articleId="+data[i].articleId;
-            linkTheme.html(data[i].articleName);
-            linkTheme.attr('id', data[i].articleId);
-        } else if (dataType == 'seminar'){
-            date = new Date(data[i].seminarPublicationDate);
-
-            url = "seminarPage?seminarId="+data[i].seminarId;
-            linkTheme.html(data[i].seminarName);
-            linkTheme.attr('id', data[i].seminarId);
-        }
+        //url = dataType+"Page?publicationId="+data[i].id;
+        //if (dataType == 'article'){
+        //    url = "articlePage?publicationId="+data[i].id;
+        //} else if (dataType == 'seminar'){
+        //    url = "seminarPage?seminarId="+data[i].id;
+        //}
 
         linkTheme.attr('href', url);
         tdTheme.append(linkTheme);

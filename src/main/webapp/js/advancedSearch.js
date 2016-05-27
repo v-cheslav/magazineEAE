@@ -35,13 +35,17 @@ function advancedSearch(){
                 clearContent("errorMessage");
                 if (data[0] == null){
                     $("#errorMessage").html("За даними критеріями пошуку нічого не знайдено!");
-                }
-                if (data[0].articleId != -1){
+                } else {
                     var dataType = 'article';
                     fillTable(data, dataType);
-                } else {
-                    $("#errorMessage").html(data[0].articleName);
                 }
+                //if (data[0].id != -1){
+                //
+                //    var dataType = 'article';
+                //    fillTable(data, dataType);
+                //} else {
+                //    $("#errorMessage").html(data[0].publicationName);
+                //}
             },
             error: function (xhr, status, errorThrown) {
                 alert('Виникла помилка: ' + status + ". " + errorThrown);
@@ -69,13 +73,16 @@ function advancedSearch(){
                 clearContent("errorMessage");
                 if (data[0] == null){
                     $("#errorMessage").html("За даними критеріями пошуку нічого не знайдено!");
-                }
-                if (data[0].seminarId != -1){
+                } else {
                     var dataType = 'seminar';
                     fillTable(data, dataType);
-                } else {
-                    $("#errorMessage").html(data[0].seminarName);
                 }
+                //if (data[0].id != -1){
+                //    var dataType = 'seminar';
+                //    fillTable(data, dataType);
+                //} else {
+                //    $("#errorMessage").html(data[0].seminarName);
+                //}
             },
             error: function (xhr, status, errorThrown) {
                 alert('Виникла помилка: ' + status + ". " + errorThrown);
@@ -98,33 +105,15 @@ function advancedSearch(){
                 clearContent("errorMessage");
                 if (data[0] == null){
                     $("#errorMessage").html("За даними критеріями пошуку нічого не знайдено!");
-                }
-                if (data[0].userId != -1){
-                    var listContent = $('#listContent');
-                    var userListContent = $('<ol></ol>');
-                    for (var i = 0; i < data.length; i++) {
-                        var userList = $('<li class="userListContent"></li>');
-                        var linkAuthor = $('<a></a>');
-                        var userUrl = "authorPage?authorId=" + data[i].userId;
-                        linkAuthor.attr('href', userUrl);
-                        linkAuthor.attr('id', data[i].userId);
-                        linkAuthor.attr('authorId', data[i].userId);
-                        linkAuthor.html(data[i].surname + ', ' + data[i].name + ', ' + data[i].middleName);
-                        var university = $('<span></span>');
-                        if (data[i].university != null){
-                            university.html(' ' + data[i].university);
-                        }
-                        var institute = $('<span></span>');
-                        if (data[i].institute != null){
-                            institute.html(' ' + data[i].institute);
-                        }
-                        userList.append(linkAuthor).append(university).append(institute);
-                        userListContent.append(userList)
-                    }
-                    listContent.append(userListContent);
                 } else {
-                    $("#errorMessage").html(data[0].userName);
+                    fillTableByUsers(data);
                 }
+                //if (data[0].userId != -1){
+                //    fillTableByUsers(data);
+                //
+                //} else {
+                //    $("#errorMessage").html(data[0].userName);
+                //}
             },
             error: function (xhr, status, errorThrown) {
                 alert('Виникла помилка: ' + status + ". " + errorThrown);
@@ -141,26 +130,20 @@ function fillTable(data, dataType){
         month: 'long',
         day: 'numeric'
     };
-
     var table = $('table');
-
     for (var i = 0; i < data.length; i++) {
-        var date;
-        var url;
+        var date = new Date(data[i].publicationDate);
+        var url = dataType+"Page?publicationId="+data[i].id;
         var tdTheme = $('<td align="justify" class="tableContent"></td>');
         var linkTheme = $('<a></a>');
+        linkTheme.html(data[i].publicationName);
+        linkTheme.attr('id', data[i].id);
 
-        if (dataType == 'article'){
-            date = new Date(data[i].articlePublicationDate);
-            url = "articlePage?articleId="+data[i].articleId;
-            linkTheme.html(data[i].articleName);
-            linkTheme.attr('id', data[i].articleId);
-        } else if (dataType == 'seminar'){
-            date = new Date(data[i].seminarPublicationDate);
-            url = "seminarPage?seminarId="+data[i].seminarId;
-            linkTheme.html(data[i].seminarName);
-            linkTheme.attr('id', data[i].seminarId);
-        }
+        //if (dataType == 'article'){
+        //    url = "articlePage?publicationId="+data[i].id;
+        //} else if (dataType == 'seminar'){
+        //    url = "seminarPage?seminarId="+data[i].id;
+        //}
 
         linkTheme.attr('href', url);
         tdTheme.append(linkTheme);
@@ -185,6 +168,31 @@ function fillTable(data, dataType){
         row.append(tdNumber).append(tdPublishDate).append(tdAuthor).append(tdTheme);
         table.append(row);
     }
+};
+
+function fillTableByUsers(data){
+    var listContent = $('#listContent');
+    var userListContent = $('<ol></ol>');
+    for (var i = 0; i < data.length; i++) {
+        var userList = $('<li class="userListContent"></li>');
+        var linkAuthor = $('<a></a>');
+        var userUrl = "authorPage?authorId=" + data[i].userId;
+        linkAuthor.attr('href', userUrl);
+        linkAuthor.attr('id', data[i].userId);
+        linkAuthor.attr('authorId', data[i].userId);
+        linkAuthor.html(data[i].surname + ', ' + data[i].name + ', ' + data[i].middleName);
+        var university = $('<span></span>');
+        if (data[i].university != null){
+            university.html(' ' + data[i].university);
+        }
+        var institute = $('<span></span>');
+        if (data[i].institute != null){
+            institute.html(' ' + data[i].institute);
+        }
+        userList.append(linkAuthor).append(university).append(institute);
+        userListContent.append(userList)
+    }
+    listContent.append(userListContent);
 };
 
 function setSearchParameters(){

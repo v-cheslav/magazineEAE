@@ -117,13 +117,13 @@ public class RegistrationServiceImpl implements RegistrationService {
              * (якщо так, то пароль реєстрації має співпадати із зазначеним у properties файлі).
              */
             if (adminRole.equals("Administrator")){
+                if(!password.equals(adminPassword)){
+                    throw new RegistrationException("Ви не маєте права реєструватись як адміністратор!");
+                }
                 UserRole superAdmin = userRoleDao.getUserRole(ListRole.SUPERADMIN);
                 UserRole admin = userRoleDao.getUserRole(ListRole.ADMIN);
                 userRoles.add(admin);
                 userRoles.add(superAdmin);
-                if(!password.equals(adminPassword)){
-                    throw new RegistrationException("Ви не маєте права реєструватись як адміністратор!");
-                }
             }
             UserRole userRole = userRoleDao.getUserRole(ListRole.USER);
             userRoles.add(userRole);
@@ -186,7 +186,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             Integer random = 1111 + (int)(Math.random() * ((9999 - 1111) + 1));
             user.setRestoreCode(random);
 
-            String receiver = "v_cheslav@ukr.net";
+            String receiver = username;
             String regCode = random.toString();
             String message = "Ви реєструвались в журналі Енергетика, автоматика і енергозбереження."
                     + "<br> для підтердження реєстрації перейдіть за посиланням "

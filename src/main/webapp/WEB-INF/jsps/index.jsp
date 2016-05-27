@@ -39,6 +39,7 @@
     <div class="banner">
         <div class="bannerTop">
             <h3 class="headerUniversityName">Національний університет біоресурсів і природокористування України</h3>
+
             <div class="authForm" id="authForm">
                 <sec:authorize access="isAnonymous()">
                     <p>
@@ -89,7 +90,11 @@
                     </div>
                     <div class="menuContent" id="sectionsMenuContent">
                         <ul class="leftMenuList">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+                            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+                            cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                         </ul>
                     </div>
                 </li>
@@ -97,95 +102,93 @@
             </ul>
         </div>
     </div>
-        <div class="mainContent">
-            <div class="mainContentHeader"<%-- id="mainContentHeader"--%>>
-                <h2 <%--id="mainContentHeader"--%>>Останні публікації</h2>
-            </div>
-            <c:if test="${message != null}">
-                <c:out value="${message}"></c:out>
-            </c:if>
+    <div class="mainContent">
+        <div class="mainContentHeader">
+            <h2>Останні публікації</h2>
+        </div>
+        <c:if test="${message != null}">
+            <c:out value="${message}"></c:out>
+        </c:if>
 
-            <c:if test="${articles != null}">
-                <c:set var="count" value="${articles.size()-1}"/>
-                <c:forEach var="i" begin="0" end="${count}">
-                    <div class="article">
+        <c:if test="${articles != null}">
+            <c:set var="count" value="${articles.size()-1}"/>
+            <c:forEach var="i" begin="0" end="${count}">
+                <div class="article">
 
-                        <div class="articleName">
-                            <a href="/articlePage?articleId=${articles.get(i).articleId}">
-                                <c:out value="${articles.get(i).articleName}"/>
-                            </a>
-                        </div>
-
-                        <div class="articlePubDate">
-                            <c:out value="${articles.get(i).articleDateToString()}"/>
-                        </div>
-
-                        <c:forEach var="annotation" items="${annotations.get(i)}">
-                            <div class="annotation">
-                                    ${annotation}
-                            </div>
-                        </c:forEach>
-
-                        <div class="articleAuthor">
-                            <a href="/authorPage?authorId=${articles.get(i).user.userId}">
-                                <c:out value="${articles.get(i).user.toString()}"/>
-                            </a>
-                        </div>
-
+                    <div class="articleName">
+                        <a href="/articlePage?publicationId=${articles.get(i).id}">
+                            <c:out value="${articles.get(i).publicationName}"/>
+                        </a>
                     </div>
-                </c:forEach>
-            </c:if>
 
+                    <div class="articlePubDate">
+                        <c:out value="${articles.get(i).publicationDateToString()}"/>
+                    </div>
+
+                    <c:forEach var="annotation" items="${annotations.get(i)}">
+                        <div class="annotation">
+                                ${annotation}
+                        </div>
+                    </c:forEach>
+
+                    <div class="articleAuthor">
+                        <a href="/authorPage?authorId=${articles.get(i).user.userId}">
+                            <c:out value="${articles.get(i).user.toString()}"/>
+                        </a>
+                    </div>
+
+                </div>
+            </c:forEach>
+        </c:if>
+    </div>
+
+    <c:if test="${nearestSeminars != null}">
+
+        <div class="rightPanel">
+            <div class="menuHeader">
+                <p>Найближчий семінар відбудеться: <br/>
+                    <c:out value="${nearestSeminars.get(0).publicationDateToString()}"/>
+                </p>
+            </div>
+
+            <div class="menuContent">
+
+                <div>
+                    <p class="seminars">Доповідають:</p>
+                    <c:forEach var="nearestSeminar" items="${nearestSeminars}">
+                        <div class="seminar">
+                            <p class="nearestSeminarUser">
+                                <c:if test="${nearestSeminar.user != null}">
+                                    <a href="/authorPage?authorId=${nearestSeminar.user.userId}">
+                                        <c:out value="${nearestSeminar.user.toString()}"/>
+                                    </a>
+                                </c:if>
+                                <c:if test="${nearestSeminar.user == null}">
+                                    <c:out value="${nearestSeminar.unRegUserName}"/>
+                                </c:if>
+                            </p>
+
+                            <p class="theme">Тема доповіді:</p>
+
+                            <p class="nearestSeminarName">
+                                "${nearestSeminar.publicationName}"</p><%--todo зробити перевірку на дату другого доповідача--%>
+                        </div>
+                    </c:forEach>
+                </div>
+            </div>
 
         </div>
-
-        <c:if test="${nearestSeminars != null}">
-
-            <div class="rightPanel">
-                <div class="menuHeader">
-                    <p>Найближчий семінар відбудеться: <br/>
-                        <c:out value="${nearestSeminars.get(0).seminarDateToString()}"/>
-                    </p>
-                </div>
-
-                <div class="menuContent">
-
-                    <div>
-                        <p class="seminars">Доповідають:</p>
-                        <c:forEach var="nearestSeminar" items="${nearestSeminars}">
-                            <div class="seminar">
-                                <p class="nearestSeminarUser">
-                                    <c:if test="${nearestSeminar.user != null}">
-                                        <a href="/authorPage?authorId=${nearestSeminar.user.userId}">
-                                            <c:out value="${nearestSeminar.user.toString()}"/>
-                                        </a>
-                                    </c:if>
-                                    <c:if test="${nearestSeminar.user == null}">
-                                        <c:out value="${nearestSeminar.unRegUserName}"/>
-                                    </c:if>
-                                </p>
-
-                                <p class="theme">Тема доповіді:</p>
-
-                                <p class="nearestSeminarName">
-                                    "${nearestSeminar.seminarName}"</p><%--todo зробити перевірку на дату другого доповідача--%>
-                            </div>
-                        </c:forEach>
-                    </div>
-                </div>
-
-            </div>
-        </c:if>
-        <c:if test="${nearestSeminars == null}">
-            <script>
-                $('.mainContentHeader').css({
-                    "width":      "749px"
-                });
-                $('.article').css({
-                    "width":      "729px"
-                });
-            </script>
-        </c:if>
+    </c:if>
+    <c:if test="${nearestSeminars == null}">
+        <script>
+            $('.mainContentHeader').css({
+                "width": "749px"
+            });
+            $('.article').css({
+                "width": "729px"
+            });
+        </script>
+    </c:if>
 </div>
 
 

@@ -77,6 +77,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void setReview(User user, String reviewJson) throws ReviewCreationException{
+        log.info("setReview method");
         JSONParser parser = new JSONParser();
         Object obj = null;
         try {
@@ -84,16 +85,17 @@ public class ReviewServiceImpl implements ReviewService {
             JSONObject jsonObj = (JSONObject) obj;
             String reviewText = (String) jsonObj.get("review");
             Long articleId = (Long) jsonObj.get("articleId");
+
             Review review = reviewDao.findByUserAndArticleId(articleId, user);
 
             String fileName = "review" + review.getReviewId() + ".xml";
 
-            String articleAddress = review.getArticle().getArticleAddress();
+            String articleAddress = review.getArticle().getPublicationAddress();
             int lastIndex = articleAddress.lastIndexOf('/');
             String relativePath = articleAddress.substring(0, lastIndex+1) + fileName;
 //            String simplePath = relativePath.replaceAll("../../userResources/", "");
-
             String absolutePath = initialPath + "userArticles/" + relativePath;
+            System.out.println(absolutePath);
 
             try {
                 reviewWriter(reviewText, absolutePath);

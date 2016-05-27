@@ -3,11 +3,14 @@ package magazine.controller;
 
 
 import magazine.Exeptions.ArticleNotFoundException;
-import magazine.Exeptions.RegistrationException;
 import magazine.Exeptions.SeminarNotFoundException;
 import magazine.domain.*;
 import magazine.servise.*;
 import magazine.utils.Messenger;
+import magazine.utils.PasswordHelper;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -45,6 +48,9 @@ public class ApplicationController {
     @Autowired
     ReviewService reviewService;
 
+    @Autowired
+    PasswordHelper passwordHelper;
+
 
     @RequestMapping(value = {"/", "/index"}, method = {RequestMethod.GET, RequestMethod.HEAD})
     public String index(ModelMap map) {
@@ -66,6 +72,7 @@ public class ApplicationController {
                 annotations.add(annotationUa);
             }
         } catch (ArticleNotFoundException e){
+            log.info(e.getMessage());
             articles = null;
             annotations = null;
             message = e.getMessage();
@@ -95,7 +102,7 @@ public class ApplicationController {
             User user = (User) authentication.getPrincipal();
             map.addAttribute("userDetails", user);
         }
-        return "publication";
+        return "articles";
     }
 
     @RequestMapping(value = "/seminar", method = {RequestMethod.GET})
@@ -140,11 +147,11 @@ public class ApplicationController {
             try {
                 Seminar seminar = seminarService.findAnnouncedByUser(user);
                 if (seminar != null) {
-                    Calendar calendar = seminar.getSeminarPublicationDate();
+                    Calendar calendar = seminar.getPublicationDate();
                     DateFormat sdr = new SimpleDateFormat("dd.MM.yyyy");
                     String seminarMessage = sdr.format(calendar.getTime()) +
                             " Ви берете участь в семінарі на тему: \n" +
-                            seminar.getSeminarName();
+                            seminar.getPublicationName();
                     map.addAttribute("seminarMessage", seminarMessage);
                 }
 
@@ -177,11 +184,11 @@ public class ApplicationController {
             try {
                 Seminar seminar = seminarService.findAnnouncedByUser(user);
                 if (seminar != null) {
-                    Calendar calendar = seminar.getSeminarPublicationDate();
+                    Calendar calendar = seminar.getPublicationDate();
                     DateFormat sdr = new SimpleDateFormat("dd.MM.yyyy");
                     String seminarMessage = sdr.format(calendar.getTime()) +
                             " Ви берете участь в семінарі на тему: \n" +
-                            seminar.getSeminarName();
+                            seminar.getPublicationName();
                     map.addAttribute("seminarMessage", seminarMessage);
                 }
 
@@ -252,25 +259,26 @@ public class ApplicationController {
         }
         return "login";
     }
-    @RequestMapping(value = "/remindPassword", method = RequestMethod.POST)
-    public ResponseEntity<String> remindPassword(@RequestBody String email, Model map){
-        log.info("/remindPassword controller");
-        email = email.replaceAll("\"", "");
 
-        System.err.println("-"+email+"-");
+    @RequestMapping(value = "/sendRestoreInformation", method = RequestMethod.POST)
+    public ResponseEntity<String> sendRestoreInformation(@RequestBody String email, Model map){
+        log.info("/sendRestoreInformation controller");
+        email = email.replaceAll("\"", "");
 
         ResponseEntity<String> entity;
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "text/html; charset=utf-8");
         try {
             User user = userService.getUserByUserName(email);
-
             Messenger messenger = new Messenger();
 
-            String message = "Ви надіслали запит на відновлення парлю в журнал Енергетика, автоматика і енергозбереження."
-                    + "<br> Ваш пароль:" + user.getPassword()
+            Integer restoreCode = 1111 + (int)(Math.random() * ((9999 - 1111) + 1));
+            user.setRestoreCode(restoreCode);
+            userService.changeUser(user);
+
+            String message = "Ви надіслали запит на відновлення паролю в журнал Енергетика, автоматика і енергозбереження."
+                    + "<br> Ваш код для відновлення паролю: " + restoreCode
                     + "<br><br> Regards, Admin";
-            System.err.println(message);
 
         try {
             messenger.sendMessage(email, message);
@@ -288,4 +296,52 @@ public class ApplicationController {
         return entity;
     }
 
+
+    @RequestMapping(value = "/restorePassword", method = RequestMethod.POST)
+    public ResponseEntity<String> restorePassword(@RequestBody String restoreInformation){
+        log.info("/restorePassword controller");
+        ResponseEntity<String> entity;
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "text/html; charset=utf-8");
+        String errorMessage;
+
+        try {
+            JSONParser parser = new JSONParser();
+            Object obj = parser.parse(restoreInformation);
+            JSONObject jsonObj = (JSONObject) obj;
+
+            String email = (String) jsonObj.get("email");
+            String restoreCodeStr = (String) jsonObj.get("restoreCodeStr");
+            String newPassword = (String) jsonObj.get("newPassword");
+
+            try {
+                User user = userService.getUserByUserName(email);
+                Integer restoreCode = Integer.parseInt(restoreCodeStr);
+                System.err.println("restoreCode " + restoreCode);
+                System.err.println("user.getRestoreCode() " + user.getRestoreCode());
+
+                if (restoreCode.equals(user.getRestoreCode())) {
+                    String encodedPassword = passwordHelper.encode(newPassword);
+                    user.setPassword(encodedPassword);
+                    userService.changeUser(user);
+                    entity = new ResponseEntity<String>("OK", headers, HttpStatus.OK);
+                } else {
+                    entity = new ResponseEntity<String>("Невірні дані", headers, HttpStatus.OK);
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage());
+                entity = new ResponseEntity<String>(e.getMessage(), headers, HttpStatus.OK);
+            }
+        } catch (ParseException e) {
+            log.error(e.getMessage());
+            entity = new ResponseEntity<String>(e.getMessage(), headers, HttpStatus.OK);
+        }
+        return entity;
+    }
+
+    @RequestMapping(value = "/restorePasswordPage", method = {RequestMethod.GET})
+    public String restorePasswordPage(Model map) {
+        log.info("/restorePasswordPage controller");
+        return "restorePasswordPage";
+    }
 }

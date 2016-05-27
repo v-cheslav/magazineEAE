@@ -213,7 +213,6 @@ function addComment(publicationId, type) {
         seminarId = publicationId;
         articleId = null;
     }
-    alert ("articleId="+ articleId + "seminarId=" +seminarId)
     var commentJson = {
         articleId: articleId,
         seminarId: seminarId,

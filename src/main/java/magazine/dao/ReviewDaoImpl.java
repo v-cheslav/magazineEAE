@@ -56,7 +56,6 @@ public class ReviewDaoImpl implements ReviewDao {
 
     @Override
     public List<Review> findByUser(User user) {
-        System.out.println("finding by user " + user.toString());
         return sessionFactory.getCurrentSession()
                 .createCriteria(Review.class)
                 .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
@@ -73,7 +72,7 @@ public class ReviewDaoImpl implements ReviewDao {
                 .add(Restrictions.eq("user", user))
                 .createCriteria("article")
                 .add(Restrictions
-                        .eq("articleId", articleId))
+                        .eq("publicationId", articleId))
                 .uniqueResult();
     }
 

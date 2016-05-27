@@ -46,7 +46,7 @@ function fillTableByArticles(articles){
 
     var table = $('table');
     for (var i = 0; i < articles.length; i++) {
-        var date = new Date(articles[i].articlePublicationDate);
+        var date = new Date(articles[i].publicationDate);
         var row = $('<tr></tr>');
             var tdNumber = $('<td align="center" class="tableContent"></td>');
             tdNumber.html(i+1);
@@ -64,11 +64,11 @@ function fillTableByArticles(articles){
             tdAuthor.append(linkAuthor);
 
             var tdTheme = $('<td align="justify" class="tableContent"></td>');
-                var url = "articlePage?articleId="+articles[i].articleId;
+                var url = "articlePage?publicationId="+articles[i].id;
                 var linkTheme = $('<a></a>');
-                linkTheme.html(articles[i].articleName);
+                linkTheme.html(articles[i].publicationName);
                 linkTheme.attr('href', url);
-                linkTheme.attr('id', articles[i].articleId);
+                linkTheme.attr('id', articles[i].id);
             tdTheme.append(linkTheme);
 
         row.append(tdNumber).append(tdPublishDate).append(tdAuthor).append(tdTheme);

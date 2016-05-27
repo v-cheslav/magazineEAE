@@ -14,7 +14,6 @@
     <link rel="stylesheet" type="text/css" href="../../css/administrator.css"/>
     <!-- Other scripts -->
     <script src="../../js/jquery-1.11.2.min.js"></script>
-    <script src="../../js/siteGlobal.js"></script>
     <script src="../../js/fillDataBase.js" type="text/javascript"></script>
 </head>
 <body>

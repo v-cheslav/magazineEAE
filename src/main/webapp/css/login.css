@@ -89,6 +89,7 @@
     border-width: 1px;
     border-color: #7F7F7F;
     border-radius: 5px;
+    margin-bottom: 15px;
 }
 
 #regButton {
@@ -124,4 +125,22 @@
 
 #remindPassword:hover {
     text-decoration: underline;
+}
+
+.error{
+    color: red;
+    font-size: 14px;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+}
+
+.restoreMessage {
+    border: solid;
+    border-width: 1px;
+    border-color: #7F7F7F;
+    border-radius: 5px;
+    background: #FAF8F5;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+    font-size: 15px;
+    margin: 15px 10px;
+    padding: 10px;
 }

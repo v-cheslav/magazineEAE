@@ -4,15 +4,14 @@ $(document).ready(function(){
 
     fillSectionsHeader(chosenSection);
     getSeminars(chosenSection);
-    $('#sections').on('click', function() {
-            var currentSection = checkSections();
-            if (chosenSection != currentSection){
-                chosenSection = currentSection;
-                fillSectionsHeader(chosenSection);
-                getSeminars(chosenSection);
-            }
+    $('#sections').on('click', function () {
+        var currentSection = checkSections();
+        if (chosenSection != currentSection) {
+            chosenSection = currentSection;
+            fillSectionsHeader(chosenSection);
+            getSeminars(chosenSection);
+        }
     })
-
 });
 
 
@@ -51,7 +50,7 @@ function fillTableBySeminars(seminars){
         tdNumber.html(i+1);
 
         var tdPublishDate  = $('<td align="center" class="tableContent"></td>');
-        var date = new Date(seminars[i].seminarPublicationDate);
+        var date = new Date(seminars[i].publicationDate);
         tdPublishDate.html(date.toLocaleString("ua", options));
 
         var tdAuthor = $('<td align="center" class="tableContent"></td>');
@@ -59,10 +58,6 @@ function fillTableBySeminars(seminars){
         if (seminars[i].user == null){
             linkAuthor.html(seminars[i].unRegUserName);
         } else {
-            //linkAuthor = $('<a href="authorPage.html"></a>');
-            //linkAuthor.html(seminars[i].user.surname + ' ' + seminars[i].user.name + ' ' + seminars[i].user.middleName);
-            //linkAuthor.attr('id', seminars[i].user.userId);
-
             var userUrl = "authorPage?authorId="+seminars[i].user.userId;
             linkAuthor.attr('href', userUrl);
             linkAuthor.attr('isd', seminars[i].user.userId);
@@ -75,12 +70,12 @@ function fillTableBySeminars(seminars){
         var tdTheme  =$('<td align="justify" class="tableContent"></td>');
         var linkTheme = $('<a></a>');
         if (seminars[i].isPublished == true) {
-            var url = "seminarPage?seminarId="+seminars[i].seminarId;
+            var url = "seminarPage?publicationId="+seminars[i].id;
             linkTheme.attr('href', url);
 
         }
-        linkTheme.html(seminars[i].seminarName);
-        linkTheme.attr('id', seminars[i].seminarId);
+        linkTheme.html(seminars[i].publicationName);
+        linkTheme.attr('id', seminars[i].id);
         tdTheme.append(linkTheme);
 
         row.append(tdNumber).append(tdPublishDate).append(tdAuthor).append(tdTheme);

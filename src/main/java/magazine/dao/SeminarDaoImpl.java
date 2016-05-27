@@ -61,10 +61,9 @@ public class SeminarDaoImpl implements SeminarDao {
     public List<Seminar> findAll() {
         return sessionFactory.getCurrentSession()
                 .createCriteria(Seminar.class)
-                .addOrder(Order.desc("seminarPublicationDate"))
+                .addOrder(Order.desc("publicationDate"))
                 .list();
     }
-
 
     @Override
     public List<Seminar> findAllPublished() {
@@ -72,12 +71,9 @@ public class SeminarDaoImpl implements SeminarDao {
                 .createCriteria(Seminar.class)
                 .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                 .add(Restrictions.eq("isPublished", true))
-                .addOrder(Order.desc("seminarPublicationDate"))
+                .addOrder(Order.desc("publicationDate"))
                 .list();
     }
-
-
-
 
     @Override
     public List<Seminar> findAllAnnounced() {
@@ -85,7 +81,7 @@ public class SeminarDaoImpl implements SeminarDao {
                 .createCriteria(Seminar.class)
                 .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                 .add(Restrictions.eq("isPublished", false))
-                .addOrder(Order.desc("seminarPublicationDate"))
+                .addOrder(Order.desc("publicationDate"))
                 .list();
     }
 
@@ -94,7 +90,7 @@ public class SeminarDaoImpl implements SeminarDao {
         return sessionFactory.getCurrentSession()
                 .createCriteria(Seminar.class)
                 .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
-                .add(Restrictions.eq("seminarPublicationDate", date))
+                .add(Restrictions.eq("publicationDate", date))
 //                .addOrder(Order.desc("seminarPublicationDate"))
                 .list();
     }
@@ -105,8 +101,8 @@ public class SeminarDaoImpl implements SeminarDao {
                 .createCriteria(Seminar.class)
                 .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                 .add(Restrictions.eq("isPublished", false))
-                .add(Restrictions.eq("seminarPublicationDate", date))
-                .addOrder(Order.asc("seminarPublicationDate"))
+                .add(Restrictions.eq("publicationDate", date))
+                .addOrder(Order.asc("publicationDate"))
                 .list();
     }
 
@@ -117,8 +113,8 @@ public class SeminarDaoImpl implements SeminarDao {
                 .createCriteria(Seminar.class)
                 .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                 .add(Restrictions.eq("isPublished", false))
-                .add(Restrictions.ge("seminarPublicationDate", currentDate))
-                .addOrder(Order.asc("seminarPublicationDate"))
+                .add(Restrictions.ge("publicationDate", currentDate))
+                .addOrder(Order.asc("publicationDate"))
                 .setMaxResults(1)
                 .list();
         if (seminars.size() == 0){
@@ -143,8 +139,8 @@ public class SeminarDaoImpl implements SeminarDao {
                 .createCriteria(Seminar.class)
                 .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                 .add(Restrictions.eq("isPublished", false))
-                .add(Restrictions.eq("seminarName", seminarName))
-                .addOrder(Order.desc("seminarPublicationDate"))
+                .add(Restrictions.eq("publicationName", seminarName))
+                .addOrder(Order.desc("publicationDate"))
                 .uniqueResult();
     }
 
@@ -155,7 +151,7 @@ public class SeminarDaoImpl implements SeminarDao {
                 .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                 .add(Restrictions.eq("isPublished", false))
                 .add(Restrictions.eq("user", user))
-                .addOrder(Order.desc("seminarPublicationDate"))
+                .addOrder(Order.desc("publicationDate"))
                 .uniqueResult();
     }
 
@@ -182,11 +178,11 @@ public class SeminarDaoImpl implements SeminarDao {
         criteria.createAlias("user", "user");
 
         if (searchQueryMap.containsKey("dateFrom")){
-            criteria.add(Restrictions.ge("seminarPublicationDate", searchQueryMap.get("dateFrom")));
+            criteria.add(Restrictions.ge("publicationDate", searchQueryMap.get("dateFrom")));
         }
 
         if (searchQueryMap.containsKey("dateTo")){
-            criteria.add(Restrictions.le("seminarPublicationDate", searchQueryMap.get("dateTo")));
+            criteria.add(Restrictions.le("publicationDate", searchQueryMap.get("dateTo")));
         }
 
         if (searchQueryMap.containsKey("keyWords")){
@@ -196,7 +192,7 @@ public class SeminarDaoImpl implements SeminarDao {
         }
 
         if (searchQueryMap.containsKey("nameOfSeminar")) {
-            criteria.add(Restrictions.ilike("seminarName", "%" + searchQueryMap.get("nameOfSeminar") + "%"));
+            criteria.add(Restrictions.ilike("publicationName", "%" + searchQueryMap.get("nameOfSeminar") + "%"));
         }
 
 
@@ -216,10 +212,9 @@ public class SeminarDaoImpl implements SeminarDao {
         }
 
         criteria.add(Restrictions.eq("isPublished", true));
-//        criteria.add(Restrictions.isNotNull("user.userId"));//todo only published
 
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
-                .addOrder(Order.desc("seminarId"));
+                .addOrder(Order.desc("publicationId"));
 
         return criteria.list();
     }

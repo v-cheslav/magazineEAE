@@ -55,7 +55,7 @@
     <form id="presentationUploadForm" class="fileForm">
         <div id="presentationUploadingContent">
             <label id="presentationImgContainer" for="presentation" class="pickFile"></label>
-            <label id="pickPresentationLabel" for="presentation" class="pickFile <%--button--%>">Обрати файл
+            <label id="pickPresentationLabel" for="presentation" class="pickFile">Обрати файл
                 презентації</label>
             <input type="file" class="photoAddress" id="presentation" name="presentation">
             <button id="btnPresentationUpload" class="button" type="button">Завантажити</button>

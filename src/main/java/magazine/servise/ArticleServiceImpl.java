@@ -159,7 +159,7 @@ public class ArticleServiceImpl implements ArticleService {
 
             Article article = new Article();
 
-            article.setArticleName(articleName);
+            article.setPublicationName(articleName);
 
             int publicationNumber = currentUser.getPublicationNumber();
 
@@ -170,7 +170,7 @@ public class ArticleServiceImpl implements ArticleService {
                     + currentUser.getUserId() + "/"
                     + publicationNumber + "/";
 
-            article.setArticleAddress(/*"../../userResources/" +*/ articleRelativePath + fileName);
+            article.setPublicationAddress(/*"../../userResources/" +*/ articleRelativePath + fileName);
             currentUser.setPublicationNumber(++publicationNumber);
             userService.changeUser(currentUser);
             article.setUser(currentUser);
@@ -204,7 +204,7 @@ public class ArticleServiceImpl implements ArticleService {
             article.setArticleSection(articleSection);
 
             Calendar instance = Calendar.getInstance();//todo try to put here only date without time
-            article.setArticlePublicationDate(instance);
+            article.setPublicationDate(instance);
 
 
             articleLong = articleDao.create(article);

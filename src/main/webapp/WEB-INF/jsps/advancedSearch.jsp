@@ -165,16 +165,11 @@
                             <option value="PHYSIC">Фізика</option>
                         </select>
                     </div>
-
                     <div class="errorMessage" id="errorMessage">
                     </div>
-
                     <input type="button" class="button" onclick="advancedSearch()" value="Шукати">
                 </form>
-
-
             </div>
-
         </div>
     </div>
     <div class="mainContent">
@@ -182,7 +177,6 @@
         <div class="mainContentHeader" id="mainContentHeader">
             <h2>Статті</h2>
         </div>
-
 
         <div id="tables">
             <table border="1" align="center" width="98%" height="100%" class="innerTable" id="innerTable">
@@ -200,12 +194,7 @@
 
         <div id="listContent">
 
-
         </div>
-
-
-
-
     </div>
 
 

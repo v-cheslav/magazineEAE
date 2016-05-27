@@ -34,7 +34,7 @@
         <div class="bannerTop">
 
             <h3 class="headerPublishDateSem">
-                ${seminar.seminarDateToString()}
+                ${seminar.publicationDateToString()}
             </h3>
 
             <div id="authForm">
@@ -46,7 +46,7 @@
                 </sec:authorize>
                 <sec:authorize access="isAuthenticated()">
                     <p>
-                        <a href="/myPageNew">${userDetails.name} ${userDetails.surname}</a>
+                        <a href="/myPage">${userDetails.name} ${userDetails.surname}</a>
                         <a href="/j_spring_security_logout">Вийти</a>
                     </p>
                 </sec:authorize>
@@ -74,7 +74,7 @@
                 <p class="paddingBottom"> ${seminar.user.university}</p>
             </div>
             <div id="articleNameHeader">
-                ${seminar.seminarName}
+                ${seminar.publicationName}
             </div>
             <a href="advancedSearch.html" class="menuButton" id="searchingButton">Пошук</a>
         </div>
@@ -171,7 +171,7 @@
                 <form class="addComment" id="addComment">
                     <textarea class="newComment" id="newComment" name="newComment"></textarea>
                     <button id="addCommentBtn" class="button" type="button"
-                            onclick="addComment(${seminar.seminarId}, 'seminar')">Коментувати
+                            onclick="addComment(${seminar.id}, 'seminar')">Коментувати
                     </button>
                 </form>
             </sec:authorize>

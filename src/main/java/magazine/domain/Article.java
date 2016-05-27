@@ -14,26 +14,29 @@ import java.util.*;
 * Created by pvc on 19.10.2015.
 */
 @Entity
-@Table(name = "Articles")
-public class Article {
+@SecondaryTable(name = "Articles")
+public class Article extends Publication {
 
-    @Id
-    @SequenceGenerator(name = "sequence", sequenceName = "ARTICLE_SEQ", allocationSize = 1, initialValue = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence")
-    @Column(name="ARTICLE_ID")
-    private Long articleId;
+//    @Id
+//    @SequenceGenerator(name = "sequence", sequenceName = "ARTICLE_SEQ", allocationSize = 1, initialValue = 1)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence")
+//    @Column(name="ARTICLE_ID")
+//    private Long articleId;
 
-    @Column(name="articleName")
-    private String articleName;
+//    @Column(name="articleName")
+//    private String articleName;
 
-    @Column(name="articleAddress")
-    private String articleAddress;
+//    @Column(name = "article_Pub_Date")
+//    private Calendar articlePublicationDate;
 
-    @Column(name = "article_Pub_Date")
-    private Calendar articlePublicationDate;
+//    @Column(name="articleAddress")
+//    private String articleAddress;
 
-    @Column(name="Image")
-    private String articleImgAddress;
+//    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//    private User user;
+
+//    @Column(name="Image")
+//    private String articleImgAddress;
 
     @Column(name="Printable")
     private Boolean isPrintable = false;
@@ -53,9 +56,6 @@ public class Article {
     @JsonIgnore(true)
     private List<Review> articleReviewers = new LinkedList<>();//todo rename to articleReviews
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private User user;
-
     @OneToMany(mappedBy = "article", fetch= FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
     @JsonManagedReference
@@ -72,60 +72,64 @@ public class Article {
     public Article() {
     }
 
-    public Article(String articleName, Section articleSection) {
-        this.articleName = articleName;
-        this.articleSection = articleSection;
+    public Article(String publicationName, Calendar publicationDate, String publicationAddress, User user) {
+        super(publicationName, publicationDate, publicationAddress, user);
     }
 
-    public Article(String articleName, String articleAddress, Calendar articlePublicationDate, Section articleSection, String articleImgAddress, Annotation articleAnnotations, User user, Set<ArticleKeyWord> articleKeyWords) {
-        this.articleName = articleName;
-        this.articleAddress = articleAddress;
-        this.articlePublicationDate = articlePublicationDate;
-        this.articleSection = articleSection;
-        this.articleImgAddress = articleImgAddress;
-        this.articleAnnotations = articleAnnotations;
-        this.user = user;
-        this.articleKeyWords = articleKeyWords;
-    }
+//    public Article(String articleName, Section articleSection) {
+//        super. = articleName;
+//        this.articleSection = articleSection;
+//    }
 
-    public Article getArticleForTables (Article article){
-        this.articleId = article.getArticleId();
-        this.articleName = article.getArticleName();
-        this.articlePublicationDate = article.getArticlePublicationDate();
-        return this;
-    }
+//    public Article(String articleName, String articleAddress, Calendar articlePublicationDate, Section articleSection, String articleImgAddress, Annotation articleAnnotations, User user, Set<ArticleKeyWord> articleKeyWords) {
+//        this.articleName = articleName;
+//        this.articleAddress = articleAddress;
+//        this.articlePublicationDate = articlePublicationDate;
+//        this.articleSection = articleSection;
+//        this.articleImgAddress = articleImgAddress;
+//        this.articleAnnotations = articleAnnotations;
+//        this.user = user;
+//        this.articleKeyWords = articleKeyWords;
+//    }
 
-    public void setArticleId(Long articleId) {
-        this.articleId = articleId;
-    }
+//    public Article getArticleForTables (Article article){
+//        this.articleId = article.getArticleId();
+//        this.articleName = article.getArticleName();
+//        this.articlePublicationDate = article.getArticlePublicationDate();
+//        return this;
+//    }
 
-    public Long getArticleId() {
-        return articleId;
-    }
+//    public void setArticleId(Long articleId) {
+//        this.articleId = articleId;
+//    }
 
-    public String getArticleName() {
-        return articleName;
-    }
+//    public Long getArticleId() {
+//        return articleId;
+//    }
 
-    public void setArticleName(String articleName) {
-        this.articleName = articleName;
-    }
+//    public String getArticleName() {
+//        return articleName;
+//    }
 
-    public String getArticleAddress() {
-        return articleAddress;
-    }
+//    public void setArticleName(String articleName) {
+//        this.articleName = articleName;
+//    }
 
-    public void setArticleAddress(String articleAddress) {
-        this.articleAddress = articleAddress;
-    }
+//    public String getArticleAddress() {
+//        return articleAddress;
+//    }
 
-    public Calendar getArticlePublicationDate() {
-        return articlePublicationDate;
-    }
+//    public void setArticleAddress(String articleAddress) {
+//        this.articleAddress = articleAddress;
+//    }
 
-    public void setArticlePublicationDate(Calendar articlePublicationDate) {
-        this.articlePublicationDate = articlePublicationDate;
-    }
+//    public Calendar getArticlePublicationDate() {
+//        return articlePublicationDate;
+//    }
+
+//    public void setArticlePublicationDate(Calendar articlePublicationDate) {
+//        this.articlePublicationDate = articlePublicationDate;
+//    }
 
 
 
@@ -137,13 +141,13 @@ public class Article {
         this.articleSection = articleSection;
     }
 
-    public String getArticleImgAddress() {
-        return articleImgAddress;
-    }
+//    public String getArticleImgAddress() {
+//        return articleImgAddress;
+//    }
 
-    public void setArticleImgAddress(String articleImgAddress) {
-        this.articleImgAddress = articleImgAddress;
-    }
+//    public void setArticleImgAddress(String articleImgAddress) {
+//        this.articleImgAddress = articleImgAddress;
+//    }
 
     public Annotation getArticleAnnotations() {
         return articleAnnotations;
@@ -169,13 +173,13 @@ public class Article {
         this.isPrintable = isPrintable;
     }
 
-    public User getUser() {
-        return user;
-    }
+//    public User getUser() {
+//        return user;
+//    }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
 
     public List<Comment> getArticleCommentsSet() {
         return articleCommentsSet;
@@ -196,22 +200,22 @@ public class Article {
 
 
 
-    @Override
-    public String toString() {
-        return "Article{" + '\'' +
-                "articleId=" + articleId + '\'' +
-                ", articleName='" + articleName + '\'' +
-                ", user='" + user.toString() + '\'' +
-                ", articleAddress='" + articleAddress + '\'' +
-                ", articlePublicationDate='" + articlePublicationDate + '\'' +
-                ", articleSection='" + articleSection + '\'' +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Article{" + '\'' +
+//                "articleId=" + articleId + '\'' +
+//                ", articleName='" + articleName + '\'' +
+//                ", user='" + user.toString() + '\'' +
+//                ", articleAddress='" + articleAddress + '\'' +
+//                ", articlePublicationDate='" + articlePublicationDate + '\'' +
+//                ", articleSection='" + articleSection + '\'' +
+//                '}';
+//    }
 
 
-    public String articleDateToString(){
-        MySimpleDateFormat dateFormat = new MySimpleDateFormat();
-        String articlePublishDate = dateFormat.getDateFormat().format(this.articlePublicationDate.getTime());
-        return articlePublishDate;
-    }
+//    public String articleDateToString(){
+//        MySimpleDateFormat dateFormat = new MySimpleDateFormat();
+//        String articlePublishDate = dateFormat.getDateFormat().format(this.articlePublicationDate.getTime());
+//        return articlePublishDate;
+//    }
 }

@@ -92,10 +92,10 @@
             <div class="leftButtonName" name="section" data-type="group" id="sections">
                 <input type="radio" name="section" id="myPublications" value="PUBLICATIONS"
                        onclick="getUserArticles(${userDetails.userId})" checked>
-                <label for="myPublications">Мої публікації</label>
+                <label for="myPublications">Публікації</label>
                 <input type="radio" name="section" id="myReports" onclick="getUserSeminars(${userDetails.userId})"
                        value="REPORTS">
-                <label for="myReports">Мої доповіді</label>
+                <label for="myReports">Доповіді семінару</label>
                 <input type="radio" name="section" id="myReviews" onclick="getReviewersArticles(${userDetails.userId})"
                        value="REVIEW">
                 <label for="myReviews">Рецензовані статті</label>

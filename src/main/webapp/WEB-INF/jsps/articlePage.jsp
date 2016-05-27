@@ -35,7 +35,7 @@
                 ${article.articleSection.sectionStr}
             </h3>
             <h3 class="headerPublishDate">
-                ${article.articleDateToString()}
+                ${article.publicationDateToString()}
             </h3>
 
             <div id="authForm">
@@ -47,7 +47,7 @@
                     </sec:authorize>
                     <sec:authorize access="isAuthenticated()">
                         <p>
-                            <a href="/myPageNew">${userDetails.name} ${userDetails.surname}</a>
+                            <a href="/myPage">${userDetails.name} ${userDetails.surname}</a>
                             <a href="/j_spring_security_logout">Вийти</a>
                         </p>
                     </sec:authorize>
@@ -75,7 +75,7 @@
                 <p class="paddingBottom"> ${article.user.university}</p>
             </div>
             <div id="articleNameHeader">
-                ${article.articleName}
+                ${article.publicationName}
             </div>
             <a href="advancedSearch.html" class="menuButton" id="searchingButton">Пошук</a>
         </div>
@@ -96,8 +96,8 @@
 
         <div class="articleContent">
             <p id="articleSizeSwitcher">Розгорнути статтю на всю сторінку</p>
-            <object id="articlePdf" data="getFile?name=${article.articleAddress}}&type=article" type="application/pdf">
-                <embed src="getFile?name=${article.articleAddress}&type=article" type="application/pdf"/>
+            <object id="articlePdf" data="getFile?name=${article.publicationAddress}}&type=article" type="application/pdf">
+                <embed src="getFile?name=${article.publicationAddress}&type=article" type="application/pdf"/>
             </object>
         </div>
     </div>
@@ -227,7 +227,7 @@
                 <form class="addComment" id="addComment">
                     <textarea class="newComment" id="newComment" name="newComment"></textarea>
                     <button id="addCommentBtn" class="button" type="button"
-                            onclick="addComment(${article.articleId}, 'article')">Коментувати
+                            onclick="addComment(${article.id}, 'article')">Коментувати
                     </button>
                 </form>
             </sec:authorize>
@@ -278,8 +278,6 @@
     </div>
 </div>
 
-<div class="uploading" id="uploading"></div>
-
 <div class="addReview" id="addReview" >
     <form name="addReviewForm" method="post" action="null">
         <div>
@@ -288,7 +286,7 @@
                                                       placeholder="Текст рецензії" ></textarea>
         </div>
 
-            <input class="button" id="setReviewBtn" type="button" value="Надати" onclick="setReview(${article.articleId})"/>
+            <input class="button" id="setReviewBtn" type="button" value="Надати" onclick="setReview(${article.id})"/>
             <input class="button" id="cancelBtn" type="button" value="Відмінити"/>
             <p class="readReviewLink" id="dennyReviewBtn"<%-- value="${article.articleId}"--%> <%--onclick="confirm(${article.articleId})"--%>>Відмовити у наданні рецензії</p>
 
@@ -299,7 +297,7 @@
     <div class="confirmationMessage">
         <p>Ви дійсно хочете відмовити автору у наданні рецензії?</p>
         <div>
-            <input class="button" id="confirmBtn" type="button" onclick="dennyReview(${article.articleId})" value="Відмовити"/>
+            <input class="button" id="confirmBtn" type="button" onclick="dennyReview(${article.id})" value="Відмовити"/>
             <input class="button" id="cancelConfBtn"  type="button" value="Відмінити"/>
         </div>
     </div>

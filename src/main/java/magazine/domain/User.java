@@ -101,20 +101,26 @@ public class User implements UserDetails {
     @JsonIgnore(true)
     private Set<UserInterest> interests = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)//todo was chanted to EAGER
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
     @JsonIgnore(true)
-    private Set<Article> articlesSet = new HashSet<>();
+    private Set<Publication> articlesSet = new HashSet<>();
+
+//    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//    @Fetch(FetchMode.SELECT)
+//    @JsonIgnore(true)
+//    private Set<Article> articlesSet = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch= FetchType.LAZY, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
     @JsonIgnore(true)
     private Set<Review> reviewSet = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", fetch= FetchType.EAGER, cascade = CascadeType.ALL)
-    @Fetch(FetchMode.SELECT)
-    @JsonIgnore(true)
-    private Set<Seminar> seminarsSet = new HashSet<>();
+//    @OneToMany(mappedBy = "user", fetch= FetchType.EAGER, cascade = CascadeType.ALL)
+//    @Fetch(FetchMode.SELECT)
+//    @JsonIgnore(true)
+//    private Set<Seminar> seminarsSet = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch= FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
@@ -360,11 +366,20 @@ public class User implements UserDetails {
 //        this.seminarKeyWords = seminarKeyWords;
 //    }
 
-    public Set<Article> getArticlesSet() {
+//    public Set<Article> getArticlesSet() {
+//        return articlesSet;
+//    }
+//
+//    public void setArticlesSet(Set<Article> articlesSet) {
+//        this.articlesSet = articlesSet;
+//    }
+
+
+    public Set<Publication> getArticlesSet() {
         return articlesSet;
     }
 
-    public void setArticlesSet(Set<Article> articlesSet) {
+    public void setArticlesSet(Set<Publication> articlesSet) {
         this.articlesSet = articlesSet;
     }
 
@@ -376,13 +391,13 @@ public class User implements UserDetails {
         this.reviewSet = reviewSet;
     }
 
-    public Set<Seminar> getSeminarsSet() {
-        return seminarsSet;
-    }
+//    public Set<Seminar> getSeminarsSet() {
+//        return seminarsSet;
+//    }
 
-    public void setSeminarsSet(Set<Seminar> seminarsSet) {
-        this.seminarsSet = seminarsSet;
-    }
+//    public void setSeminarsSet(Set<Seminar> seminarsSet) {
+//        this.seminarsSet = seminarsSet;
+//    }
 
     public Set<Comment> getAuthorCommentsSet() {
         return authorCommentsSet;

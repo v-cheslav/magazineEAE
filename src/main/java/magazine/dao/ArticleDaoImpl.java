@@ -54,7 +54,7 @@ public class ArticleDaoImpl implements ArticleDao {
         return sessionFactory.getCurrentSession()
                 .createCriteria(Article.class)
                 .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
-                .addOrder(Order.desc("articleId"))
+                .addOrder(Order.desc("publicationId"))
                 .add(Restrictions.eq("articleSection", section))
                 .add(Restrictions.eq("isPrintable", true))
                 .list();
@@ -65,7 +65,7 @@ public class ArticleDaoImpl implements ArticleDao {
         return sessionFactory.getCurrentSession()
                 .createCriteria(Article.class)
                 .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
-                .addOrder(Order.desc("articleId"))
+                .addOrder(Order.desc("publicationId"))
                 .add(Restrictions.eq("isPrintable", true))
                 .list();
     }
@@ -86,7 +86,7 @@ public class ArticleDaoImpl implements ArticleDao {
                 .createCriteria(Article.class)
                 .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                 .add(Restrictions.eq("isPrintable", true))
-                .addOrder(Order.desc("articleId"))
+                .addOrder(Order.desc("publicationId"))
                 .setMaxResults(10)//todo
                 .list();
     }
@@ -125,11 +125,11 @@ public class ArticleDaoImpl implements ArticleDao {
         }
 
         if (searchQueryMap.containsKey("dateFrom")){
-            criteria.add(Restrictions.ge("articlePublicationDate", searchQueryMap.get("dateFrom")));
+            criteria.add(Restrictions.ge("publicationDate", searchQueryMap.get("dateFrom")));
         }
 
         if (searchQueryMap.containsKey("dateTo")){
-            criteria.add(Restrictions.le("articlePublicationDate", searchQueryMap.get("dateTo")));
+            criteria.add(Restrictions.le("publicationDate", searchQueryMap.get("dateTo")));
         }
 
         if (searchQueryMap.containsKey("keyWords")){
@@ -139,7 +139,7 @@ public class ArticleDaoImpl implements ArticleDao {
         }
 
         if (searchQueryMap.containsKey("nameOfArticle")) {
-            criteria.add(Restrictions.ilike("articleName", "%" + searchQueryMap.get("nameOfArticle") + "%"));
+            criteria.add(Restrictions.ilike("publicationName", "%" + searchQueryMap.get("nameOfArticle") + "%"));
         }
 
         if (searchQueryMap.containsKey("acadStatus")) {
@@ -157,10 +157,10 @@ public class ArticleDaoImpl implements ArticleDao {
             criteria.add(Restrictions.or(name, surname, middleName));
         }
 
-//        criteria.add(Restrictions.eq("isPrintable", true)); //todo only published
+        criteria.add(Restrictions.eq("isPrintable", true));
 
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
-                .addOrder(Order.desc("articleId"));
+                .addOrder(Order.desc("publicationId"));
 
         return criteria.list();
     }

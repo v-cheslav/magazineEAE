@@ -82,7 +82,7 @@ public class ArticlesController {
     }
 
     @RequestMapping(value = "/articlePage", method = {RequestMethod.GET})
-    public String articleNew(@RequestParam String articleId, ModelMap map) {
+    public String articleNew(@RequestParam String publicationId, ModelMap map) {
         log.info("/articlePage controller");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user;
@@ -92,7 +92,7 @@ public class ArticlesController {
         }
 
         try {
-            Article article = articleService.getArticle(Long.parseLong(articleId));
+            Article article = articleService.getArticle(Long.parseLong(publicationId));
             map.addAttribute("article", article);
 
             Annotation annotation = article.getArticleAnnotations();
@@ -115,7 +115,7 @@ public class ArticlesController {
 
 
     @RequestMapping(value = "/seminarPage", method = {RequestMethod.GET})
-    public String seminarPage(@RequestParam String seminarId, ModelMap map) {
+    public String seminarPage(@RequestParam String publicationId, ModelMap map) {
         log.info("/seminarPage controller");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user;
@@ -125,7 +125,7 @@ public class ArticlesController {
         }
 
         try {
-            Seminar seminar = seminarService.getSeminar(Long.parseLong(seminarId));
+            Seminar seminar = seminarService.getSeminar(Long.parseLong(publicationId));
             map.addAttribute("seminar", seminar);
 
         } catch (Exception e) {
@@ -212,7 +212,7 @@ public class ArticlesController {
 
 
     @RequestMapping(value = "/searchArticles", method = RequestMethod.POST)
-    public @ResponseBody List<Article> searchArticles(@RequestBody String articleStr, HttpServletResponse response) {
+    public @ResponseBody List<Article> searchArticles(@RequestBody String articleStr) {
         log.info("/searchArticles controller");
         List<Article> articles = null;
         try {
@@ -220,15 +220,15 @@ public class ArticlesController {
         } catch (Exception e) {
             articles = new ArrayList<>();
             Article article = new Article();
-            article.setArticleId(-1l);
-            article.setArticleName(e.getMessage());
+            article.setId(-1l);
+            article.setPublicationName(e.getMessage());
             articles.add(article);
         }
         return articles;
     }
 
     @RequestMapping(value = "/searchSeminars", method = RequestMethod.POST)
-    public @ResponseBody List<Seminar> searchSeminars(@RequestBody String seminarStr, HttpServletResponse response) {
+    public @ResponseBody List<Seminar> searchSeminars(@RequestBody String seminarStr) {
         log.info("/searchSeminars controller");
         List<Seminar> semiars = null;
         try {
@@ -236,15 +236,15 @@ public class ArticlesController {
         } catch (Exception e) {
             semiars = new ArrayList<>();
             Seminar seminar = new Seminar();
-            seminar.setSeminarId(-1l);
-            seminar.setSeminarName(e.getMessage());
+            seminar.setId(-1l);
+            seminar.setPublicationName(e.getMessage());
             semiars.add(seminar);
         }
         return semiars;
     }
 
     @RequestMapping(value = "/searchUsers", method = RequestMethod.POST)
-    public @ResponseBody List<User> searchUsers(@RequestBody String userStr, HttpServletResponse response) {
+    public @ResponseBody List<User> searchUsers(@RequestBody String userStr) {
         log.info("/searchUsers controller");
         List<User> users = null;
         try {

@@ -84,34 +84,32 @@ function createUnpublishedSeminar(){
 
     var reportDate = $("#datepicker").val();
 
-            var seminar = {
-                seminarId: seminarId,
-                seminarName: seminarName,
-                userId: userId,
-                unRegUserName: unRegUserName,
-                reportDate: reportDate
-            };
-
-            //alert("SeminarId=" +seminarId + "  seminarName=" +seminarName +"  userId=" +userId +"  unRegUserName=" +unRegUserName +"  reportDate=" +reportDate );
-            $.ajax({
-                url: "/announceSeminar",
-                contentType: 'application/json',
-                data: JSON.stringify(seminar),
-                async: false,
-                type: 'POST',
-                success: function (data) {
-                    var seminarRegErrorMessage = $('#seminarRegErrorMessage');
-                    if (data == "OK") {
-                        alert("Інформацію опубліковано.");
-                        location.reload();
-                    } else {
-                        seminarRegErrorMessage.html(data);
-                    }
-                },
-                error: function (xhr, status, errorThrown) {
-                    alert('Виникла помилка при завантаженні: ' + status + ". " + errorThrown);
-                }
-            });
+    var seminar = {
+        seminarId: seminarId,
+        seminarName: seminarName,
+        userId: userId,
+        unRegUserName: unRegUserName,
+        reportDate: reportDate
+    };
+    $.ajax({
+        url: "/announceSeminar",
+        contentType: 'application/json',
+        data: JSON.stringify(seminar),
+        async: false,
+        type: 'POST',
+        success: function (data) {
+            var seminarRegErrorMessage = $('#seminarRegErrorMessage');
+            if (data == "OK") {
+                alert("Інформацію опубліковано.");
+                location.reload();
+            } else {
+                seminarRegErrorMessage.html(data);
+            }
+        },
+        error: function (xhr, status, errorThrown) {
+            alert('Виникла помилка при завантаженні: ' + status + ". " + errorThrown);
+        }
+    });
 
 }
 

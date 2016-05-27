@@ -14,8 +14,8 @@
     <link rel="stylesheet" type="text/css" href="../../css/login.css" charset="utf-8"/>
     <!-- Other scripts -->
     <script src="../../js/jquery-1.11.2.min.js"></script>
+    <script src="../../js/jquery.validate.min.js"></script>
     <script src="../../js/login.js"></script>
-    <%--<script src="../../js/registration.js" type="text/javascript"></script>--%>
 </head>
 <body>
 <div class="header">
@@ -47,48 +47,45 @@
 
     <div class="contentLeft">
         <h3 class="loginTitle">
-            <p id="titleText">Увійдіть використовуючи електронну пошту та пароль!</p>
+            <p id="titleText">Відновлення паролю!</p>
         </h3>
-
-        <c:if test="${SPRING_SECURITY_LAST_EXCEPTION != null}">
-            <div class="errorBlock">
-                Помилка авторизації.
-                <br/> Причина:
-                    ${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}
-            </div>
-        </c:if>
-
-        <form class="loginForm" name="f" action="<c:url value='/j_spring_security_check'/>"
-              method="post">
+        <div class="restoreMessage">
+            На вашу електронну адресу було надіслано лист з номером.
+            Для відновлення паролю введіть отриманий листом номер та новий пароль!
+        </div>
+        <form class="restorePasswordForm" name="restorePasswordForm" id="restorePasswordForm"/>
             <div class="login">
                 <div class="tips">Електронна пошта:</div>
                 <div class="userFiller">
-                    <input type="text" name="j_username" id="j_username" value="v_cheslav@ukr.net">
+                    <input type="text" name="username" id="username" value="v_cheslav@ukr.net">
                 </div>
             </div>
 
             <div class="password">
-                <div class="tips">Пароль:</div>
+                <div class="tips">Отриманий номер:</div>
                 <div class="userFiller">
-                    <input type="password" name="j_password" value="QwQw1212">
+                    <input type="password" name="restoreCodeStr" id="restoreCodeStr"><br>
+                </div>
+            </div>
+            <div class="password">
+                <div class="tips">Введіть пароль:</div>
+                <div class="userFiller">
+                    <input type="password" name="newPassword" id="newPassword"><br>
+                </div>
+            </div>
+            <div class="password">
+                <div class="tips">Отриманий пароль:</div>
+                <div class="userFiller">
+                    <input type="password" name="newPasswordConfirm" id="newPasswordConfirm" >
                 </div>
             </div>
 
             <div class="buttons">
-                <input class="button" type="submit" name="submit" value="Увійти">
-                <input class="button" type="reset" name="reset" value="Скинути">
-                <input class="button" type="button" onclick="registrationPage()"
-                       value="Реєстрація">
+                <input class="button" id="restorePasswordBtn" value="Відновити">
             </div>
         </form>
     </div>
 
-    <div class="contentRight">
-        <input id="_spring_security_remember_me"
-               name="_spring_security_remember_me" type="checkbox"/>
-        <label for="_spring_security_remember_me">Запам'ятати?</label>
-        <div id="remindPassword">Нагадати пароль.</div>
-    </div>
 
     <hr class="horizontalLine">
     <div class="clearfix colelem" id="footer"><!-- column -->
@@ -136,6 +133,3 @@
 
 </body>
 </html>
-
-
-

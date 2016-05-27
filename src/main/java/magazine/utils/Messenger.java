@@ -28,29 +28,22 @@ public class Messenger {
         Session getMailSession;
         MimeMessage generateMailMessage;
 
-
         mailServerProperties = System.getProperties();
         mailServerProperties.put("mail.smtp.port", "587");
         mailServerProperties.put("mail.smtp.auth", "true");
         mailServerProperties.put("mail.smtp.starttls.enable", "true");
 
-//        try {
-            getMailSession = Session.getDefaultInstance(mailServerProperties, null);
-            generateMailMessage = new MimeMessage(getMailSession);
-            generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(receiver));
-            generateMailMessage.setSubject("Журнал Енергетика, автоматика і енергозбереження");
-            String emailBody = message;
-            generateMailMessage.setContent(emailBody, "text/html; charset=UTF-8");
+        getMailSession = Session.getDefaultInstance(mailServerProperties, null);
+        generateMailMessage = new MimeMessage(getMailSession);
+        generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(receiver));
+        generateMailMessage.setSubject("Журнал Енергетика, автоматика і енергозбереження");
+        String emailBody = message;
+        generateMailMessage.setContent(emailBody, "text/html; charset=UTF-8");
 
-            Transport transport = getMailSession.getTransport("smtp");
-            transport.connect("smtp.gmail.com", "magazineeae@gmail.com", "eaepassword");
-            transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
-            transport.close();
+        Transport transport = getMailSession.getTransport("smtp");
+        transport.connect("smtp.gmail.com", "magazineeae@gmail.com", "eaepassword");
+        transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
+        transport.close();
 
-//        } catch (MessagingException e) {
-//            e.printStackTrace();
-//        }
-
-//        return capcha;
     }
 }

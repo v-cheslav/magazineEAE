@@ -19,7 +19,7 @@ public interface SeminarService  {
     public List<Seminar> findAllAnnounced();
     public Seminar findAnnouncedByUser(User user);
     public List<Seminar> findSeminarsBySection(String section)throws DataNotFoundException;//todo throw Exception connection error or so.
-    public Long publishSeminar(String seminar, User currentUser) throws SeminarCreationException;
+    public void publishSeminar(String seminar, User currentUser) throws SeminarCreationException;
     public void advertiseSeminar(String seminar) throws SeminarCreationException;
     public List<Seminar> findPublishedSeminarByUserId(Long userId);
     public List<Seminar> findAllAppyied();

@@ -98,8 +98,8 @@ public class PublicationController {
         String [] idAndName;
         for (Seminar seminar: seminarList){
             idAndName = new String[2];
-            idAndName[0] = seminar.getSeminarId().toString();
-            idAndName[1] = seminar.getSeminarName();
+            idAndName[0] = seminar.getId().toString();
+            idAndName[1] = seminar.getPublicationName();
             seminarsStr.add(idAndName);
         }
         return seminarsStr;

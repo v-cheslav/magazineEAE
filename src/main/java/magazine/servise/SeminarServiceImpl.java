@@ -119,7 +119,7 @@ public class SeminarServiceImpl implements SeminarService {
             String reportDateStr = (String) jsonObj.get("reportDate");
 
             Seminar seminar = new Seminar();
-            seminar.setSeminarName(seminarName);
+            seminar.setPublicationName(seminarName);
             seminar.setUser(currentUser);
             seminar.setIsPublished(null);
 
@@ -128,7 +128,7 @@ public class SeminarServiceImpl implements SeminarService {
                 Date reportDate = format.parse(reportDateStr);
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(reportDate);
-                seminar.setSeminarPublicationDate(cal);
+                seminar.setPublicationDate(cal);
             } catch (java.text.ParseException ex){
                 throw new SeminarCreationException("Не коректна дата!");
             }
@@ -172,9 +172,9 @@ public class SeminarServiceImpl implements SeminarService {
             }
 
             if (!seminarName.equals("")){
-                seminar.setSeminarName(seminarName);
+                seminar.setPublicationName(seminarName);
             }
-            if (seminar.getSeminarName() == null){
+            if (seminar.getPublicationName() == null){
                 throw new SeminarCreationException("Назва семінару не вказана.");
             }
 
@@ -183,7 +183,7 @@ public class SeminarServiceImpl implements SeminarService {
                 Date reportDate = format.parse(reportDateStr);
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(reportDate);
-                seminar.setSeminarPublicationDate(cal);
+                seminar.setPublicationDate(cal);
             } catch (java.text.ParseException ex){
                 throw new SeminarCreationException("Не коректна дата!");
             }
@@ -197,9 +197,9 @@ public class SeminarServiceImpl implements SeminarService {
     }
 
     @Override
-    public Long publishSeminar(String seminarStr, User currentUser) throws SeminarCreationException {
-        log.info("createByString method");
-        Long seminarLong = null;
+    public void publishSeminar(String seminarStr, User currentUser) throws SeminarCreationException {
+        log.info("publishSeminar method");
+//        Long seminarLong = null;
         try {
             JSONParser parser = new JSONParser();
             Object obj = parser.parse(seminarStr);
@@ -222,13 +222,13 @@ public class SeminarServiceImpl implements SeminarService {
                 if (!currentUser.getUserId().equals(seminar.getUser().getUserId())) {
                     throw new SeminarCreationException("Ви не є доповідачем цього семінару!");
                 }
+            } else {
+                seminar.setUser(currentUser);
             }
 
             int publicationNumber = currentUser.getPublicationNumber();
 
-
             String seminarPresentationPath =
-//                    "../../userResources/userSeminars/" +
                     currentUser.getUserId() + "/"
                     + publicationNumber + "/";
             seminar.setSeminarPresentationAddress(seminarPresentationPath + swfFileName);
@@ -236,31 +236,25 @@ public class SeminarServiceImpl implements SeminarService {
             String seminarReportPath =
                     currentUser.getUserId() + "/"
                     + publicationNumber + "/";
+
             seminar.setSeminarReportAddress(seminarReportPath + pdfFileName);
-
             currentUser.setPublicationNumber(++publicationNumber);
-
             userService.changeUser(currentUser);
-            seminar.setUser(currentUser);
-
-            seminar.setIsPublished(true);
 
             Set<SeminarKeyWord> articleKeyWords = userInterestFormer(keyWordsStr, seminar);
             seminar.setSeminarKeyWords(articleKeyWords);
 
             Calendar instance = Calendar.getInstance();
-            seminar.setSeminarPublicationDate(instance);
-
+            seminar.setPublicationDate(instance);
             seminar.setIsPublished(true);
             seminarDao.update(seminar);
-
 
         } catch (ParseException e) {
             e.printStackTrace();
             throw new SeminarCreationException(errorMessage);
         }
 
-        return seminarLong;
+//        return seminarLong;
     }
 
     //todo дати в utils, переписати клас з дженеріками
@@ -310,16 +304,11 @@ public class SeminarServiceImpl implements SeminarService {
         calendar.set(Calendar.MILLISECOND, 0);
 
         Seminar seminar;
-//        try {
             seminar = seminarDao.findNearestSeminar(calendar);
-            Calendar date = seminar.getSeminarPublicationDate();
+            Calendar date = seminar.getPublicationDate();
             List<Seminar> seminars = seminarDao.findSeminarsByDate(date);
-            return seminars;
-//        } catch (SeminarNotFoundException e){
-//            e.printStackTrace();
-//            return null;
-//        }
-    }//todo виправити 3 звернення в БД
+        return seminars;
+    }
 
     @Override
     public List<Seminar> searchSeminars(String articleStr) throws SearchException {
