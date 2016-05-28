@@ -1,9 +1,7 @@
 package magazine.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
@@ -105,7 +103,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
     @JsonIgnore(true)
-    private Set<Publication> articlesSet = new HashSet<>();
+    private Set<PublicationTemp> articlesSet = new HashSet<>();
 
 //    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 //    @Fetch(FetchMode.SELECT)
@@ -375,11 +373,11 @@ public class User implements UserDetails {
 //    }
 
 
-    public Set<Publication> getArticlesSet() {
+    public Set<PublicationTemp> getArticlesSet() {
         return articlesSet;
     }
 
-    public void setArticlesSet(Set<Publication> articlesSet) {
+    public void setArticlesSet(Set<PublicationTemp> articlesSet) {
         this.articlesSet = articlesSet;
     }
 

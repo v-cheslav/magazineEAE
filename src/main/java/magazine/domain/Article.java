@@ -1,9 +1,7 @@
 package magazine.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import magazine.utils.MySimpleDateFormat;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -15,7 +13,7 @@ import java.util.*;
 */
 @Entity
 @SecondaryTable(name = "Articles")
-public class Article extends Publication {
+public class Article extends PublicationTemp {
 
 //    @Id
 //    @SequenceGenerator(name = "sequence", sequenceName = "ARTICLE_SEQ", allocationSize = 1, initialValue = 1)
