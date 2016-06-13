@@ -29,9 +29,33 @@ public class Messenger {
         MimeMessage generateMailMessage;
 
         mailServerProperties = System.getProperties();
-        mailServerProperties.put("mail.smtp.port", "587");
+
+        mailServerProperties.put("mail.smtp.host", "smtp.gmail.com");
+        mailServerProperties.put("mail.stmp.user", "magazineeae@gmail.com");
+        //TLS
         mailServerProperties.put("mail.smtp.auth", "true");
         mailServerProperties.put("mail.smtp.starttls.enable", "true");
+        mailServerProperties.put("mail.smtp.password", "eaepassword");
+        //SSL
+        mailServerProperties.put("mail.smtp.socketFactory.port", "465");
+        mailServerProperties.put("mail.smtp.socketFactory.class",
+                "javax.net.ssl.SSLSocketFactory");
+        mailServerProperties.put("mail.smtp.auth", "true");
+        mailServerProperties.put("mail.smtp.port", "465");
+
+
+//        mailServerProperties.put("mail.smtp.socketFactory.port", "465");
+//        mailServerProperties.put("mail.smtp.socketFactory.class",
+//                "javax.net.ssl.SSLSocketFactory");
+//
+//
+//        mailServerProperties.put("mail.smtp.port", "465");
+//        mailServerProperties.put("mail.smtp.auth", "true");
+//        mailServerProperties.put("mail.smtp.starttls.enable", "true");
+
+//        mailServerProperties.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+//        mailServerProperties.put("mail.smtp.connectiontimeout", 10000000);
+
 
         getMailSession = Session.getDefaultInstance(mailServerProperties, null);
         generateMailMessage = new MimeMessage(getMailSession);

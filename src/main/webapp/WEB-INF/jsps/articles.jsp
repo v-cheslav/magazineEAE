@@ -106,7 +106,7 @@
             <h2 id="mainContentHeader">&nbsp;</h2>
         </div>
 
-        <table align="center" width="98%" height="100%" class="innerTable" id="innerTable">
+        <table align="center" width="700px" height="100%" class="innerTable" id="innerTable">
             <thead>
             <tr>
                 <th id="number" class="innerTableHead" width="35px">№</th>

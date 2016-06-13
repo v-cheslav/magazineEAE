@@ -108,7 +108,7 @@
         <div class="mainContentHeader" id="TableNameLabel">
             <h2 id="mainContentHeader">&nbsp;</h2>
         </div>
-        <table border="1" align="center" width="98%" height="100%" class="innerTable" id="innerTable">
+        <table border="1" align="center" width="700px" height="100%" class="innerTable" id="innerTable">
             <thead>
             <tr>
                 <th id="number" class="innerTableHead" width="35px">№</th>

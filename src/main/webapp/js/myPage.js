@@ -199,7 +199,10 @@ function fillTable(data, dataType){
         tdPublishDate.html(date.toLocaleString("ua", options));
 
         var tdAuthor  =$('<td align="center" class="tableContent"></td>');
-        var linkAuthor = $('<a href="authorPage.html"></a>');
+        var userUrl = "authorPage?authorId="+data[i].user.userId;
+        var linkAuthor = $('<a></a>');
+        linkAuthor.attr('href', userUrl);
+        //linkAuthor.attr('isd', data[i].user.userId);
         linkAuthor.html(data[i].user.surname + ' ' + data[i].user.name + ' ' + data[i].user.middleName);
         linkAuthor.attr('id', data[i].user.userId);
         tdAuthor.append(linkAuthor);

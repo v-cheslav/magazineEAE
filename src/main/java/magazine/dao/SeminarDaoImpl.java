@@ -186,9 +186,9 @@ public class SeminarDaoImpl implements SeminarDao {
         }
 
         if (searchQueryMap.containsKey("keyWords")){
-            criteria.createAlias("sem.seminarKeyWords", "keyWord")
+            criteria.createAlias("sem.publicationKeyWords", "keyWord")
                     .add(Restrictions
-                            .eq("keyWord.semKeyWord", searchQueryMap.get("keyWords")));
+                            .eq("keyWord.keyWord", searchQueryMap.get("keyWords")));
         }
 
         if (searchQueryMap.containsKey("nameOfSeminar")) {

@@ -25,7 +25,7 @@ import java.util.List;
  */
 @Service
 public class ReviewServiceImpl implements ReviewService {
-    private static Logger log = Logger.getLogger(ArticleServiceImpl.class);
+    private static Logger log = Logger.getLogger(ReviewServiceImpl.class);
 
     @Autowired
     ReviewDao reviewDao;
@@ -86,7 +86,9 @@ public class ReviewServiceImpl implements ReviewService {
             String reviewText = (String) jsonObj.get("review");
             Long articleId = (Long) jsonObj.get("articleId");
 
+            System.err.println("articleId" + articleId);
             Review review = reviewDao.findByUserAndArticleId(articleId, user);
+            System.err.println("articleId" + articleId);
 
             String fileName = "review" + review.getReviewId() + ".xml";
 

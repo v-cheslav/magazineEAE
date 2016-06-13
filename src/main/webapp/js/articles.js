@@ -58,7 +58,7 @@ function fillTableByArticles(articles){
                 var userUrl = "authorPage?authorId="+articles[i].user.userId;
                 var linkAuthor = $('<a></a>');
                 linkAuthor.attr('href', userUrl);
-                linkAuthor.attr('isd', articles[i].user.userId);
+                linkAuthor.attr('id', articles[i].user.userId);
                 linkAuthor.html(articles[i].user.surname + ' ' + articles[i].user.name + ' ' + articles[i].user.middleName);
                 linkAuthor.attr('authorId', articles[i].user.userId);
             tdAuthor.append(linkAuthor);

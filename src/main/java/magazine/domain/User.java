@@ -103,7 +103,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
     @JsonIgnore(true)
-    private Set<PublicationTemp> articlesSet = new HashSet<>();
+    private Set<Publication> articlesSet = new HashSet<>();
 
 //    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 //    @Fetch(FetchMode.SELECT)
@@ -373,11 +373,11 @@ public class User implements UserDetails {
 //    }
 
 
-    public Set<PublicationTemp> getArticlesSet() {
+    public Set<Publication> getArticlesSet() {
         return articlesSet;
     }
 
-    public void setArticlesSet(Set<PublicationTemp> articlesSet) {
+    public void setArticlesSet(Set<Publication> articlesSet) {
         this.articlesSet = articlesSet;
     }
 

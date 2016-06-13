@@ -96,8 +96,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             String username = (String) jsonObj.get("username");
             try {//спробуємо знайти юзера за username
                 userDao.findByUsername(username).get(0);//якщо існує кидаємо RegistrationException
-                throw new RegistrationException("Користувач з поштою \""+ username +"\" існує. Спробуйте іншу.");
-           // todo throw new UserExistException and ask if user forgot password, if does - redirect to the page forgot password
+                throw new RegistrationException("Користувач з поштою \"" + username + "\" існує. Спробуйте іншу.");
+                // todo throw new UserExistException and ask if user forgot password, if does - redirect to the page forgot password
             } catch (IndexOutOfBoundsException e) {
                 log.info("Реєстрація нового користувача: " + username);
             }
@@ -116,8 +116,8 @@ public class RegistrationServiceImpl implements RegistrationService {
              * перевіряємо чи дійсно має право реєструватись як Адмін,
              * (якщо так, то пароль реєстрації має співпадати із зазначеним у properties файлі).
              */
-            if (adminRole.equals("Administrator")){
-                if(!password.equals(adminPassword)){
+            if (adminRole.equals("Administrator")) {
+                if (!password.equals(adminPassword)) {
                     throw new RegistrationException("Ви не маєте права реєструватись як адміністратор!");
                 }
                 UserRole superAdmin = userRoleDao.getUserRole(ListRole.SUPERADMIN);
@@ -160,7 +160,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
             UserSex userSex = null;
             try {
-                userSex = userSexService.findByString((String)jsonObj.get("userSex"));
+                userSex = userSexService.findByString((String) jsonObj.get("userSex"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -183,7 +183,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             user.setInterests(interests);
             user.setUserRoles(userRoles);
 
-            Integer random = 1111 + (int)(Math.random() * ((9999 - 1111) + 1));
+            Integer random = 1111 + (int) (Math.random() * ((9999 - 1111) + 1));
             user.setRestoreCode(random);
 
             String receiver = username;
@@ -191,15 +191,18 @@ public class RegistrationServiceImpl implements RegistrationService {
             String message = "Ви реєструвались в журналі Енергетика, автоматика і енергозбереження."
                     + "<br> для підтердження реєстрації перейдіть за посиланням "
                     + domainName + "confirmRegistration?" + "userName=" + receiver + "&regCode=" + regCode
-                    + "<br><br> Regards, Admin";
+                    + "<br><br> Regards, Admin";//todo here write proper jsp page
 
             try {
-            Messenger messenger = new Messenger();
-            messenger.sendMessage(receiver, message);
+                Messenger messenger = new Messenger();
+                messenger.sendMessage(receiver, message);
+//            } catch (java.net.ConnectException cEx) {
+//
+//            }
             } catch (MessagingException ex) {
                 ex.printStackTrace();
                 throw new RegistrationException("Неможливо відправити повідомлення на пошту. " +
-                        "Перевірте правильність вашої електронної адреси і повторіть спробу реєстрації");
+                        "Перевірте правильність вашої електронної адреси та підключення до інтернету");
             }
             try {
                 userService.createUser(user);

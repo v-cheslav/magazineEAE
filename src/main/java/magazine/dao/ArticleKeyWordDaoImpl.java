@@ -1,6 +1,6 @@
 package magazine.dao;
 
-import magazine.domain.ArticleKeyWord;
+import magazine.domain.PublicationKeyWord;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,30 +21,30 @@ public class ArticleKeyWordDaoImpl implements ArticleKeyWordDao {
     }
 
     @Override
-    public Long create(ArticleKeyWord articleKeyWord) {
-        return (Long) sessionFactory.getCurrentSession().save(articleKeyWord);
+    public Long create(PublicationKeyWord publicationKeyWord) {
+        return (Long) sessionFactory.getCurrentSession().save(publicationKeyWord);
     }
 
     @Override
-    public ArticleKeyWord reade(Long id) {
-        return (ArticleKeyWord) sessionFactory.getCurrentSession().get(ArticleKeyWord.class, id);
+    public PublicationKeyWord reade(Long id) {
+        return (PublicationKeyWord) sessionFactory.getCurrentSession().get(PublicationKeyWord.class, id);
     }
 
     @Override
-    public void update(ArticleKeyWord articleKeyWord) {
-        sessionFactory.getCurrentSession().update(articleKeyWord);
+    public void update(PublicationKeyWord publicationKeyWord) {
+        sessionFactory.getCurrentSession().update(publicationKeyWord);
     }
 
     @Override
-    public void delete(ArticleKeyWord articleKeyWord) {
-        sessionFactory.getCurrentSession().delete(articleKeyWord);
+    public void delete(PublicationKeyWord publicationKeyWord) {
+        sessionFactory.getCurrentSession().delete(publicationKeyWord);
     }
 
     @Override
-    public ArticleKeyWord getKeyWord(String articleKeyWord) {
-        return (ArticleKeyWord) sessionFactory.getCurrentSession()
-                .createCriteria(ArticleKeyWord.class)
-                .add(Restrictions.eq("artKeyWord", articleKeyWord))
+    public PublicationKeyWord getKeyWord(String articleKeyWord) {
+        return (PublicationKeyWord) sessionFactory.getCurrentSession()
+                .createCriteria(PublicationKeyWord.class)
+                .add(Restrictions.eq("keyWord", articleKeyWord))
                 .uniqueResult();
     }
 }

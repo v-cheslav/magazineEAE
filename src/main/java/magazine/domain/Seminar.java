@@ -12,8 +12,11 @@ import java.util.*;
 * Created by pvc on 19.10.2015.
 */
 @Entity
-@SecondaryTable(name = "Seminars")
-public class Seminar extends PublicationTemp {
+//@SecondaryTable(name = "Seminars")
+@DiscriminatorValue("Seminars")
+
+//@Inheritance(strategy = InheritanceType.JOINED)
+public class Seminar extends Publication {
 
 //    @Id
 //    @SequenceGenerator(name = "sequence", sequenceName = "SEMINAR_SEQ", allocationSize = 1, initialValue = 1)
@@ -60,7 +63,7 @@ public class Seminar extends PublicationTemp {
     @JoinTable(name = "seminar_semKeyWord", joinColumns = @JoinColumn(name = "seminar_id"),
             inverseJoinColumns = @JoinColumn(name = "semKeyWord_id"))
     @JsonIgnore(true)
-    private Set<SeminarKeyWord> seminarKeyWords = new HashSet<>();
+    private Set<PublicationKeyWord> seminarKeyWords = new HashSet<>();
 
     public Seminar() {
     }
@@ -148,11 +151,11 @@ public class Seminar extends PublicationTemp {
         this.seminarCommentsSet = seminarCommentsSet;
     }
 
-    public Set<SeminarKeyWord> getSeminarKeyWords() {
+    public Set<PublicationKeyWord> getSeminarKeyWords() {
         return seminarKeyWords;
     }
 
-    public void setSeminarKeyWords(Set<SeminarKeyWord> seminarKeyWords) {
+    public void setSeminarKeyWords(Set<PublicationKeyWord> seminarKeyWords) {
         this.seminarKeyWords = seminarKeyWords;
     }
 

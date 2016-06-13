@@ -5,6 +5,7 @@ import magazine.Exeptions.SearchException;
 import magazine.Exeptions.SeminarCreationException;
 //import magazine.dao.PublishedSeminarDao;
 import magazine.Exeptions.SeminarNotFoundException;
+import magazine.dao.ArticleKeyWordDao;
 import magazine.dao.SeminarDao;
 import magazine.dao.SeminarKeyWordDao;
 import magazine.dao.UserDao;
@@ -42,6 +43,9 @@ public class SeminarServiceImpl implements SeminarService {
 
     @Autowired
     SeminarKeyWordDao seminarKeyWordDao;
+
+    @Autowired
+    ArticleKeyWordDao articleKeyWordDao;
 
     @Autowired
     SectionService sectionService;
@@ -241,8 +245,9 @@ public class SeminarServiceImpl implements SeminarService {
             currentUser.setPublicationNumber(++publicationNumber);
             userService.changeUser(currentUser);
 
-            Set<SeminarKeyWord> articleKeyWords = userInterestFormer(keyWordsStr, seminar);
-            seminar.setSeminarKeyWords(articleKeyWords);
+
+            Set<PublicationKeyWord> publicationKeyWords = userInterestFormer(keyWordsStr, seminar);
+            seminar.setSeminarKeyWords(publicationKeyWords);
 
             Calendar instance = Calendar.getInstance();
             seminar.setPublicationDate(instance);
@@ -258,29 +263,30 @@ public class SeminarServiceImpl implements SeminarService {
     }
 
     //todo дати в utils, переписати клас з дженеріками
-    private Set<SeminarKeyWord> userInterestFormer (String keyWordsStr, Seminar seminar){
-        Set<SeminarKeyWord> keyWordsSet = new HashSet<>();
+    private Set<PublicationKeyWord> userInterestFormer (String keyWordsStr, Seminar seminar){
+        Set<PublicationKeyWord> keyWordsSet = new HashSet<>();
         if (keyWordsStr.length() >= 2) {//якщо пусто, пробіл або 2, або менше 2 символів то в БД не додається
             String[] keyWordsArrStr = keyWordsStr.split("\\,");
             for (String keyWordStr : keyWordsArrStr) {
                 if (keyWordStr.charAt(0) == ' ') {
                     keyWordStr = keyWordStr.replaceFirst(" ", "");
                 }
-                SeminarKeyWord seminarKeyWord;
+                PublicationKeyWord publicationKeyWord;
                 try {
-                    seminarKeyWord = seminarKeyWordDao.getKeyWord(keyWordStr.toLowerCase());
-                    Set <Seminar> seminars = seminarKeyWord.getSeminars();
+                    publicationKeyWord = seminarKeyWordDao.getKeyWord(keyWordStr.toLowerCase());
+                    Set<Publication> seminars = publicationKeyWord.getPublications();
+
                     seminars.add(seminar);
-                    seminarKeyWordDao.update(seminarKeyWord);
+                    seminarKeyWordDao.update(publicationKeyWord);
                 } catch (NullPointerException e) {//todo
-                    seminarKeyWord = new SeminarKeyWord(keyWordStr.toLowerCase());
-                    Set<Seminar> seminars = new HashSet<>();
-                    seminarKeyWord.setSeminars(seminars);
+                    publicationKeyWord = new PublicationKeyWord(keyWordStr.toLowerCase());
+                    Set<Publication> seminars = new HashSet<>();
+                    publicationKeyWord.setPublications(seminars);
                     seminars.add(seminar);
-                    seminarKeyWordDao.create(seminarKeyWord);
+                    seminarKeyWordDao.create(publicationKeyWord);
 //                    e.printStackTrace();
                 }
-                keyWordsSet.add(seminarKeyWord);
+                keyWordsSet.add(publicationKeyWord);
             }
         } else {
             keyWordsSet = null;

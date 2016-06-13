@@ -133,9 +133,9 @@ public class ArticleDaoImpl implements ArticleDao {
         }
 
         if (searchQueryMap.containsKey("keyWords")){
-            criteria.createAlias("art.articleKeyWords", "keyWord")
+            criteria.createAlias("art.publicationKeyWords", "keyWord")
                     .add(Restrictions
-                            .eq("keyWord.artKeyWord", searchQueryMap.get("keyWords")));
+                            .eq("keyWord.keyWord", searchQueryMap.get("keyWords")));
         }
 
         if (searchQueryMap.containsKey("nameOfArticle")) {

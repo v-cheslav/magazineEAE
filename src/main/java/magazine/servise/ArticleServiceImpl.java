@@ -194,8 +194,15 @@ public class ArticleServiceImpl implements ArticleService {
             article.setArticleAnnotations(annotation);
             annotationDao.create(annotation);
 
-            Set<ArticleKeyWord> articleKeyWords = userInterestFormer(keyWordsStr, article);
-            article.setArticleKeyWords(articleKeyWords);
+            Set<PublicationKeyWord> publicationKeyWords = userInterestFormer(keyWordsStr, article);
+//            Set<PublicationKeyWord> publicationKeyWords = article.getArticlesKeyWordSet();
+//            publicationKeyWords.add(null);
+//            article.setArticlesKeyWordSet(publicationKeyWords);
+            article.setPublicationKeyWords(publicationKeyWords);
+
+
+            System.err.println(article.toString());
+            articleLong = articleDao.create(article);
 
             Section articleSection = sectionService.getSectionByName(ListSection.valueOf(articleSectionStr));
             Set <Article> articles = articleSection.getArticles();
@@ -207,7 +214,6 @@ public class ArticleServiceImpl implements ArticleService {
             article.setPublicationDate(instance);
 
 
-            articleLong = articleDao.create(article);
 
             User firstReviewer = userService.getUser(firstReviewerLong);
             firstReviewer.setIsReviewer(true);
@@ -227,6 +233,7 @@ public class ArticleServiceImpl implements ArticleService {
             article.setArticleReviewers(reviews);
 
             articleDao.update(article);
+
 
         } catch (ParseException e) {
             //todo видалити завантажені файли і зробити reduce кількості публікацій
@@ -280,29 +287,35 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     //todo дати в utils, переписати клас з дженеріками
-    private Set<ArticleKeyWord> userInterestFormer (String keyWordsStr, Article article){
-        Set<ArticleKeyWord> keyWordsSet = new HashSet<>();
+    private Set<PublicationKeyWord> userInterestFormer (String keyWordsStr, Article article){
+        Set<PublicationKeyWord> keyWordsSet = new HashSet<>();
         if (keyWordsStr.length() >= 2) {//якщо пусто, пробіл або 2, або менше 2 символів то в БД не додається
             String[] keyWordsArrStr = keyWordsStr.split("\\,");
             for (String keyWordStr : keyWordsArrStr) {
                 if (keyWordStr.charAt(0) == ' ') {
                     keyWordStr = keyWordStr.replaceFirst(" ", "");
                 }
-                ArticleKeyWord articleKeyWord;
+                PublicationKeyWord publicationKeyWord;
                 try {
-                    articleKeyWord = articleKeyWordDao.getKeyWord(keyWordStr.toLowerCase());
-                    Set <Article> articles = articleKeyWord.getArticles();
+                    publicationKeyWord = articleKeyWordDao.getKeyWord(keyWordStr.toLowerCase());
+                    Set <Publication> articles = publicationKeyWord.getPublications();
                     articles.add(article);
-                    articleKeyWordDao.update(articleKeyWord);
+                    articleKeyWordDao.update(publicationKeyWord);
                 } catch (NullPointerException e) {//todo
-                    articleKeyWord = new ArticleKeyWord(keyWordStr.toLowerCase());
-                    Set<Article> articles = new HashSet<>();
-                    articleKeyWord.setArticles(articles);
+                    publicationKeyWord = new PublicationKeyWord(keyWordStr.toLowerCase());
+                    Set<Publication> articles = new HashSet<>();
+                    publicationKeyWord.setPublications(articles);
                     articles.add(article);
-                    articleKeyWordDao.create(articleKeyWord);
+                    articleKeyWordDao.create(publicationKeyWord);
 //                    e.printStackTrace();
                 }
-                keyWordsSet.add(articleKeyWord);
+//                catch (Exception ex) {
+//                    System.err.println("Exception");
+//                    ex.printStackTrace();
+//                    return null;
+//                }
+
+                keyWordsSet.add(publicationKeyWord);
             }
         } else {
             keyWordsSet = null;

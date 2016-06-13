@@ -12,8 +12,10 @@ import java.util.*;
 * Created by pvc on 19.10.2015.
 */
 @Entity
-@SecondaryTable(name = "Articles")
-public class Article extends PublicationTemp {
+@DiscriminatorValue("Articles")
+//@SecondaryTable(name = "Articles")
+//@Inheritance(strategy = InheritanceType.JOINED)
+public class Article extends Publication {
 
 //    @Id
 //    @SequenceGenerator(name = "sequence", sequenceName = "ARTICLE_SEQ", allocationSize = 1, initialValue = 1)
@@ -60,12 +62,11 @@ public class Article extends PublicationTemp {
     @OrderBy (value = "Comment_Date")
     private List<Comment> articleCommentsSet = new LinkedList<>();
 
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "article_artKeyWord", joinColumns = @JoinColumn(name = "article_id"),
-            inverseJoinColumns = @JoinColumn(name = "artKeyWord_id"))
-    @JsonIgnore(true)
-    private Set<ArticleKeyWord> articleKeyWords = new HashSet<>();
+//    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//    @JoinTable(name = "articleKeyWords", joinColumns = @JoinColumn(name = "article_id"),
+//            inverseJoinColumns = @JoinColumn(name = "articleKeyWord_id"))
+//    @JsonIgnore(true)
+//    private Set<PublicationKeyWord> articlesKeyWordSet/* = new HashSet<>()*/;
 
     public Article() {
     }
@@ -187,28 +188,35 @@ public class Article extends PublicationTemp {
         this.articleCommentsSet = articleCommentsSet;
     }
 
-    public Set<ArticleKeyWord> getArticleKeyWords() {
-        return articleKeyWords;
-    }
-
-    public void setArticleKeyWords(Set<ArticleKeyWord> articleKeyWords) {
-        this.articleKeyWords = articleKeyWords;
-    }
-
-
-
-
-//    @Override
-//    public String toString() {
-//        return "Article{" + '\'' +
-//                "articleId=" + articleId + '\'' +
-//                ", articleName='" + articleName + '\'' +
-//                ", user='" + user.toString() + '\'' +
-//                ", articleAddress='" + articleAddress + '\'' +
-//                ", articlePublicationDate='" + articlePublicationDate + '\'' +
-//                ", articleSection='" + articleSection + '\'' +
-//                '}';
+//    public Set<PublicationKeyWord> getPublicationKeyWords() {
+//        return publicationKeyWords;
 //    }
+//
+//    public void setPublicationKeyWords(Set<PublicationKeyWord> publicationKeyWords) {
+//        this.publicationKeyWords = publicationKeyWords;
+//    }
+
+
+//    public Set<PublicationKeyWord> getArticlesKeyWordSet() {
+//        return articlesKeyWordSet;
+//    }
+//
+//    public void setArticlesKeyWordSet(Set<PublicationKeyWord> articlesKeyWordSet) {
+//        this.articlesKeyWordSet = articlesKeyWordSet;
+//    }
+
+    @Override
+    public String toString() {
+        return "Article{" + '\'' +
+                "articleId=" + super.getId() + '\'' +
+                ", articleName='" + super.getPublicationName() + '\'' +
+                ", user='" + super.getUser().toString() + '\'' +
+                ", articleAddress='" + super.getPublicationAddress() + '\'' +
+                ", articlePublicationDate='" + super.getPublicationDate() + '\'' +
+                ", articleSection='" + articleSection + '\'' +
+                ", articleKeyWords='" +  + '\'' +
+                '}';
+    }
 
 
 //    public String articleDateToString(){

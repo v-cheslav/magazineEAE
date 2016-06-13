@@ -30,7 +30,8 @@
         <ul>
             <li><a href="index.html" class="menuButton menuActive">ГОЛОВНА</a></li>
             <li><a href="publication.html" class="menuButton">ПУБЛІКАЦІЇ</a></li>
-            <li><a href="seminar.html" class="menuButton">СЕМІНАР</a></li>
+            <li><a href="seminar.html" class="menuButton">СЕМІНАРИ</a></li>
+            <%--<li><a href="conference.html" class="menuButton">КОНФЕРЕНЦІЇ</a></li>--%>
             <li><a href="publish.html" class="menuButton">ОПУБЛІКУВАТИ</a></li>
             <li><a href="contacts.html" class="menuButton">КОНТАКТИ</a></li>
         </ul>

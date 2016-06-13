@@ -1,5 +1,4 @@
 $(document).ready(function() {
-    alert("fillDB")
     $('#fillDB').click(function(){
         fillDB();
     });

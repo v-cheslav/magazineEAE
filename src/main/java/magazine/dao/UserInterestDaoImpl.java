@@ -48,7 +48,7 @@ public class UserInterestDaoImpl implements UserInterestDao {
     public UserInterest getInterest(String userInterest) {
         return (UserInterest) sessionFactory.getCurrentSession()
                 .createCriteria(UserInterest.class)
-                .add(Restrictions.eq("interest", userInterest))
+                .add(Restrictions.eq("keyWord", userInterest))
                 .uniqueResult();
     }
 }
