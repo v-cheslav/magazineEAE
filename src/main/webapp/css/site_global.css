@@ -201,6 +201,7 @@ body {
 #authForm p a:link {
     margin: 15px;
     text-decoration: none;
+    color: #E8E8E8;
 }
 
 #authForm p a:visited {

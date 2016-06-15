@@ -50,12 +50,12 @@ public class Publication {
         this.publicationName = publicationName;
     }
 
-    public Publication getPublicationForTables (Publication publication){
-        this.publicationId = publication.getId();
-        this.publicationName = publication.getPublicationName();
-        this.publicationDate = publication.getPublicationDate();
-        return this;
-    }
+//    public Publication getPublicationForTables (Publication publication){
+//        this.publicationId = publication.getId();
+//        this.publicationName = publication.getPublicationName();
+//        this.publicationDate = publication.getPublicationDate();
+//        return this;
+//    }
 
     public String publicationDateToString(){
         MySimpleDateFormat dateFormat = new MySimpleDateFormat();

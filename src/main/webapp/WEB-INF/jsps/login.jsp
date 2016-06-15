@@ -45,7 +45,7 @@
 </div>
 <div class="clearfix" id="page">
 
-    <div class="contentLeft">
+
         <h3 class="loginTitle">
             <p id="titleText">Увійдіть використовуючи електронну пошту та пароль!</p>
         </h3>
@@ -60,35 +60,41 @@
 
         <form class="loginForm" name="f" action="<c:url value='/j_spring_security_check'/>"
               method="post">
-            <div class="login">
-                <div class="tips">Електронна пошта:</div>
-                <div class="userFiller">
-                    <input type="text" name="j_username" id="j_username" value="v_cheslav@ukr.net">
+
+            <div class="contentLeft">
+                <div class="login">
+                    <div class="tips">Електронна пошта:</div>
+                    <div class="userFiller">
+                        <input type="text" name="j_username" id="j_username" value="v_cheslav@ukr.net">
+                    </div>
+                </div>
+
+                <div class="password">
+                    <div class="tips">Пароль:</div>
+                    <div class="userFiller">
+                        <input type="password" name="j_password" value="QwQw1212">
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <input class="button" type="submit" name="submit" value="Увійти">
+                    <input class="button" type="reset" name="reset" value="Скинути">
+                    <input class="button" type="button" onclick="registrationPage()"
+                           value="Реєстрація">
                 </div>
             </div>
 
-            <div class="password">
-                <div class="tips">Пароль:</div>
-                <div class="userFiller">
-                    <input type="password" name="j_password" value="QwQw1212">
-                </div>
+            <div class="contentRight">
+                <input id="_spring_security_remember_me"
+                       name="_spring_security_remember_me" type="checkbox"/>
+                <label for="_spring_security_remember_me">Запам'ятати?</label>
+                <div id="remindPassword">Нагадати пароль.</div>
             </div>
 
-            <div class="buttons">
-                <input class="button" type="submit" name="submit" value="Увійти">
-                <input class="button" type="reset" name="reset" value="Скинути">
-                <input class="button" type="button" onclick="registrationPage()"
-                       value="Реєстрація">
-            </div>
         </form>
-    </div>
 
-    <div class="contentRight">
-        <input id="_spring_security_remember_me"
-               name="_spring_security_remember_me" type="checkbox"/>
-        <label for="_spring_security_remember_me">Запам'ятати?</label>
-        <div id="remindPassword">Нагадати пароль.</div>
-    </div>
+
+
 
     <hr class="horizontalLine">
     <div class="clearfix colelem" id="footer"><!-- column -->

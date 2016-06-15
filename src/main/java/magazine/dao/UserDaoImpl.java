@@ -12,6 +12,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,12 +62,16 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> findByUsername(String username) {
-        return sessionFactory.getCurrentSession()
+    public User findByUsername(String username) throws UsernameNotFoundException {
+        User user = (User) sessionFactory.getCurrentSession()
                     .createCriteria(User.class)
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                     .add(Restrictions.eq("username", username))
-                    .list();
+                    .uniqueResult();
+        if (user == null){
+            throw new UsernameNotFoundException("username: " + username +  " not found!");
+        }
+        return user;
     }
 
     @Override

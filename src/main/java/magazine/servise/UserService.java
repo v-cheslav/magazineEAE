@@ -4,6 +4,8 @@ import magazine.Exeptions.RegistrationException;
 import magazine.Exeptions.SearchException;
 import magazine.domain.Article;
 import magazine.domain.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 

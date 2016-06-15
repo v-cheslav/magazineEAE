@@ -24,12 +24,6 @@ public class User implements UserDetails {
     @Column(name="USER_ID")
     private Long userId;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
-    inverseJoinColumns = @JoinColumn(name = "role_id"))
-    @JsonIgnore(true)
-    private Set<UserRole> userRoles = new HashSet<>();
-
     @Column(name="username")
     private String username;
 
@@ -75,12 +69,6 @@ public class User implements UserDetails {
     @Column(name="isValid")
     private boolean isValid = false;
 
-
-//    @OneToOne
-//    @JoinColumn(name = "message")
-//    @JsonIgnore(true)
-//    private Message message;
-
     @ManyToOne
     @JsonIgnore(true)
     private UserAcadStatus acadStatus;
@@ -94,6 +82,13 @@ public class User implements UserDetails {
     private UserSex userSex;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JsonIgnore(true)
+    private Set<UserRole> userRoles = new HashSet<>();
+
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_interest", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "interest_id"))
     @JsonIgnore(true)
@@ -105,20 +100,12 @@ public class User implements UserDetails {
     @JsonIgnore(true)
     private Set<Publication> articlesSet = new HashSet<>();
 
-//    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    @Fetch(FetchMode.SELECT)
-//    @JsonIgnore(true)
-//    private Set<Article> articlesSet = new HashSet<>();
+
 
     @OneToMany(mappedBy = "user", fetch= FetchType.LAZY, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
     @JsonIgnore(true)
     private Set<Review> reviewSet = new HashSet<>();
-
-//    @OneToMany(mappedBy = "user", fetch= FetchType.EAGER, cascade = CascadeType.ALL)
-//    @Fetch(FetchMode.SELECT)
-//    @JsonIgnore(true)
-//    private Set<Seminar> seminarsSet = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch= FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
@@ -128,9 +115,15 @@ public class User implements UserDetails {
     public User() {
     }
 
+    public User(String username, String password, String name, String surname, String university) {
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.surname = surname;
+        this.university = university;
+    }
 
-
-    public User(String username, String password, String name, String surname, String middleName, String university, String institute, String chair, String position, String phone, String photo, UserAcadStatus acadStatus, UserSciDegree sciDegree, UserSex userSex, Set<UserInterest> interests) {
+    public User(String username, String password, String name, String surname, String middleName, String university, String institute, String chair, String position, String phone, String photoAddress, UserAcadStatus acadStatus, UserSciDegree sciDegree, UserSex userSex) {
         this.username = username;
         this.password = password;
         this.name = name;
@@ -141,21 +134,11 @@ public class User implements UserDetails {
         this.chair = chair;
         this.position = position;
         this.phone = phone;
-        this.photoAddress = photo;
+        this.photoAddress = photoAddress;
         this.acadStatus = acadStatus;
         this.sciDegree = sciDegree;
         this.userSex = userSex;
-        this.interests = interests;
     }
-
-//    public User getUserForTables (User user){
-//        this.userId = user.getUserId();
-//        this.name = user.getName();
-//        this.surname = user.getSurname();
-//        this.middleName = user.getMiddleName();
-//        return this;
-//    }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -165,8 +148,6 @@ public class User implements UserDetails {
         }
         return result;
     }
-
-
 
     @Override
     public boolean isAccountNonExpired() {
@@ -348,30 +329,6 @@ public class User implements UserDetails {
     public void setInterests(Set<UserInterest> interests) {
         this.interests = interests;
     }
-//    public List<ArticleKeyWord> getArticleKeyWords() {
-//        return articleKeyWords;
-//    }
-//
-//    public void setArticleKeyWords(List<ArticleKeyWord> articleKeyWords) {
-//        this.articleKeyWords = articleKeyWords;
-//    }
-//
-//    public List<SeminarKeyWord> getSeminarKeyWords() {
-//        return seminarKeyWords;
-//    }
-//
-//    public void setSeminarKeyWords(List<SeminarKeyWord> seminarKeyWords) {
-//        this.seminarKeyWords = seminarKeyWords;
-//    }
-
-//    public Set<Article> getArticlesSet() {
-//        return articlesSet;
-//    }
-//
-//    public void setArticlesSet(Set<Article> articlesSet) {
-//        this.articlesSet = articlesSet;
-//    }
-
 
     public Set<Publication> getArticlesSet() {
         return articlesSet;
@@ -389,14 +346,6 @@ public class User implements UserDetails {
         this.reviewSet = reviewSet;
     }
 
-//    public Set<Seminar> getSeminarsSet() {
-//        return seminarsSet;
-//    }
-
-//    public void setSeminarsSet(Set<Seminar> seminarsSet) {
-//        this.seminarsSet = seminarsSet;
-//    }
-
     public Set<Comment> getAuthorCommentsSet() {
         return authorCommentsSet;
     }
@@ -405,13 +354,6 @@ public class User implements UserDetails {
         this.authorCommentsSet = authorCommentsSet;
     }
 
-//    public Message getMessage() {
-//        return message;
-//    }
-//
-//    public void setMessage(Message message) {
-//        this.message = message;
-//    }
 
     public Integer getRestoreCode() {
         return restoreCode;

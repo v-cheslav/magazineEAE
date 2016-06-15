@@ -1,36 +1,28 @@
 package magazine.servise;
 
+import magazine.Exeptions.AdminRegistrationException;
 import magazine.Exeptions.RegistrationException;
-//import magazine.dao.MessageDao;
+import magazine.Exeptions.SuchUserExistException;
 import magazine.dao.UserDao;
 import magazine.dao.UserInterestDao;
 import magazine.dao.UserRoleDao;
 import magazine.domain.*;
-//import magazine.utils.TemporaryPhotoAddresses;
-//import magazine.domain.Message;
 import magazine.utils.Messenger;
 import magazine.utils.PasswordHelper;
 import org.apache.log4j.Logger;
-import org.hibernate.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import java.io.File;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.file.*;
 import java.util.HashSet;
-import java.util.Properties;
 import java.util.Set;
 import javax.mail.*;
-import javax.mail.Session;
-import javax.mail.internet.*;
-import javax.activation.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+
 
 /**
  * Created by pvc on 30.10.2015.
@@ -60,9 +52,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Autowired
     UserSexService userSexService;
 
-//    @Autowired
-//    MessageDao messageDao;
-
     @Autowired
     PasswordHelper passwordHelper;
 
@@ -78,153 +67,24 @@ public class RegistrationServiceImpl implements RegistrationService {
     public RegistrationServiceImpl() {
     }
 
-    /**
-     * Реєстрація користувача.
-     * З jsp надходить об'єкт JSON з даними користувача. Клас парсить його, перевіряє чи має
-     * юзер права адміна, та передає його в DAO для запису в БД
-     */
     @Override
-    public void regUser(String userStr) throws RegistrationException{//todo винести окремі задачі в окремі методи
-        JSONParser parser = new JSONParser();
-        Object obj = null;
+    public void regUser(String userInformationJSON) throws RegistrationException{//todo винести окремі задачі в окремі методи
+
+        User user = formUserFromJSONString(userInformationJSON);
+
+        //registrationException
+        int regCode = sentRegistrationMessage(user);
+        user.setRestoreCode(regCode);
+
         try {
-            User user = new User();
-
-            obj = parser.parse(userStr);
-            JSONObject jsonObj = (JSONObject) obj;
-
-            String username = (String) jsonObj.get("username");
-            try {//спробуємо знайти юзера за username
-                userDao.findByUsername(username).get(0);//якщо існує кидаємо RegistrationException
-                throw new RegistrationException("Користувач з поштою \"" + username + "\" існує. Спробуйте іншу.");
-                // todo throw new UserExistException and ask if user forgot password, if does - redirect to the page forgot password
-            } catch (IndexOutOfBoundsException e) {
-                log.info("Реєстрація нового користувача: " + username);
-            }
-
-            String password = (String) jsonObj.get("password");
-            String encodedPassword = passwordHelper.encode(password);
-            user.setPassword(encodedPassword);
-
-            /**
-             * Здійснюється перевірка чи відмітив користувач checkbox Адміністратор,
-             */
-            Set<UserRole> userRoles = user.getUserRoles();
-            String adminRole = (String) jsonObj.get("isAdministrator");
-
-            /**
-             * перевіряємо чи дійсно має право реєструватись як Адмін,
-             * (якщо так, то пароль реєстрації має співпадати із зазначеним у properties файлі).
-             */
-            if (adminRole.equals("Administrator")) {
-                if (!password.equals(adminPassword)) {
-                    throw new RegistrationException("Ви не маєте права реєструватись як адміністратор!");
-                }
-                UserRole superAdmin = userRoleDao.getUserRole(ListRole.SUPERADMIN);
-                UserRole admin = userRoleDao.getUserRole(ListRole.ADMIN);
-                userRoles.add(admin);
-                userRoles.add(superAdmin);
-            }
-            UserRole userRole = userRoleDao.getUserRole(ListRole.USER);
-            userRoles.add(userRole);
-
-            /**
-             * Якщо користувач додав фото photoName (!photoName.equals("")), то перейменовуємо його
-             * задля запобігання двох однакових імен файлів. Якщо фотографії немає, то як адреса для
-             * фото встановлюється стандартна з images.
-             */
-            String photoName = (String) jsonObj.get("photo");
-            String newPhotoAddress;
-            if (!photoName.equals("")) {
-                newPhotoAddress = renameImage(photoName, username);
-            } else {
-                newPhotoAddress = "../../images/noPhotoMan.png";
-            }
-            user.setPhotoAddress(newPhotoAddress);
-
-            UserAcadStatus acadStatus = null;
-            try {
-                acadStatus = acadStatusService.findByString((String) jsonObj.get("acadStatus"));
-            } catch (Exception e) {
-                acadStatus = null;
-                e.printStackTrace();
-            }
-
-            UserSciDegree sciDegree = null;
-            try {
-                sciDegree = sciDegreeService.findByString((String) jsonObj.get("sciDegree"));
-            } catch (Exception e) {
-                sciDegree = null;
-                e.printStackTrace();
-            }
-
-            UserSex userSex = null;
-            try {
-                userSex = userSexService.findByString((String) jsonObj.get("userSex"));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            String interestsStr = (String) jsonObj.get("interests");
-            Set<UserInterest> interests = userInterestFormer(interestsStr, user);
-
-            user.setUserName(username);
-            user.setName((String) jsonObj.get("name"));
-            user.setSurname((String) jsonObj.get("surname"));
-            user.setMiddleName((String) jsonObj.get("middleName"));
-            user.setUniversity((String) jsonObj.get("university"));
-            user.setInstitute((String) jsonObj.get("institute"));
-            user.setChair((String) jsonObj.get("chair"));
-            user.setPosition((String) jsonObj.get("position"));
-            user.setPhone((String) jsonObj.get("phone"));
-            user.setAcadStatus(acadStatus);
-            user.setSciDegree(sciDegree);
-            user.setUserSex(userSex);
-            user.setInterests(interests);
-            user.setUserRoles(userRoles);
-
-            Integer random = 1111 + (int) (Math.random() * ((9999 - 1111) + 1));
-            user.setRestoreCode(random);
-
-            String receiver = username;
-            String regCode = random.toString();
-            String message = "Ви реєструвались в журналі Енергетика, автоматика і енергозбереження."
-                    + "<br> для підтердження реєстрації перейдіть за посиланням "
-                    + domainName + "confirmRegistration?" + "userName=" + receiver + "&regCode=" + regCode
-                    + "<br><br> Regards, Admin";//todo here write proper jsp page
-
-            try {
-                Messenger messenger = new Messenger();
-                messenger.sendMessage(receiver, message);
-//            } catch (java.net.ConnectException cEx) {
-//
-//            }
-            } catch (MessagingException ex) {
-                ex.printStackTrace();
-                throw new RegistrationException("Неможливо відправити повідомлення на пошту. " +
-                        "Перевірте правильність вашої електронної адреси та підключення до інтернету");
-            }
-            try {
-                userService.createUser(user);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                throw new RegistrationException("Виникли проблеми з реєстрацією." +
-                        "Спробуйте будь-ласка пізніше. Якщо проблема повториться - зверніться до адміністратора");
-            }
-
-        } catch (ParseException e) {
-            e.printStackTrace();
+            userService.createUser(user);
+        } catch (Exception ex) {
+            ex.printStackTrace();
             throw new RegistrationException("Виникли проблеми з реєстрацією." +
                     "Спробуйте будь-ласка пізніше. Якщо проблема повториться - зверніться до адміністратора");
         }
-
     }
 
-    /**
-     * Оновлення даних користувача.
-     * З jsp надходить об'єкт JSON з даними користувача. Клас парсить його, змінює дані юзера
-     * та передає його в DAO для оновлення в БД
-     */
     @Override
     public void updateUser(String userStr, User user) throws RegistrationException {
         JSONParser parser = new JSONParser();
@@ -233,18 +93,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             obj = parser.parse(userStr);
             JSONObject jsonObj = (JSONObject) obj;
 
-            /**
-             * Перевірка на існування в БД username. Якщо існує кидаємо RegistrationException.
-             */
-            String newUsername = (String) jsonObj.get("username");//todo перевірити чи існує username
-            if (!newUsername.equals("")){
-                try {//спробуємо знайти юзера за username
-                    userDao.findByUsername(newUsername).get(0);//якщо існує кидаємо RegistrationException
-                    throw new RegistrationException("Користувач з поштою \""+ newUsername +"\" зареєстрований.");
-                } catch (IndexOutOfBoundsException e) {
-                    user.setUserName(newUsername);
-                    log.info("Зміна даних користувача: " + user.getUsername());
-                }
+            String newUsername = (String) jsonObj.get("username");
+            boolean isUserExist = checkIfUserExist(newUsername);
+            if (isUserExist){
+                user.setUserName(newUsername);
             }
 
             String newName = (String) jsonObj.get("name");
@@ -324,7 +176,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             }
 
             String interestsStr = (String) jsonObj.get("interests");
-            Set<UserInterest> interests = userInterestFormer(interestsStr, user);
+            Set<UserInterest> interests = setUserInterests(interestsStr, user);
             user.setInterests(interests);
 
             /**
@@ -352,6 +204,142 @@ public class RegistrationServiceImpl implements RegistrationService {
                     "Спробуйте будь-ласка пізніше. Якщо проблема повториться - зверніться до адміністратора");
         }
     }
+
+
+    private int sentRegistrationMessage(User user) throws RegistrationException {
+
+        //set restoration/registration code
+        int regCode = 1111 + (int) (Math.random() * ((9999 - 1111) + 1));
+
+        String receiver = user.getUsername();
+        String message = "Ви реєструвались в журналі Енергетика, автоматика і енергозбереження."
+                + "<br> для підтердження реєстрації перейдіть за посиланням "
+                + domainName + "confirmRegistration?" + "userName=" + receiver + "&regCode=" + regCode
+                + "<br><br> Regards, Admin";//todo here write proper jsp page
+
+        try {
+            Messenger messenger = new Messenger();
+            messenger.sendMessage(receiver, message);
+        } catch (MessagingException ex) {
+            log.error(ex.getMessage());
+            throw new RegistrationException("Неможливо відправити повідомлення на пошту. " +
+                    "Перевірте правильність вашої електронної адреси та підключення до інтернету");
+        }
+        return regCode;
+    }
+
+
+
+    private User formUserFromJSONString (String userInformationJSON)throws SuchUserExistException, AdminRegistrationException{
+
+        User user;
+        try {
+            JSONParser parser = new JSONParser();
+            Object obj = parser.parse(userInformationJSON);
+            JSONObject jsonObj = (JSONObject) obj;
+
+            String username = (String) jsonObj.get("username");
+            String password = (String) jsonObj.get("password");
+            String name = (String) jsonObj.get("name");
+            String surname = (String) jsonObj.get("surname");
+            String middleName = (String) jsonObj.get("middleName");
+            String university = (String) jsonObj.get("university");
+            String institute = (String) jsonObj.get("institute");
+            String chair = (String) jsonObj.get("chair");
+            String position = (String) jsonObj.get("position");
+            String phone = (String) jsonObj.get("phone");
+            String acadStatusStr = (String) jsonObj.get("acadStatus");
+            String sciDegreeStr = (String) jsonObj.get("sciDegree");
+            String userSexStr =(String) jsonObj.get("userSex");
+            String photoName = (String) jsonObj.get("photo");
+            String adminRole = (String) jsonObj.get("isAdministrator");
+            String interestsStr = (String) jsonObj.get("interests");
+
+            //throws SuchUserExistException
+            checkIfUserExist(username);
+
+            String encodedPassword = passwordHelper.encode(password);
+
+            UserAcadStatus acadStatus = getAcadStatus(acadStatusStr);
+            UserSciDegree sciDegree = getSciDegree(sciDegreeStr);
+            UserSex userSex = getUserSex(userSexStr);
+            String photoAddress = setPhotoAddress(username, photoName);
+
+            user = new User(username, encodedPassword, name, surname, middleName, university, institute, chair, position, phone, photoAddress, acadStatus, sciDegree, userSex);
+
+            //throws AdminRegistrationException
+            Set<UserRole> userRoles = setUserRoles(user, password, adminRole);
+            user.setUserRoles(userRoles);
+
+            Set<UserInterest> interests = setUserInterests(interestsStr, user);
+            user.setInterests(interests);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Неможливо зареєструватись. Перевірте вірність введених даних.");
+        }
+
+        return user;
+    }
+
+
+    private UserAcadStatus getAcadStatus(String acadStatusStr) {
+        try {
+          return acadStatusService.findByString(acadStatusStr);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return null;
+        }
+    }
+
+    private UserSciDegree getSciDegree(String sciDegreeStr) {
+        try {
+            return sciDegreeService.findByString(sciDegreeStr);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return null;
+        }
+    }
+
+    private UserSex getUserSex(String userSexStr) {
+        try {
+            return userSexService.findByString(userSexStr);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new IllegalArgumentException();//todo перевірити
+        }
+    }
+
+    /**
+     * Якщо користувач додав фото photoName (!photoName.equals("")), то перейменовуємо його
+     * задля запобігання двох однакових імен файлів. Якщо фотографії немає, то як адреса для
+     * фото встановлюється стандартна з images.
+     */
+    private String setPhotoAddress(String username, String photoName) {
+        if (!photoName.equals("")) {
+            return renameImage(photoName, username);
+        } else {
+            return "../../images/noPhotoMan.png";
+        }
+    }
+
+    private Set<UserRole> setUserRoles(User user, String password, String adminRole) throws AdminRegistrationException {
+        Set<UserRole> userRoles = user.getUserRoles();
+        if (adminRole.equals("Administrator")) {
+            if (!password.equals(adminPassword)) {
+                throw new AdminRegistrationException("Ви не маєте права реєструватись як адміністратор!");
+            }
+            UserRole superAdmin = userRoleDao.getUserRole(ListRole.SUPERADMIN);
+            UserRole admin = userRoleDao.getUserRole(ListRole.ADMIN);
+            userRoles.add(admin);
+            userRoles.add(superAdmin);
+        }
+        UserRole userRole = userRoleDao.getUserRole(ListRole.USER);
+        userRoles.add(userRole);
+        return userRoles;
+    }
+
+
 
     private void deleteImage (String oldPhotoAddress){
         int index = oldPhotoAddress.lastIndexOf("userPhotos/");
@@ -390,7 +378,7 @@ public class RegistrationServiceImpl implements RegistrationService {
      * Парсить String інтересів користувача, строку ділить на частини відоркремлені комою,
      * і заносить інтерес до БД.
      */
-    private Set<UserInterest>  userInterestFormer (String interestsStr, User user){
+    private Set<UserInterest> setUserInterests(String interestsStr, User user){
         String[] interestsArrStr = interestsStr.split("\\,");
         Set<UserInterest> interests = new HashSet<>();
         if (interestsStr.length() >= 2) {//якщо пусто, пробіл або 2, або менше 2 символів то в БД не додається
@@ -419,6 +407,17 @@ public class RegistrationServiceImpl implements RegistrationService {
         return interests;
     }
 
-
+    private boolean checkIfUserExist (String username) throws SuchUserExistException {
+        if (username.equals("")){
+           throw new IllegalArgumentException("Електронна адреса username не вказана.");
+        }
+        try {//спробуємо знайти юзера за username
+            userDao.findByUsername(username);//якщо існує кидаємо RegistrationException
+            throw new SuchUserExistException("Користувач з поштою \"" + username + "\" існує. Спробуйте іншу.");
+        } catch (UsernameNotFoundException e) {
+            log.info("Реєстрація нового користувача, або заміна його username: " + username);
+            return true;
+        }
+    }
 
 }

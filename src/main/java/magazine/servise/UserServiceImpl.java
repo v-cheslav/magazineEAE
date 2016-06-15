@@ -23,47 +23,51 @@ import java.util.*;
  * Created by pvc on 26.10.2015.
  */
 @Service
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService/*, UserDetailsService*/ {
 
     @Autowired
-    UserDao userDao;
+    private UserDao userDao;
 
     @Autowired
     private SessionFactory sessionFactory;
 
     @Autowired
-    AcadStatusService acadStatusService;
+    private AcadStatusService acadStatusService;
 
     @Autowired
-    SciDegreeService sciDegreeService;
+    private SciDegreeService sciDegreeService;
 
     @Autowired
-    ArticleService articleService;
+    private ArticleService articleService;
 
     @Autowired
-    SeminarService seminarService;
+    private SeminarService seminarService;
 
     @Autowired
-    CommentService commentService;
+    private CommentService commentService;
 
     @Autowired
-    UserRoleDao userRoleDao;
+    private UserRoleDao userRoleDao;
 
     public UserServiceImpl() {
     }
 
-    @Override //todo  перенести в userDao
-    @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = (User) sessionFactory.getCurrentSession()
-                .createCriteria(User.class)
-                .add(Restrictions.eq("username", username))
-                .uniqueResult();
-        if (user == null){
-            throw new UsernameNotFoundException("username: " + username +  " not found!");
-        }
-        return user;
-    }
+//    @Override
+////    @Transactional
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        if (username == "Administrator") {
+//            return null;
+//        }
+//        return userDao.findByUsername(username);
+////        User user = (User) sessionFactory.getCurrentSession()
+////                .createCriteria(User.class)
+////                .add(Restrictions.eq("username", username))
+////                .uniqueResult();
+////        if (user == null){
+////            throw new UsernameNotFoundException("username: " + username +  " not found!");
+////        }
+////        return user;
+//    }
 
     @Override
     public Long createUser(User user) throws RegistrationException{
@@ -153,10 +157,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User getUserByUserName(String userName) throws UsernameNotFoundException{
-        try {
-            return userDao.findByUsername(userName).get(0);
-        } catch (IndexOutOfBoundsException ex){
-            throw  new UsernameNotFoundException("Користувача " + userName + "не знайдено.");
-        }
+//        try {
+            return userDao.findByUsername(userName);
+//        } catch (IndexOutOfBoundsException ex){
+//            throw  new UsernameNotFoundException("Користувача " + userName + "не знайдено.");
+//        }
     }
 }
