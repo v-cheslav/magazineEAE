@@ -1,16 +1,51 @@
 $(document).ready(function(){
-    var bigSize = false;
+    annotationToggle();
+    scrollWindow();
+    validate();
+    pdfSizeControl();
+    buttonsListener();
+});
 
-    $('#articleSizeSwitcher').click(function(){
-        if (bigSize == false){
-            toLargeSize();
-            bigSize = true;
-        } else {
-            toSmallSize();
-            bigSize = false;
+
+function annotationToggle(){
+    $('#annotationEngContent').hide();
+    $('#annotationRuContent').hide();
+    $('#ua').click(function(){
+        document.getElementById('annotationHeader').innerHTML = 'Анотація';
+        $('#annotationEngContent').hide();
+        $('#annotationRuContent').hide();
+        $('#annotationUkrContent').show();
+    });
+    $('#eng').click(function(){
+        document.getElementById('annotationHeader').innerHTML = 'Annotation';
+        $('#annotationUkrContent').hide();
+        $('#annotationRuContent').hide();
+        $('#annotationEngContent').show();
+    });
+    $('#ru').click(function(){
+        document.getElementById('annotationHeader').innerHTML = 'Аннотация';
+        $('#annotationUkrContent').hide();
+        $('#annotationEngContent').hide();
+        $('#annotationRuContent').show();
+    });
+}
+
+
+function scrollWindow (){
+    $(window).scroll(function(){
+        if($(this).scrollTop()>220){
+            $('#topnav').addClass('fixed');
+
+        }
+        else if ($(this).scrollTop()<220){
+            $('#topnav').removeClass('fixed');
         }
     });
 
+};
+
+
+function buttonsListener(){
     $('#dennyReviewBtn').click(function(){
         $('#confirmation').show();
     });
@@ -20,54 +55,78 @@ $(document).ready(function(){
         $('#addReview').hide();
     });
 
-
     $('#cancelConfBtn').click(function(){
         $('#confirmation').hide();
     });
 
     $('#closeSign').click(function(){
         $('#reviewSection').hide();
-        var reviewContent = document.getElementById("reviewMessage");
+        var reviewContent = document.getElementById("reviewPdf");
         while (reviewContent.lastChild) {
             reviewContent.removeChild(reviewContent.lastChild);
         }
     });
 
-    $('#commentsHeader').click(function(){
-        $('#commentsContent').toggle();
-    });
-    $('#annotationUaHeader').click(function(){
-        $('#annotationUaContent').toggle();
-    });
-    $('#annotationUkHeader').click(function(){
-        $('#annotationUkContent').toggle();
-    });
-    $('#annotationRuHeader').click(function(){
-        $('#annotationRuContent').toggle();
-    });
-    $('#reviewersMenuHeader').click(function(){
-        $('#reviewersMenuContent').toggle();
+    $('#btnUpload').click( function() {
+        if ($("#pdfUploadForm").valid()){
+            addReview();
+        } else {
+            alert("Заповніть будь-ласка коректно форму додавання статті.")
+        };
     });
 
-});
+    $('#btnClear').on('click', function() {
+        $('[name="articleFile"]').val('');
+    });
+};
 
+
+function validate(){
+    $('#pdfUploadForm').validate({
+        rules: {
+            reviewFile: {
+                required: true
+            }
+        },
+        messages: {
+            reviewFile:{
+                required: "Оберіть файл pdf."
+            }
+        }
+    });
+};
+
+//Control view of pdf document
+function pdfSizeControl(){
+    var largeSize = false;
+    $('#toLargeSize').click(function(){
+        if (largeSize == false){
+            toLargeSize();
+            largeSize = true;
+        } else {
+            toSmallSize();
+            largeSize = false;
+        }
+    });
+};
 
 function toLargeSize(){
-    document.getElementById('articleSizeSwitcher').innerHTML='Згорнути статтю';
-
-    $('#articleSizeSwitcher').css({
+    $('#toLargeSize').css({
         "position":   "fixed",
-        "width":      "100%",
-        "padding-left": "60px",
-        "z-index":    "1000",
+        "width":      "32px",
+        "height":      "32px",
+        //"padding-left": "60px",
+        "z-index":    "10000",
         "top":        "0",
-        "left":       "0"
+        "right":        "0",
+        "background": "transparent url(\"../images/closeSign.png\")",
+        "background-repeat": "no-repeat"
     });
 
     $('#articlePdf').css({
         "position":   "fixed",
         "z-index":    "1000",
-        "top":        "30px",
+        "top":        "0px",
         "left":       "0",
         "height":     "100%",
         "width":      "100%"
@@ -86,21 +145,22 @@ function toReviewerSize(){
 };
 
 function toSmallSize(){
-    document.getElementById('articleSizeSwitcher').innerHTML='Розгорнути статтю на всю сторінку';
 
-    $('#articleSizeSwitcher').css({
+    $('#toLargeSize').css({
+        "z-index":    "100",
         "position":     "relative",
-        "width":        "auto",
-        "padding-left": "22px"
-    });
+        "background": "transparent url(\"../images/toAllPage.png\")"
+});
 
     $('#articlePdf').css({
+        "z-index":    "100",
         "position":   "relative",
         "top":        "0",
         "height":     "650px",
-        "width":      "753px"
+        "width":      "100%"
     });
 }
+
 
 function checkReviewer(reviewerId){
     var reviewerIdJson = {
@@ -125,6 +185,7 @@ function checkReviewer(reviewerId){
         }
     });
 }
+
 
 function dennyReview(articleId) {
     var articleIdJson = {
@@ -153,54 +214,66 @@ function dennyReview(articleId) {
     });
 }
 
-function setReview(articleId){
-    var review = $("#reviewText").val();
-    if (review.length < 100){
-        alert("Рецензія не коректна")
-    } else {
-        var reviewJson = {
-            articleId: articleId,
-            review: $("#reviewText").val()
+
+function addReview(){
+    $.ajax({
+        url: '/addReview',
+        type: "POST",
+        data: new FormData(document.getElementById("pdfUploadForm")),
+        enctype: 'multipart/form-data',
+        processData: false,
+        contentType: false
+    }).done(function(data) {
+        if (data.reviewErrorMassage == null) {
+            $('#fileUploadingContent').hide();
+            window.location.reload();
+        }
+        if (data.reviewErrorMassage != null){
+            var errorMessage = $('#reviewErrorMassage');
+            errorMessage.html(data.reviewErrorMassage);
         };
-        $.ajax({
-            url: "/setReview",
-            contentType: 'application/json',
-            data: JSON.stringify(reviewJson),
-            async: false,
-            type: 'POST',
-            success: function (data) {
-                if (data =="OK"){
-                    window.location.reload();
-                } else {
-                    alert(data);
-                }
-            },
-            error: function (xhr, status, errorThrown) {
-                alert('Виникла помилка: ' + status + ". " + errorThrown);
-            }
-        });
-    }
+    }).fail(function(errorThrown) {
+        alert(errorThrown + ' Помилка завантаження!');
+    });
 }
 
-function getReview(reviewId) {
-    $.ajax({
-        data: "reviewId="+reviewId,
-        dataType: 'json',
-        type: 'GET',
-        url: '/getReview',
-        success: function (data) {
-            $('#reviewSection').show();
-            var reviewMessage = $('#reviewMessage');
-            for (var i = 0; i < data.length; i++){
-                var par = $('<p></p>');
-                par.html(data[i]);
-                reviewMessage.append(par);
-            }
-        },
-        error: function (xhr, status, errorThrown) {
-            alert('Виникла помилка: ' + status + ". " + errorThrown);
-        }
-    });
+
+//function addReview(articleId){
+//    var file = $('[name="reviewFile"]');
+//        var reviewJson = {
+//            articleId: articleId,
+//            fileName: $.trim(file.val()).split('\\').pop()
+//        };
+//        $.ajax({
+//            url: "/addReview",
+//            contentType: 'application/json',
+//            data: JSON.stringify(reviewJson),
+//            async: false,
+//            type: 'POST',
+//            success: function (data) {
+//                if (data =="OK"){
+//                    window.location.reload();
+//                } else {
+//                    alert(data);
+//                }
+//            },
+//            error: function (xhr, status, errorThrown) {
+//                alert('Виникла помилка: ' + status + ". " + errorThrown);
+//            }
+//        });
+//    //}
+//}
+
+
+function getReview(review) {
+    var reviewPdf = $('#reviewPdf');
+    var path = 'getFile?name=' + review + '&type=article';
+    $('#reviewSection').show();
+
+    var iframe = $('<iframe id="reviewPdf1"></iframe>');
+    iframe.attr('src', path);
+    reviewPdf.append(iframe);
+
 }
 
 function addComment(publicationId, type) {
@@ -225,36 +298,15 @@ function addComment(publicationId, type) {
         type: 'POST',
         url: '/addComment',
         success: function (data) {
-            var allComments = $('#allComments');
-            var commentBox = $('<div class="commentBox"></div>');
-            var commentator = $('<span class="commentator"></span>');
-            commentator.html(data);
-
-            var commentDate = $('<span class="commentDate"></span>');
-
-            var date = new Date();
-            var options = {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                time: 'numeric'
-            };
-            var localDate = date.toLocaleString("ua", options);
-            commentDate.html(localDate);
-
-            var newComment = $('<p class="allCommentsText"></p>');
-            newComment.html($('#newComment').val());
-
-            commentBox.append(commentator).append(commentDate).append(newComment);
-            allComments.append(commentBox);
-
             $('#newComment').val('');
+            window.location.reload();
         },
         error: function (xhr, status, errorThrown) {
             alert('Виникла помилка: ' + status + ". " + errorThrown);
         }
     });
 }
+
 
 function deleteComment(commentId){
     if (confirm("Видалити комертар?")){
@@ -277,3 +329,5 @@ function deleteComment(commentId){
         });
     }
 }
+
+

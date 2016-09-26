@@ -12,132 +12,183 @@
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="../../css/site_global.css" charset="utf-8"/>
     <link rel="stylesheet" type="text/css" href="../../css/login.css" charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="../../css/formsAndButtons.css"/>
+
     <!-- Other scripts -->
     <script src="../../js/jquery-1.11.2.min.js"></script>
+    <script src="../../js/jquery.validate.min.js"></script>
     <script src="../../js/login.js"></script>
     <%--<script src="../../js/registration.js" type="text/javascript"></script>--%>
 </head>
 <body>
 <div class="header">
-    <h1 id="magazineName">ЕНЕРГЕТИКА, АВТОМАТИКА І ЕНЕРГОЗБЕРЕЖЕННЯ</h1>
-    <nav id="MenuBar">
-        <ul>
-            <li><a href="index.html" class="menuButton">ГОЛОВНА</a></li>
-            <li><a href="publication.html" class="menuButton">ПУБЛІКАЦІЇ</a></li>
-            <li><a href="seminar.html" class="menuButton">СЕМІНАР</a></li>
-            <li><a href="publish.html" class="menuButton">ОПУБЛІКУВАТИ</a></li>
-            <li><a href="contacts.html" class="menuButton">КОНТАКТИ</a></li>
-        </ul>
-    </nav>
-    <hr class="horizontalLine">
     <div class="banner">
         <div class="bannerTop">
             <h3 class="headerUniversityName">Національний університет біоресурсів і природокористування України</h3>
+
+            <div class="authForm" id="authForm">
+                <sec:authorize access="isAnonymous()">
+                    <p>
+                        <a href="/login">Увійти</a>
+                        <a href="/registration">Зареєструватись</a>
+                    </p>
+                </sec:authorize>
+                <sec:authorize access="isAuthenticated()">
+                    <p>
+                        <a href="/myPage">${userDetails.name} ${userDetails.surname}</a>
+                        <a href="/j_spring_security_logout">Вийти</a>
+                    </p>
+                </sec:authorize>
+            </div>
         </div>
         <hr class="horizontalLine" id="bannerLine">
         <div class="bannerBottom">
             <div class="instituteLogo"></div>
             <h3 class="instituteHeaderName">ННІ Енергетики, автоматики <br>і енергозбереження</h3>
-            <a href="advancedSearch.html" class="menuButton" id="searchingButton">Пошук</a>
+            <sec:authorize access="hasRole('ADMIN')">
+                <p class="adminLink">
+                    <a href="/administrator">Сторінка адміністратора</a>
+                </p>
+            </sec:authorize>
+            <p id="currentDate"></p>
         </div>
     </div>
-    <hr class="horizontalLine">
+    <hr>
+    <div id="topnav">
+        <ul class="nav">
+            <li><a href="index.html">Головна</a></li>
+            <li class="active"><a href="articles.html">Статті</a></li>
+            <li><a href="seminars.html">Семінари</a></li>
+            <li><a href="conference.html">Конференції</a></li>
+            <li><a href="#">Опублікувати</a>
+                <ul>
+                    <li><a href="publishArticle.html">Статтю</a></li>
+                    <li><a href="publishSeminar.html">Cемінар</a></li>
+                    <li><a href="publishConference.html">Корференцію</a></li>
+                </ul>
+            </li>
+            <li><a href="advancedSearch.html">Пошук</a></li>
+            <li><a href="contacts.html">Контакти</a></li>
+        </ul>
+    </div>
+    <hr>
 </div>
-<div class="clearfix" id="page">
 
 
-        <h3 class="loginTitle">
-            <p id="titleText">Увійдіть використовуючи електронну пошту та пароль!</p>
-        </h3>
+<div class="content">
 
-        <c:if test="${SPRING_SECURITY_LAST_EXCEPTION != null}">
-            <div class="errorBlock">
-                Помилка авторизації.
-                <br/> Причина:
-                    ${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}
+    <div class="whiteBox">
+
+        <div class="mainContent">
+            <div class="barHeader">
+                <%--<h2>Увійдіть використовуючи електронну пошту та пароль!</h2>--%>
             </div>
-        </c:if>
 
-        <form class="loginForm" name="f" action="<c:url value='/j_spring_security_check'/>"
-              method="post">
 
-            <div class="contentLeft">
-                <div class="login">
-                    <div class="tips">Електронна пошта:</div>
-                    <div class="userFiller">
+            <c:if test="${SPRING_SECURITY_LAST_EXCEPTION != null}">
+                <div class="errorBlock">
+                    Помилка авторизації.
+                    <br/>
+                        ${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}
+                </div>
+            </c:if>
+
+            <form class="form" id="loginForm" name="f" action="<c:url value='/j_spring_security_check'/>"
+                  method="post">
+
+
+                <div class="formField">
+                    <label for="j_username" class="label">
+                        Електронна адреса
+                        <span>*</span>
+                    </label>
+
+                    <div class="textField">
                         <input type="text" name="j_username" id="j_username" value="v_cheslav@ukr.net">
                     </div>
                 </div>
 
-                <div class="password">
-                    <div class="tips">Пароль:</div>
-                    <div class="userFiller">
-                        <input type="password" name="j_password" value="QwQw1212">
+                <div class="formField">
+                    <label for="j_password" class="label">
+                        Пароль
+                        <span>*</span>
+                    </label>
+
+                    <div class="textField">
+                        <input type="password" id="j_password" name="j_password" value="QwQw1212">
                     </div>
                 </div>
 
-                <div class="buttons">
+                <div class="formField">
+                    <input id="_spring_security_remember_me"
+                           name="_spring_security_remember_me" type="checkbox"/>
+                    <label for="_spring_security_remember_me">Запам'ятати?</label>
+                </div>
+
+                <div id="buttons">
                     <input class="button" type="submit" name="submit" value="Увійти">
                     <input class="button" type="reset" name="reset" value="Скинути">
-                    <input class="button" type="button" onclick="registrationPage()"
-                           value="Реєстрація">
                 </div>
-            </div>
-
-            <div class="contentRight">
-                <input id="_spring_security_remember_me"
-                       name="_spring_security_remember_me" type="checkbox"/>
-                <label for="_spring_security_remember_me">Запам'ятати?</label>
-                <div id="remindPassword">Нагадати пароль.</div>
-            </div>
-
-        </form>
 
 
+            </form>
 
 
-    <hr class="horizontalLine">
-    <div class="clearfix colelem" id="footer"><!-- column -->
-        <div class="clearfix colelem" id="footerUniversityInform"><!-- content -->
-            <p>Національний університет біоресурсів і природокористування України&nbsp; ННІ Енергетики, автоматики і
-                енергозбереження</p>
         </div>
-        <div class="clearfix colelem" id="footerContacts"><!-- group -->
-            <div class="grpelem" id="addressIcon"><!-- simple frame --></div>
-            <div class="clearfix grpelem" id="footerAdsressInform"><!-- column -->
-                <div class="clearfix colelem" id="addressFooter"><!-- content -->
-                    <p>03041, м Київ, вул Героїв Оборони 12, навчальний корпус №8</p>
-                </div>
-                <div class="clearfix colelem" id="designerName"><!-- content -->
-                    <p>Дизайн та програмування: Гаврилюк В.В.</p>
-                </div>
+
+        <div class="rightSideBar">
+            <input class="button" type="button" onclick="registrationPage()"
+                   value="Реєстрація">
+            <input class="button" type="button" id="remindPassword" value="Відновити пароль">
+        </div>
+        <div class="clear"></div>
+    </div>
+
+</div>
+</div>
+
+<hr class="horizontalLine">
+<div class="footer" id="footer"><!-- column -->
+    <div class="" id="footerUniversityInform"><!-- content -->
+        <p>Національний університет біоресурсів і природокористування України&nbsp; ННІ Енергетики, автоматики і
+            енергозбереження</p>
+    </div>
+    <div class="" id="footerContacts"><!-- group -->
+        <div class="" id="addressIcon"><!-- simple frame --></div>
+        <div class="" id="footerAdsressInform"><!-- column -->
+            <div class="" id="addressFooter"><!-- content -->
+                <p>03041, м Київ, вул Героїв Оборони 12, навчальний корпус №8</p>
             </div>
-            <div class="grpelem" id="footerVline"><!-- simple frame --></div>
-            <div class="grpelem" id="callIcon"><!-- simple frame --></div>
-            <div class="clearfix grpelem" id="fotterPhones"><!-- column -->
-                <div class="clearfix colelem" id="institutePhone"><!-- content -->
-                    <p>(044) 527-85-80</p>
-                </div>
-                <div class="clearfix colelem" id="designerPhone"><!-- content -->
-                    <p>(096) 115-00-83</p>
-                </div>
-            </div>
-            <div class="grpelem" id="fotterVline2"><!-- simple frame --></div>
-            <div class="grpelem" id="emailIcon"><!-- simple frame --></div>
-            <div class="clearfix grpelem" id="footerEmails"><!-- column -->
-                <div class="clearfix colelem" id="instituteEmail"><!-- content -->
-                    <p>epafort1@ukr.net</p>
-                </div>
-                <div class="clearfix colelem" id="designerEmail"><!-- content -->
-                    <p>v_cheslav@ukr.net</p>
-                </div>
+            <div class="" id="designerName"><!-- content -->
+                <p>Дизайн та програмування: Гаврилюк В.В.</p>
             </div>
         </div>
-        <div class="clearfix colelem" id="allRightsInform"><!-- content -->
-            <p>© All rights reserved</p>
+        <div class="" id="footerVline"><!-- simple frame --></div>
+        <div class="" id="callIcon"><!-- simple frame --></div>
+        <div class="" id="fotterPhones"><!-- column -->
+            <div class="" id="institutePhone"><!-- content -->
+                <p>(044) 527-85-80</p>
+            </div>
+            <div class="" id="designerPhone"><!-- content -->
+                <p>(096) 115-00-83</p>
+            </div>
+        </div>
+        <div class="" id="fotterVline2"><!-- simple frame --></div>
+        <div class="" id="emailIcon"><!-- simple frame --></div>
+        <div class="" id="footerEmails"><!-- column -->
+            <div class="" id="instituteEmail"><!-- content -->
+                <p>epafort1@ukr.net</p>
+            </div>
+            <div class="" id="designerEmail"><!-- content -->
+                <p>v_cheslav@ukr.net</p>
+            </div>
         </div>
     </div>
+    <div class="" id="allRightsInform"><!-- content -->
+        <p>© All rights reserved</p>
+    </div>
 </div>
+
 <div class="uploading" id="uploading"></div>
 
 </body>

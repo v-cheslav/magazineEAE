@@ -1,26 +1,25 @@
 package magazine.controller;
 
+import magazine.Exeptions.AdminRegistrationException;
 import magazine.Exeptions.RegistrationException;
 import magazine.domain.User;
-import magazine.servise.RegistrationService;
-import magazine.servise.UserService;
+import magazine.domain.UserInterest;
+import magazine.domain.UserRole;
+import magazine.servise.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.apache.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
+import java.util.HashMap;
+import java.util.Set;
 
 /**
 * Created by pvc on 31.10.2015.
@@ -32,74 +31,148 @@ public class RegistrationController {
     public static final Logger log = Logger.getLogger(ApplicationController.class);
 
     @Autowired
+    JsonParseService jsonParseService;
+
+    @Autowired
     RegistrationService registrationService;
 
     @Autowired
     UserService userService;
 
+    @Autowired
+    AcadStatusService acadStatusService;
+
+    @Autowired
+    SciDegreeService sciDegreeService;
+
+    @Autowired
+    UserSexService userSexService;
+
+    @Autowired
+    FileService fileService;
+
+    @Autowired
+    UserInterestService userInterestService;
+
+    @Autowired
+    UserRoleService userRoleService;
+
 
     @PreAuthorize("isAnonymous()")
     @RequestMapping(value = "/registration", method = {RequestMethod.GET})
-    public String registration(Model model) {
+    public String registration() {
         log.info("/registration controller");
         return "registration";
     }
 
-    @RequestMapping(value = "/regUser", method = RequestMethod.POST, consumes = "application/json; charset=UTF-8")
-    public ResponseEntity<String> registrationForm (@RequestBody String userStr) {
+
+    @RequestMapping(value = "/regUser", method = RequestMethod.POST, produces = {"application/json"})
+    public @ResponseBody
+    HashMap<String, Object> regUser(MultipartHttpServletRequest request,
+                                      HttpServletResponse response)  {
         log.info("/regUser controller");
-        ResponseEntity<String> entity;
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "text/html; charset=utf-8");
+        HashMap<String, Object> map = new HashMap<String, Object>();
+
+        MultipartFile multipartFile = request.getFile("userPhoto");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        User user = new User(username, password,
+                request.getParameter("name"),
+                request.getParameter("surname"),
+                request.getParameter("middleName"),
+                request.getParameter("university"),
+                request.getParameter("institute"),
+                request.getParameter("chair"),
+                request.getParameter("position"),
+                request.getParameter("phone"),
+                acadStatusService.findAcadStatus(request.getParameter("acadStatus")),
+                sciDegreeService.finSciDegree(request.getParameter("sciDegree")),
+                userSexService.findUserSex(request.getParameter("userSex"))
+        );
+
+        String interestsStr = request.getParameter("keyWords");
+        Set<UserInterest> interests = userInterestService.setUserInterests(interestsStr, user);
+        user.setInterests(interests);
+
+        String adminRole = request.getParameter("adminChBox");
+        Set<UserRole> userRoles;
         try {
-            registrationService.regUser(userStr);
-        } catch (RegistrationException e) {
+            userRoles = userRoleService.setUserRoles(user, password, adminRole);//throws AdminRegistrationException
+            user.setUserRoles(userRoles);
+        } catch (AdminRegistrationException e) {
+            map.put("registrationMassage", "Ви не маєте права реєструватись як адміністратор!");
             e.printStackTrace();
-            entity = new ResponseEntity<String>(e.getMessage(), headers, HttpStatus.OK);
-            return entity;
         }
-        entity = new ResponseEntity<String>("OK", headers, HttpStatus.OK);
-        return entity;
+
+        try {
+            registrationService.regUser(user, multipartFile);
+        } catch (RegistrationException e) {
+            map.put("registrationMassage", e.getMessage());
+            e.printStackTrace();
+        }
+        return map;
     }
+
 
     @PreAuthorize("hasRole('USER')")
-    @RequestMapping(value = "/updateUser", method = RequestMethod.POST, consumes = "application/json; charset=UTF-8")
-    public ResponseEntity<String> updateUser (@RequestBody String userStr) {
+    @RequestMapping(value = "/updateUser", method = RequestMethod.POST, produces = {"application/json"})
+    public @ResponseBody
+    HashMap<String, Object> updateUser(MultipartHttpServletRequest request,
+                                    HttpServletResponse response)  {
         log.info("/updateUser controller");
-        ResponseEntity<String> entity;
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "text/html; charset=utf-8");
-        User user = null;
+
+        User oldUser = null;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            user = (User) authentication.getPrincipal();
+            oldUser = (User) authentication.getPrincipal();
         }
+
+        HashMap<String, Object> map = new HashMap<String, Object>();
+
+        MultipartFile multipartFile = request.getFile("userPhoto");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        User newUser = new User(username, password,
+                request.getParameter("name"),
+                request.getParameter("surname"),
+                request.getParameter("middleName"),
+                request.getParameter("university"),
+                request.getParameter("institute"),
+                request.getParameter("chair"),
+                request.getParameter("position"),
+                request.getParameter("phone"),
+                acadStatusService.findAcadStatus(request.getParameter("acadStatus")),
+                sciDegreeService.finSciDegree(request.getParameter("sciDegree")),
+                userSexService.findUserSex(request.getParameter("userSex"))
+        );
+
+        String interestsStr = request.getParameter("keyWords");
+        Set<UserInterest> interests = userInterestService.setUserInterests(interestsStr, newUser);
+        newUser.setInterests(interests);
+
         try {
-            registrationService.updateUser(userStr, user);
+            userService.updateUser(oldUser, newUser, multipartFile);
         } catch (RegistrationException e) {
+            map.put("errorMessage", e.getMessage());
             e.printStackTrace();
-            entity = new ResponseEntity<String>(e.getMessage(), headers, HttpStatus.OK);
-            return entity;
         }
-        entity = new ResponseEntity<String>("OK", headers, HttpStatus.OK);
-        return entity;
+        return map;
     }
 
 
-
-
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String uploadFile (MultipartHttpServletRequest request,
-                              HttpServletResponse response)throws Exception {
-        log.info("/upload controller");
-        MultipartFile multipartFile = request.getFile("file");
-        StringBuilder sb = new StringBuilder();
-        String username = multipartFile.getName();
-        String type = multipartFile.getContentType();
-        sb.append("../userPhotos/").append(username).append(type);
-        String photoAddress = sb.toString();
-        multipartFile.transferTo(new File(photoAddress));//todo do exception, if it occurs redirect to another page
-        return "OK";
-    }
+//    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+//    public String uploadFile (MultipartHttpServletRequest request)throws Exception {
+//        log.info("/upload controller");
+//        MultipartFile multipartFile = request.getFile("file");
+//        StringBuilder sb = new StringBuilder();
+//        String username = multipartFile.getName();
+//        String type = multipartFile.getContentType();
+//        sb.append("../userPhotos/").append(username).append(type);
+//        String photoAddress = sb.toString();
+//        multipartFile.transferTo(new File(photoAddress));//todo do exception, if it occurs redirect to another page
+//        return "OK";
+//    }
 
 }

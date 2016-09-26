@@ -123,7 +123,7 @@ public class User implements UserDetails {
         this.university = university;
     }
 
-    public User(String username, String password, String name, String surname, String middleName, String university, String institute, String chair, String position, String phone, String photoAddress, UserAcadStatus acadStatus, UserSciDegree sciDegree, UserSex userSex) {
+    public User(String username, String password, String name, String surname, String middleName, String university, String institute, String chair, String position, String phone, UserAcadStatus acadStatus, UserSciDegree sciDegree, UserSex userSex) {
         this.username = username;
         this.password = password;
         this.name = name;
@@ -134,7 +134,6 @@ public class User implements UserDetails {
         this.chair = chair;
         this.position = position;
         this.phone = phone;
-        this.photoAddress = photoAddress;
         this.acadStatus = acadStatus;
         this.sciDegree = sciDegree;
         this.userSex = userSex;

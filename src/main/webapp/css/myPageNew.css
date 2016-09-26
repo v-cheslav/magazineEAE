@@ -46,7 +46,6 @@
 }
 
 #instituteNameHeader {
-    /*float: left;*/
     margin-left: 500px;
     font-size: 19px;
     width: 500px;
@@ -54,132 +53,165 @@
 }
 
 
-#searchingButton {
-    margin-top: 20px;
-}
-.searchingArea {
-    margin-top: 20px;
-}
-.searchingSign {
-    margin-top: 25px;
+.mainContent {
+    float: right;
+    width: 630px;
+    margin: 0;
 }
 
-#information {
-    margin-bottom: 15px;
+
+#curentUserImg {
+    max-width: 90px;
 }
-#information hr {
-    margin-right: 15px;
+
+
+#sexField{
+    border: 1px solid #D7D7D7;
+    width: 610px;
+    float: left;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+#sexField input{
+    width: 10px;
+}
+
+#userSexLabel{
+    margin: 0px;
+}
+
+#userSex span, #sexField label {
+    float: left;
+    display: inline-block;
+}
+
+/*#searchingButton {*/
+    /*margin-top: 20px;*/
+/*}*/
+/*.searchingArea {*/
+    /*margin-top: 20px;*/
+/*}*/
+/*.searchingSign {*/
+    /*margin-top: 25px;*/
+/*}*/
+
+/*#information {*/
+    /*margin-bottom: 15px;*/
+/*}*/
+/*#information hr {*/
+    /*margin-right: 15px;*/
     /*margin-bottom: -15px;*/
-}
+/*}*/
 
-#information div p {
-    width: 680px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-}
+/*#information div p {*/
+    /*width: 680px;*/
+    /*padding-top: 5px;*/
+    /*padding-bottom: 5px;*/
+/*}*/
 
-.menuContent {
-    font-size: 16px;
+/*.menuContent {*/
+    /*font-size: 16px;*/
 
-}
+/*}*/
 
-.newReviewer {
-    display: inline;
-    color: blue;
-}
-.newReviewer:hover {
-   text-decoration: underline;
-    cursor: pointer;
-}
+/*.newReviewer {*/
+    /*display: inline;*/
+    /*color: blue;*/
+/*}*/
+/*.newReviewer:hover {*/
+   /*text-decoration: underline;*/
+    /*cursor: pointer;*/
+/*}*/
 
-.body .confirmation {
-    overflow: hidden;
-}
-.confirmation {
-    display:    none;
-    position:   fixed;
-    z-index:    1000;
-    top:        0;
-    left:       0;
-    height:     100%;
-    width:      100%;
-    background-color: rgba( 255, 255, 255, 0.5 );
-}
+/*.body .confirmation {*/
+    /*overflow: hidden;*/
+/*}*/
+/*.confirmation {*/
+    /*display:    none;*/
+    /*position:   fixed;*/
+    /*z-index:    1000;*/
+    /*top:        0;*/
+    /*left:       0;*/
+    /*height:     100%;*/
+    /*width:      100%;*/
+    /*background-color: rgba( 255, 255, 255, 0.5 );*/
+/*}*/
 
-.confirmationMessage {
-    border: solid;
-    border-width: 1px;
-    border-color: #000008;
-    border-radius: 3px;
-    width: 450px;
-    height: 130px;
-    margin: 200px auto 0px auto;
-    background-color: #FAF8F5;
-}
+/*.confirmationMessage {*/
+    /*border: solid;*/
+    /*border-width: 1px;*/
+    /*border-color: #000008;*/
+    /*border-radius: 3px;*/
+    /*width: 450px;*/
+    /*height: 130px;*/
+    /*margin: 200px auto 0px auto;*/
+    /*background-color: #FAF8F5;*/
+/*}*/
 
-.confirmationMessage p {
-    margin-top: 30px;
-    margin-left: 40px;
-}
-.confirmationMessage div {
-    margin-top: 30px;
-    margin-left: 60px;}
+/*.confirmationMessage p {*/
+    /*margin-top: 30px;*/
+    /*margin-left: 40px;*/
+/*}*/
+/*.confirmationMessage div {*/
+    /*margin-top: 30px;*/
+    /*margin-left: 60px;}*/
 
 
-#keyWords {
-    width: 200px;
-}
+/*#keyWords {*/
+    /*width: 200px;*/
+/*}*/
 
-.photoFrame {
-    margin-top: 20px;
-    margin-left: 55px;
-}
+/*.photoFrame {*/
+    /*margin-top: 20px;*/
+    /*margin-left: 55px;*/
+/*}*/
 
-.photoAddress {
-    width: 210px;
-}
+/*.photoAddress {*/
+    /*width: 210px;*/
+/*}*/
 
-#btnUpload {
-    float: none;
-    margin: 10px 0px 0px 30px;
-}
-#btnClear {
-    float: none;
-    margin: 10px 0px 0px 50px;
-}
+/*#btnUpload {*/
+    /*float: none;*/
+    /*margin: 10px 0px 0px 30px;*/
+/*}*/
+/*#btnClear {*/
+    /*float: none;*/
+    /*margin: 10px 0px 0px 50px;*/
+/*}*/
 
-#newSeminarTheme {
-    margin-top: 0px;
-    margin-left: 30px;
-    width: 640px;
-    height: 50px;
-    padding: 8px;
-}
+/*#newSeminarTheme {*/
+    /*margin-top: 0px;*/
+    /*margin-left: 30px;*/
+    /*width: 640px;*/
+    /*height: 50px;*/
+    /*padding: 8px;*/
+/*}*/
 
-#datepickerContainer {
-    margin: 20px 20px 20px 90px;
-    width: 300px;
-    height: 30px;
-    float:left;
-}
+/*#datepickerContainer {*/
+    /*margin: 20px 20px 20px 90px;*/
+    /*width: 300px;*/
+    /*height: 30px;*/
+    /*float:left;*/
+/*}*/
 
-#datepicker {
-    margin: 6px 10px 0px 5px;
-}
+/*#datepicker {*/
+    /*margin: 6px 10px 0px 5px;*/
+/*}*/
 
-#applySeminarBtn {
-    margin: 20px;
-}
+/*#applySeminarBtn {*/
+    /*margin: 20px;*/
+/*}*/
 
-.messageField {
-    margin-top: 240px;
-}
+/*.messageField {*/
+    /*margin-top: 240px;*/
+/*}*/
 
-.fileForm  {
-    margin-top: -480px;
-}
-#regBtn {
-    top: -45px;
-    margin-left: 40px;
-}
+/*.fileForm  {*/
+    /*margin-top: -480px;*/
+/*}*/
+/*#regBtn {*/
+    /*top: -45px;*/
+    /*margin-left: 40px;*/
+/*}*/
 

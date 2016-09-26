@@ -33,72 +33,41 @@ $(document).ready(function () {
             alert("Заповніть будь-ласка коректно форму реєстрації.")
         };
     });
+
+    $('#btnClear').on('click', function() {
+        var file = $('#photo');
+        file.val('');
+    });
 });
 
+
 function addUser(){
-    var file = $('[name="file"]');
-        var user = {
-            username: $("#username").val(),
-            password: $("#password").val(),
-            name: $("#name").val(),
-            surname: $("#surname").val(),
-            middleName: $("#middleName").val(),
-            university: $("#university").val(),
-            institute: $("#institute").val(),
-            chair: $("#chair").val(),
-            position: $("#position").val(),
-            phone: $("#pnone").val(),
-            photo: $.trim(file.val()).split('\\').pop(),
-            acadStatus: $("#acadStatus :selected").val(),
-            sciDegree: $("#sciDegree :selected").val(),
-            userSex: (checkSex()),
-            interests: $("#keyWords").val(),
-            isAdministrator: (checkAdmin())
+    $.ajax({
+        url: '/regUser',
+        type: "POST",
+        data: new FormData(document.getElementById("registrationForm")),
+        enctype: 'multipart/form-data',
+        processData: false,
+        contentType: false
+    }).done(function(data) {
+        if (data.registrationMassage == null){
+            $('#regContent').hide();
+            $('#message').show();
+        };
+        if (data.registrationMassage != null){
+            var errorMessage = $('#regErrorMessage');
+            errorMessage.html(data.registrationMassage);
         };
 
-        $.ajax({
-            url: "/regUser",
-            contentType: 'application/json',
-            data: JSON.stringify(user),
-            async: false,
-            type: 'POST',
-            success: function (data) {
-                var message = $('#regErrorMessage');
-                if (data =="OK"){
-                    $('#regContent').hide();
-                    $('#message').show();
-                    //window.location.href = '/login'
-                } else {
-                    message.html(data);
-                };
-
-            },
-            error: function (xhr, status, errorThrown) {
-                alert('Виникла помилка при реєстрації: ' + status + ". " + errorThrown);
-            }
-        });
-};
-
-function checkAdmin(){
-        var isAdmin = document.getElementsByName('adminChBox');
-        if (isAdmin[0].type == "checkbox" && isAdmin[0].checked) {
-            return isAdmin[0].value;
-        } else {
-            return '';
-        }
-};
-
-function checkSex(){
-    var userSex = document.getElementsByName('userSex');
-    for (var i = 0; i < userSex.length; i++) {
-        if (userSex[i].type == "radio" && userSex[i].checked) {
-            return userSex[i].value;
-        }
-    }
-};
+    }).fail(function(jqXHR, textStatus) {
+        alert(jqXHR + textStatus + 'Помилка завантаження! Спробуйте змінити назву файлу.');
+    });
+}
 
 $.validator.addMethod("pwCheck", function(value) {
     return /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[A-Za-z0-9]{8,}$/.test(value)
 });
+
+
 
 

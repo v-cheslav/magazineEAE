@@ -30,7 +30,7 @@ public class SciDegreeServiceImpl implements SciDegreeService {
     }
 
     @Override
-    public UserSciDegree findByString(String sciDegreeStr) {
+    public UserSciDegree finSciDegree(String sciDegreeStr) {
         return sciDegreeDao.getByString(sciDegreeStr);
     }
 }

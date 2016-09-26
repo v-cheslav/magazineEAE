@@ -8,47 +8,30 @@
 <html class="html" lang="uk-UA">
 <head>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
-    <meta name="description"
-          content="Розміщення матеріалів семінару під егідою НАН Українии та внутрішніх публікацій журналу ННІ Енергетики, автоматики і енергозбереження"/>
-
-    <title>Он-лайн журнал &quot;Енергетика, автоматика і енергозбереження&quot;ОпублікуватиОн-лайн журнал &quot;Енергетика,
-        автоматика і енергозбереження&quot;</title>
+    <title></title>
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="../../css/jquery-ui.css"/>
-    </title>
     <link rel="stylesheet" type="text/css" href="../../css/site_global.css"/>
-    <link rel="stylesheet" type="text/css" href="../../css/registration.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/myPageNew.css"/>
     <!-- Other scripts -->
     <script src="../../js/jquery-1.11.2.min.js"></script>
     <script src="../../js/jquery-ui.js"></script>
     <script src="../../js/jquery.validate.min.js"></script>
     <script src="../../js/jquery.ajax.upload.js"></script>
-    <script src="../../js/siteGlobal.js" type="text/javascript"></script>
-    <script src="../../js/upload.js" type="text/javascript"></script>
     <script src="../../js/myPage.js" type="text/javascript"></script>
+    <script src="../../js/siteGlobal.js" type="text/javascript"></script>
 </head>
+
+
 <body>
 <div class="header">
-    <h1 id="magazineName">ЕНЕРГЕТИКА, АВТОМАТИКА І ЕНЕРГОЗБЕРЕЖЕННЯ</h1>
-    <nav id="MenuBar">
-        <ul>
-            <li><a href="index.html" class="menuButton">ГОЛОВНА</a></li>
-            <li><a href="publication.html" class="menuButton">ПУБЛІКАЦІЇ</a></li>
-            <li><a href="seminar.html" class="menuButton">СЕМІНАР</a></li>
-            <li><a href="publish.html" class="menuButton">ОПУБЛІКУВАТИ</a></li>
-            <li><a href="contacts.html" class="menuButton">КОНТАКТИ</a></li>
-        </ul>
-    </nav>
-    <hr class="horizontalLine">
     <div class="banner">
         <div class="bannerTop">
             <h3 class="headerUserName">
                 ${userDetails.name} ${userDetails.middleName} ${userDetails.surname}
             </h3>
 
-            <h3 class="headerUniversityName">Національний університет біоресурсів <br> і природокористування України
-            </h3>
+            <h3 class="headerUniversityName">${userDetails.university}</h3>
 
             <div class="authForm" id="authForm">
                 <p><a href="/j_spring_security_logout">Вийти</a></p>
@@ -56,8 +39,8 @@
         </div>
         <hr class="horizontalLine" id="bannerLine">
         <div class="bannerBottom">
-
-            <img class="userPhoto" id="imgContainer" src="getFile?name=${userDetails.photoAddress}&type=img" alt="Photo">
+            <img class="userPhoto" id="imgContainer" src="getFile?name=${userDetails.photoAddress}&type=img"
+                 alt="Photo">
 
             <div id="aStatAndSDegree">
                 <p class="paddingBottom"> ${userDetails.acadStatus.toString()}</p>
@@ -65,31 +48,42 @@
                 <p class="paddingBottom"> ${userDetails.sciDegree.toString()}</p>
 
                 <p class="paddingBottom"> ${userDetails.chair}</p>
-
             </div>
             <div id="instituteNameHeader">
                 <p> ${userDetails.institute}</p>
             </div>
-            <a href="advancedSearch.html" class="menuButton" id="searchingButton">Пошук</a>
         </div>
     </div>
-    <hr class="horizontalLine">
+    <hr>
+    <div id="topnav">
+        <ul class="nav">
+            <li><a href="index.html">Головна</a></li>
+            <li><a href="articles.html">Статті</a></li>
+            <li><a href="seminars.html">Семінари</a></li>
+            <li><a href="conference.html">Конференції</a></li>
+            <li class="active"><a href="#">Опублікувати</a>
+                <ul>
+                    <li><a href="publishArticle.html">Статтю</a></li>
+                    <li><a href="publishSeminar.html">Cемінар</a></li>
+                    <li><a href="publishConference.html">Корференцію</a></li>
+                </ul>
+            </li>
+            <li><a href="advancedSearch.html">Пошук</a></li>
+            <li><a href="contacts.html">Контакти</a></li>
+        </ul>
+    </div>
+    <hr>
 </div>
 
-<div class="content" id="mainContent">
+<div class="content">
+    <div class="whiteBox">
 
-    <div class="leftSideBar" id="leftSideBar">
-        <div class="currentDateHeader" id="currentDateContainer">
-            <p id="currentDate">&nbsp;</p>
-        </div>
-
-        <div class="leftButtonsMenu" id="publicationsContent">
-
-            <div class="leftButtonsHeader" id="rubricsName">
-                <p id="rubrics">Рубрики:</p>
+        <div class="leftSideBar">
+            <div class="barHeader">
+                Меню:
             </div>
 
-            <div class="leftButtonName" name="section" data-type="group" id="sections">
+            <div class="barContent" name="section" data-type="group" id="sections">
                 <input type="radio" name="section" id="myPublications" value="PUBLICATIONS"
                        onclick="getUserArticles(${userDetails.userId})" checked>
                 <label for="myPublications">Публікації</label>
@@ -100,14 +94,14 @@
                        value="REVIEW">
                 <label for="myReviews">Рецензовані статті</label>
             </div>
-        </div>
     </div>
 
-    <div class="mainContent"<%-- id="TablesContent"--%>>
+    <div class="mainContent">
 
-        <div class="mainContentHeader" id="TableNameLabel">
+        <div class="barHeader" id="TableNameLabel">
             <h2 id="mainContentHeader">&nbsp;</h2>
         </div>
+
         <table border="1" align="center" width="700px" height="100%" class="innerTable" id="innerTable">
             <thead>
             <tr>
@@ -256,7 +250,8 @@
         </div>
 
     </div>
-
+        <div class="clear"></div>
+    </div>
 </div>
 
 

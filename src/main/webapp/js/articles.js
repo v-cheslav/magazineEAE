@@ -11,6 +11,14 @@ $(document).ready(function(){
             getArticles(chosenSection);
         }
     })
+    $(window).scroll(function(){
+        if($(this).scrollTop()>220){
+            $('#topnav').addClass('fixed');
+        }
+        else if ($(this).scrollTop()<220){
+            $('#topnav').removeClass('fixed');
+        }
+    });
 
 });
 
@@ -31,7 +39,6 @@ function getArticles(chosenSection) {
     });
 };
 
-
 function fillTableByArticles(articles){
     var tableContent = document.getElementById("tableContent");
     while (tableContent.lastChild) {
@@ -48,6 +55,12 @@ function fillTableByArticles(articles){
     for (var i = 0; i < articles.length; i++) {
         var date = new Date(articles[i].publicationDate);
         var row = $('<tr></tr>');
+        if (i%2 == 0){
+            row.attr('class', "light");
+        }
+        if (i%2 != 0){
+            row.attr('class', "dark");
+        }
             var tdNumber = $('<td align="center" class="tableContent"></td>');
             tdNumber.html(i+1);
 
@@ -79,31 +92,31 @@ function fillTableByArticles(articles){
 function fillArticlesHeader(chosenSection){
     switch(chosenSection) {
         case 'ALL':
-            document.getElementById('mainContentHeader').innerHTML = 'Всі статті';
+            document.getElementById('tableName').innerHTML = 'Всі статті';
             break;
         case 'AUTOMATION':
-            document.getElementById('mainContentHeader').innerHTML = 'Автоматика та робототехнічні системи';
+            document.getElementById('tableName').innerHTML = 'Автоматика та робототехнічні системи';
             break;
         case 'EXPLOITATION':
-            document.getElementById('mainContentHeader').innerHTML = 'Експлуатація електрообладнання';
+            document.getElementById('tableName').innerHTML = 'Експлуатація електрообладнання';
             break;
         case 'MACHINES':
-            document.getElementById('mainContentHeader').innerHTML = 'Електричні машини';
+            document.getElementById('tableName').innerHTML = 'Електричні машини';
             break;
         case 'SUPPLYING':
-            document.getElementById('mainContentHeader').innerHTML = 'Електропостачання';
+            document.getElementById('tableName').innerHTML = 'Електропостачання';
             break;
         case 'DRIVING':
-            document.getElementById('mainContentHeader').innerHTML = 'Електропривід';
+            document.getElementById('tableName').innerHTML = 'Електропривід';
             break;
         case 'MATHEMATICS':
-            document.getElementById('mainContentHeader').innerHTML = 'Математика';
+            document.getElementById('tableName').innerHTML = 'Математика';
             break;
         case 'HEATENERGY':
-            document.getElementById('mainContentHeader').innerHTML = 'Теплоенергетика';
+            document.getElementById('tableName').innerHTML = 'Теплоенергетика';
             break;
         case 'PHYSIC':
-            document.getElementById('mainContentHeader').innerHTML = 'Фізика';
+            document.getElementById('tableName').innerHTML = 'Фізика';
             break;
         default:
             alert('Невірне значення!');

@@ -2,7 +2,7 @@ package magazine.servise;
 
 import magazine.Exeptions.DataNotFoundException;
 import magazine.Exeptions.SearchException;
-import magazine.Exeptions.SeminarCreationException;
+import magazine.Exeptions.SeminarException;
 //import magazine.dao.PublishedSeminarDao;
 import magazine.Exeptions.SeminarNotFoundException;
 import magazine.dao.ArticleKeyWordDao;
@@ -10,7 +10,7 @@ import magazine.dao.SeminarDao;
 import magazine.dao.SeminarKeyWordDao;
 import magazine.dao.UserDao;
 import magazine.domain.*;
-import magazine.utils.DateParser;
+import magazine.utils.DateService;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.json.simple.parser.ParseException;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -96,7 +95,33 @@ public class SeminarServiceImpl implements SeminarService {
     }
 
     @Override
-    public List<Seminar> findAllAppyied(){
+    public void changeSeminar(Seminar seminar) {
+        seminarDao.update(seminar);
+    }
+
+    @Override
+    public void changeSeminar(Seminar seminar, User user) throws SeminarException{
+
+        if(seminar.getUser() != null) {
+            if (!user.getUserId().equals(seminar.getUser().getUserId())) {
+                throw new SeminarException("Ви не є доповідачем цього семінару");
+            }
+        } else {
+            seminar.setUser(user);
+        }
+
+        Calendar instance = Calendar.getInstance();
+        seminar.setPublicationDate(instance);
+
+        userService.increaseUserPublications(user);
+
+        seminar.setIsPublished(true);
+        seminarDao.update(seminar);
+    }
+
+
+    @Override
+    public List<Seminar> findAllDeclared(){
         return seminarDao.findAllApplyied();
     }
 
@@ -111,7 +136,7 @@ public class SeminarServiceImpl implements SeminarService {
     }
 
     @Override
-    public void applySeminar(User currentUser, String seminarStr) throws SeminarCreationException {
+    public void applySeminar(User currentUser, String seminarStr) throws SeminarException {
         log.info("createApplyiedSeminar method");
 
         try {
@@ -134,18 +159,18 @@ public class SeminarServiceImpl implements SeminarService {
                 cal.setTime(reportDate);
                 seminar.setPublicationDate(cal);
             } catch (java.text.ParseException ex){
-                throw new SeminarCreationException("Не коректна дата!");
+                throw new SeminarException("Не коректна дата!");
             }
             seminarDao.create(seminar);
 
         } catch (ParseException e) {
             e.printStackTrace();
-            throw new SeminarCreationException(errorMessage);
+            throw new SeminarException(errorMessage);
         }
     }
 
     @Override
-    public void advertiseSeminar(String seminarStr) throws SeminarCreationException {
+    public void advertiseSeminar(String seminarStr) throws SeminarException {
         log.info("createUnPublishedSeminarByString method");
         Long seminarLong = null;
         try {
@@ -179,7 +204,7 @@ public class SeminarServiceImpl implements SeminarService {
                 seminar.setPublicationName(seminarName);
             }
             if (seminar.getPublicationName() == null){
-                throw new SeminarCreationException("Назва семінару не вказана.");
+                throw new SeminarException("Назва семінару не вказана.");
             }
 
             try {
@@ -189,115 +214,88 @@ public class SeminarServiceImpl implements SeminarService {
                 cal.setTime(reportDate);
                 seminar.setPublicationDate(cal);
             } catch (java.text.ParseException ex){
-                throw new SeminarCreationException("Не коректна дата!");
+                throw new SeminarException("Не коректна дата!");
             }
             seminar.setIsPublished(false);
             seminarDao.createOrUpdate(seminar);
         } catch (ParseException e) {
             e.printStackTrace();
-            throw new SeminarCreationException(errorMessage);
+            throw new SeminarException(errorMessage);
         }
 
     }
 
     @Override
-    public void publishSeminar(String seminarStr, User currentUser) throws SeminarCreationException {
+    public void publishSeminar(String seminarStr, User currentUser) throws SeminarException {
         log.info("publishSeminar method");
 //        Long seminarLong = null;
-        try {
-            JSONParser parser = new JSONParser();
-            Object obj = parser.parse(seminarStr);
-            JSONObject jsonObj = (JSONObject) obj;
-
-            String seminarId = (String) jsonObj.get("seminarId");
-            String swfFileName = (String) jsonObj.get("swfFileName");
-            String pdfFileName = (String) jsonObj.get("pdfFileName");
-            String keyWordsStr = (String) jsonObj.get("seminarKeyWords");
-
-            Seminar seminar = seminarDao.read(Long.parseLong(seminarId));
-
-            /**
-             *  Перевірка на право публікації доповіді семінару.
-             *  Має право публікувати користувач що зазначений як доповідач
-             *  або користувач не зареєстрований на момент подачі адміністратором
-             *  заявки на участь у семінарі (getUser() == null).
-             */
-            if(seminar.getUser() != null) {
-                if (!currentUser.getUserId().equals(seminar.getUser().getUserId())) {
-                    throw new SeminarCreationException("Ви не є доповідачем цього семінару!");
-                }
-            } else {
-                seminar.setUser(currentUser);
-            }
-
-            int publicationNumber = currentUser.getPublicationNumber();
-
-            String seminarPresentationPath =
-                    currentUser.getUserId() + "/"
-                    + publicationNumber + "/";
-            seminar.setSeminarPresentationAddress(seminarPresentationPath + swfFileName);
-
-            String seminarReportPath =
-                    currentUser.getUserId() + "/"
-                    + publicationNumber + "/";
-
-            seminar.setSeminarReportAddress(seminarReportPath + pdfFileName);
-            currentUser.setPublicationNumber(++publicationNumber);
-            userService.changeUser(currentUser);
-
-
-            Set<PublicationKeyWord> publicationKeyWords = userInterestFormer(keyWordsStr, seminar);
-            seminar.setSeminarKeyWords(publicationKeyWords);
-
-            Calendar instance = Calendar.getInstance();
-            seminar.setPublicationDate(instance);
-            seminar.setIsPublished(true);
-            seminarDao.update(seminar);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-            throw new SeminarCreationException(errorMessage);
-        }
+//        try {
+//            JSONParser parser = new JSONParser();
+//            Object obj = parser.parse(seminarStr);
+//            JSONObject jsonObj = (JSONObject) obj;
+//
+//            String seminarId = (String) jsonObj.get("seminarId");
+//            String swfFileName = (String) jsonObj.get("swfFileName");
+//            String pdfFileName = (String) jsonObj.get("pdfFileName");
+//            String keyWordsStr = (String) jsonObj.get("seminarKeyWords");
+//
+//            Seminar seminar = seminarDao.read(Long.parseLong(seminarId));
+//
+//            /**
+//             *  Перевірка на право публікації доповіді семінару.
+//             *  Має право публікувати користувач що зазначений як доповідач
+//             *  або користувач не зареєстрований на момент подачі адміністратором
+//             *  заявки на участь у семінарі (getUser() == null).
+//             */
+//            if(seminar.getUser() != null) {
+//                if (!currentUser.getUserId().equals(seminar.getUser().getUserId())) {
+//                    throw new SeminarException("Ви не є доповідачем цього семінару!");
+//                }
+//            } else {
+//                seminar.setUser(currentUser);
+//            }
+//
+//            int publicationNumber = currentUser.getPublicationNumber();
+//
+//            String seminarPresentationPath =
+//                    currentUser.getUserId() + "/"
+//                    + publicationNumber + "/";
+//            seminar.setSeminarPresentationAddress(seminarPresentationPath + swfFileName);
+//
+//            String seminarReportPath =
+//                    currentUser.getUserId() + "/"
+//                    + publicationNumber + "/";
+//
+//            seminar.setSeminarReportAddress(seminarReportPath + pdfFileName);
+//            currentUser.setPublicationNumber(++publicationNumber);
+//            userService.changeUser(currentUser);
+//
+//
+//            Set<PublicationKeyWord> publicationKeyWords = userInterestFormer(keyWordsStr, seminar);
+//            seminar.setSeminarKeyWords(publicationKeyWords);
+//
+//            Calendar instance = Calendar.getInstance();
+//            seminar.setPublicationDate(instance);
+//            seminar.setIsPublished(true);
+//            seminarDao.update(seminar);
+//
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//            throw new SeminarException(errorMessage);
+//        }
 
 //        return seminarLong;
-    }
-
-    //todo дати в utils, переписати клас з дженеріками
-    private Set<PublicationKeyWord> userInterestFormer (String keyWordsStr, Seminar seminar){
-        Set<PublicationKeyWord> keyWordsSet = new HashSet<>();
-        if (keyWordsStr.length() >= 2) {//якщо пусто, пробіл або 2, або менше 2 символів то в БД не додається
-            String[] keyWordsArrStr = keyWordsStr.split("\\,");
-            for (String keyWordStr : keyWordsArrStr) {
-                if (keyWordStr.charAt(0) == ' ') {
-                    keyWordStr = keyWordStr.replaceFirst(" ", "");
-                }
-                PublicationKeyWord publicationKeyWord;
-                try {
-                    publicationKeyWord = seminarKeyWordDao.getKeyWord(keyWordStr.toLowerCase());
-                    Set<Publication> seminars = publicationKeyWord.getPublications();
-
-                    seminars.add(seminar);
-                    seminarKeyWordDao.update(publicationKeyWord);
-                } catch (NullPointerException e) {//todo
-                    publicationKeyWord = new PublicationKeyWord(keyWordStr.toLowerCase());
-                    Set<Publication> seminars = new HashSet<>();
-                    publicationKeyWord.setPublications(seminars);
-                    seminars.add(seminar);
-                    seminarKeyWordDao.create(publicationKeyWord);
-//                    e.printStackTrace();
-                }
-                keyWordsSet.add(publicationKeyWord);
-            }
-        } else {
-            keyWordsSet = null;
-        }
-        return keyWordsSet;
     }
 
 
     @Override
     public List<Seminar> findAllAnnounced() {
         return seminarDao.findAllAnnounced();
+    }
+
+    @Override
+    public List<Seminar> findSeminarsByKeywords(Seminar seminar){
+        return seminarDao.findSeminarsByKeywords(seminar);
     }
 
 
@@ -336,7 +334,7 @@ public class SeminarServiceImpl implements SeminarService {
             if (!acadStatusStr.equals("")) {
                 UserAcadStatus acadStatus = null;
                 try {
-                    acadStatus = acadStatusService.findByString(acadStatusStr);
+                    acadStatus = acadStatusService.findAcadStatus(acadStatusStr);
                 } catch (Exception e) {
                     acadStatus = null;
                     e.printStackTrace();
@@ -347,7 +345,7 @@ public class SeminarServiceImpl implements SeminarService {
             if (!sciDegreeStr.equals("")) {
                 UserSciDegree sciDegree = null;
                 try {
-                    sciDegree = sciDegreeService.findByString(sciDegreeStr);
+                    sciDegree = sciDegreeService.finSciDegree(sciDegreeStr);
                 } catch (Exception e) {
                     sciDegree = null;
                     e.printStackTrace();
@@ -356,16 +354,26 @@ public class SeminarServiceImpl implements SeminarService {
             }
 
 
-            DateParser dateParser = new DateParser();
+            DateService dateService = new DateService();
             if (!dateFromStr.equals("")) {
-                Calendar dateFromCal = dateParser.parseDate(dateFromStr);
+                Calendar dateFromCal = null;
+                try {
+                    dateFromCal = dateService.parseDate(dateFromStr);
+                } catch (java.text.ParseException e) {
+                    throw new SearchException("Не коректна дата!");
+                }
                 System.err.println(dateFromCal);
 
                 searchQueryMap.put("dateFrom", dateFromCal);
             }
 
             if (!dateToStr.equals("")) {
-                Calendar dateToCal = dateParser.parseDate(dateToStr);
+                Calendar dateToCal = null;
+                try {
+                    dateToCal = dateService.parseDate(dateToStr);
+                } catch (java.text.ParseException e) {
+                    throw new SearchException("Не коректна дата!");
+                }
                 System.err.println(dateToCal);
 
                 searchQueryMap.put("dateTo", dateToCal);

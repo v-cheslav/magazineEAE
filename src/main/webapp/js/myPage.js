@@ -1,5 +1,28 @@
 $(document).ready(function() {
 
+    buttonsControl();
+    scrollWindow ();
+    validate();
+
+    $( "#datepicker" ).datepicker({ dateFormat: 'dd.mm.yy' });
+
+});
+
+
+function buttonsControl(){
+
+    var chosenSection = checkSections();
+
+    fillSectionsHeader(chosenSection);
+    $('#sections').on('click', function() {
+        var currentSection = checkSections();
+        if (chosenSection != currentSection){
+            chosenSection = currentSection;
+            fillSectionsHeader(chosenSection);
+            getSeminars(chosenSection);
+        }
+    })
+
     $('#firstReviewer').click( function() {
         autocompleteReviewers();
     });
@@ -22,6 +45,23 @@ $(document).ready(function() {
         };
     });
 
+
+    $('#btnClear').on('click', function() {
+        var file = $('#photo');
+        file.val('');
+    });
+}
+
+function checkSections(){
+    var section = document.getElementsByName('section');
+    for (var i = 0; i < section.length; i++) {
+        if (section[i].type == "radio" && section[i].checked) {
+            return section[i].value;
+        }
+    }
+};
+
+function validate(){
     $('#userUpdatingForm').validate({
         rules: {
             surname: {minlength: 2},
@@ -34,7 +74,7 @@ $(document).ready(function() {
             phone: {minlength: 7},
             username: {email: true},
             password: {required: false, minlength: 8, pwCheck: true},
-            passwordConfirm: {equalTo: "#password"},
+            passwordConfirm: {required: false, equalTo: "#password"},
             keyWords: {minlength: 2}
         },
         messages: {
@@ -55,62 +95,29 @@ $(document).ready(function() {
             keyWords: {minlength: "Введіть коректні дані."}
         }
     });
-
-    var chosenSection = checkSections();
-    fillSectionsHeader(chosenSection);
-    $('#sections').on('click', function() {
-        var currentSection = checkSections();
-        if (chosenSection != currentSection){
-            chosenSection = currentSection;
-            fillSectionsHeader(chosenSection);
-            getSeminars(chosenSection);
-        }
-    })
-
-    $( "#datepicker" ).datepicker({ dateFormat: 'dd.mm.yy' });
-
-});
+}
 
 function updateUser(){
-    var file = $('[name="file"]');
-    var user = {
-        username: $("#username").val(),
-        password: $("#password").val(),
-        name: $("#name").val(),
-        surname: $("#surname").val(),
-        middleName: $("#middleName").val(),
-        university: $("#university").val(),
-        institute: $("#institute").val(),
-        chair: $("#chair").val(),
-        position: $("#position").val(),
-        phone: $("#phone").val(),
-        photo: $.trim(file.val()).split('\\').pop(),
-        acadStatus: $("#acadStatus :selected").val(),
-        sciDegree: $("#sciDegree :selected").val(),
-        userSex: (checkSex()),
-        interests: $("#keyWords").val()
-    };
-
     $.ajax({
-        url: "/updateUser",
-        contentType: 'application/json',
-        data: JSON.stringify(user),
-        async: false,
-        type: 'POST',
-        success: function (data) {
-            var message = $('#regErrorMessage');
-            if (data =="OK"){
-                alert("Ваші дані успішно оновлені.");
-                location.reload();
-            } else {
-                message.html(data);
-            };
-        },
-        error: function (xhr, status, errorThrown) {
-            alert('Виникла помилка при реєстрації: ' + status + ". " + errorThrown);
-        }
+        url: '/updateUser',
+        type: "POST",
+        data: new FormData(document.getElementById("userUpdatingForm")),
+        enctype: 'multipart/form-data',
+        processData: false,
+        contentType: false
+    }).done(function(data) {
+        if (data.errorMessage == null){
+            window.location.reload();
+        };
+        if (data.errorMessage != null){
+            var errorMessage = $('#regErrorMessage');
+            errorMessage.html(data.errorMessage);
+        };
+    }).fail(function(jqXHR, textStatus) {
+        alert(jqXHR + textStatus + 'Помилка завантаження! Спробуйте змінити назву файлу.');
     });
-};
+
+}
 
 function getUserArticles(userId) {
     $.ajax({
@@ -180,18 +187,16 @@ function fillTable(data, dataType){
         var linkTheme = $('<a></a>');
         linkTheme.html(data[i].publicationName);
         linkTheme.attr('id', data[i].id);
-
-        //url = dataType+"Page?publicationId="+data[i].id;
-        //if (dataType == 'article'){
-        //    url = "articlePage?publicationId="+data[i].id;
-        //} else if (dataType == 'seminar'){
-        //    url = "seminarPage?seminarId="+data[i].id;
-        //}
-
         linkTheme.attr('href', url);
         tdTheme.append(linkTheme);
 
         var row = $('<tr></tr>');
+        if (i%2 == 0){
+            row.attr('class', "light");
+        }
+        if (i%2 != 0){
+            row.attr('class', "dark");
+        }
         var tdNumber = $('<td align="center" class="tableContent"></td>');
         tdNumber.html(i+1);
 
@@ -212,105 +217,7 @@ function fillTable(data, dataType){
     }
 };
 
-function setNewReviewer(userId) {
-    var userIdJson = {
-        userId: userId
-    };
-    $.ajax({
-        url: "/setNewReviewer",
-        contentType: 'application/json',
-        data: JSON.stringify(userIdJson),
-        async: false,
-        type: 'POST',
-        success: function (data) {
-            if (data == "OK") {
-                alert("Заявку на рецензування надіслано!");
-                window.location.reload();
-            } else if((data == "theSameReviewer")){
-                $('#confirmation').show();
-                $('#confirmBtn').click(function(){
-                    setNewReviewerFinally(userId);
-                    $('#confirmation').hide();
-                });
-                $('#cancelConfBtn').click(function(){
-                    $('#confirmation').hide();
-                });
-            } else {
-                alert(data);
-            };
-        },
-        error: function (xhr, status, errorThrown) {
-            alert('Виникла помилка: ' + status + ". " + errorThrown);
-        }
-    });
-}
 
-function setNewReviewerFinally(userId) {
-    var userIdJson = {
-        userId: userId
-    };
-    $.ajax({
-        url: "/setNewReviewerFinally",
-        contentType: 'application/json',
-        data: JSON.stringify(userIdJson),
-        async: false,
-        type: 'POST',
-        success: function (data) {
-            if (data == "OK") {
-                alert("Заявку на рецензування надіслано!");
-                window.location.reload();
-            }  else {
-                alert(data);
-            };
-        },
-        error: function (xhr, status, errorThrown) {
-            alert('Виникла помилка: ' + status + ". " + errorThrown);
-        }
-    });
-}
-
-function autocompleteReviewers() {
-    $.ajax({
-        type: 'GET',
-        url: '/getAllReviewers',
-        data: '',
-        dataType: "json",
-        synchronous: false,
-        success: function (data) {
-            var reviewer = '#firstReviewer';
-            var new_options = '#firstOption';
-            fillSelectedReviewers(new_options, data, reviewer);
-            var reviewer = '#secondReviewer';
-            var new_options = '#secondOption';
-            fillSelectedReviewers(new_options, data, reviewer);
-        },
-        error: function (event, xhr, options, exc) {
-            alert('Виникла помилка' + xhr + ' ' + options + ' ' + exc);
-        }
-    });
-}
-
-function fillSelectedReviewers (new_options, data, reviewer){
-    var user;
-    var userId;
-    var userName;
-    for (var i in data) {
-        user = data[i]
-        userId = user[0];
-        userName = user[1];
-        new_options += "<option value='" + userId + "'>" + userName + "</option>";
-    }
-    $(reviewer).html(new_options);
-}
-
-function checkSex(){
-    var userSex = document.getElementsByName('userSex');
-    for (var i = 0; i < userSex.length; i++) {
-        if (userSex[i].type == "radio" && userSex[i].checked) {
-            return userSex[i].value;
-        }
-    }
-};
 
 $.validator.addMethod("pwCheck", function(value) {
     if (value == ""){
@@ -320,35 +227,58 @@ $.validator.addMethod("pwCheck", function(value) {
     }
 });
 
+function scrollWindow () {
+    $(window).scroll(function(){
+        if($(this).scrollTop()>220){
+            $('#topnav').addClass('fixed');
+        }
+        else if ($(this).scrollTop()<220){
+            $('#topnav').removeClass('fixed');
+        }
+    });
+}
+
 function fillSectionsHeader(chosenSection){
     switch(chosenSection) {
+        case 'MASSAGES':
+            document.getElementById('mainContentHeader').innerHTML = 'Повідомлення';
+            $('#updateUser').hide();
+            $('#applySeminarContainer').hide();
+            $('#innerTable').hide();
+            $('#information').show();
+            break;
         case 'PUBLICATIONS':
-            document.getElementById('mainContentHeader').innerHTML = 'Мої публікації';
+            document.getElementById('mainContentHeader').innerHTML = 'Публікації';
+            $('#information').hide();
             $('#updateUser').hide();
             $('#applySeminarContainer').hide();
             $('#innerTable').show();
             break;
         case 'REPORTS':
-            document.getElementById('mainContentHeader').innerHTML = 'Мої доповіді';
+            document.getElementById('mainContentHeader').innerHTML = 'Доповіді';
+            $('#information').hide();
+            $('#information').hide();
             $('#updateUser').hide();
             $('#applySeminarContainer').hide();
             $('#innerTable').show();
             break;
         case 'REVIEW':
             document.getElementById('mainContentHeader').innerHTML = 'Рецензовані статті';
+            $('#information').hide();
             $('#updateUser').hide();
             $('#applySeminarContainer').hide();
             $('#innerTable').show();
             break;
         case 'EDIT':
             document.getElementById('mainContentHeader').innerHTML = 'Редагування сторінки';
-            $('#innerTable').hide();
+            $('#information').hide();
             $('#innerTable').hide();
             $('#applySeminarContainer').hide();
             $('#updateUser').show();
         break;
         case 'APPLY':
             document.getElementById('mainContentHeader').innerHTML = 'Заявка на участь в семінарі';
+            $('#information').hide();
             $('#innerTable').hide();
             $('#updateUser').hide();
             $('#applySeminarContainer').show();
@@ -361,14 +291,6 @@ function fillSectionsHeader(chosenSection){
     }
 };
 
-function checkSections(){
-    var section = document.getElementsByName('section');
-    for (var i = 0; i < section.length; i++) {
-        if (section[i].type == "radio" && section[i].checked) {
-            return section[i].value;
-        }
-    }
-};
 
 function applySeminar(){
     var reportDate = $("#datepicker").val();
@@ -396,3 +318,147 @@ function applySeminar(){
             }
         });
 }
+
+
+//function checkSex(){
+//    var userSex = document.getElementsByName('userSex');
+//    for (var i = 0; i < userSex.length; i++) {
+//        if (userSex[i].type == "radio" && userSex[i].checked) {
+//            return userSex[i].value;
+//        }
+//    }
+//};
+
+
+//function updateUser(){
+//    var file = $('[name="file"]');
+//    var user = {
+//        username: $("#username").val(),
+//        password: $("#password").val(),
+//        name: $("#name").val(),
+//        surname: $("#surname").val(),
+//        middleName: $("#middleName").val(),
+//        university: $("#university").val(),
+//        institute: $("#institute").val(),
+//        chair: $("#chair").val(),
+//        position: $("#position").val(),
+//        phone: $("#phone").val(),
+//        photo: $.trim(file.val()).split('\\').pop(),
+//        acadStatus: $("#acadStatus :selected").val(),
+//        sciDegree: $("#sciDegree :selected").val(),
+//        userSex: (checkSex()),
+//        interests: $("#keyWords").val()
+//    };
+//
+//    $.ajax({
+//        url: "/updateUser",
+//        contentType: 'application/json',
+//        data: JSON.stringify(user),
+//        async: false,
+//        type: 'POST',
+//        success: function (data) {
+//            var message = $('#regErrorMessage');
+//            if (data =="OK"){
+//                alert("Ваші дані успішно оновлені.");
+//                location.reload();
+//            } else {
+//                message.html(data);
+//            };
+//        },
+//        error: function (xhr, status, errorThrown) {
+//            alert('Виникла помилка при реєстрації: ' + status + ". " + errorThrown);
+//        }
+//    });
+//};
+
+//function setNewReviewer(userId) {
+//    var userIdJson = {
+//        userId: userId
+//    };
+//    $.ajax({
+//        url: "/setNewReviewer",
+//        contentType: 'application/json',
+//        data: JSON.stringify(userIdJson),
+//        async: false,
+//        type: 'POST',
+//        success: function (data) {
+//            if (data == "OK") {
+//                alert("Заявку на рецензування надіслано!");
+//                window.location.reload();
+//            } else if((data == "theSameReviewer")){
+//                $('#confirmation').show();
+//                $('#confirmBtn').click(function(){
+//                    setNewReviewerFinally(userId);
+//                    $('#confirmation').hide();
+//                });
+//                $('#cancelConfBtn').click(function(){
+//                    $('#confirmation').hide();
+//                });
+//            } else {
+//                alert(data);
+//            };
+//        },
+//        error: function (xhr, status, errorThrown) {
+//            alert('Виникла помилка: ' + status + ". " + errorThrown);
+//        }
+//    });
+//}
+//
+//function setNewReviewerFinally(userId) {
+//    var userIdJson = {
+//        userId: userId
+//    };
+//    $.ajax({
+//        url: "/setNewReviewerFinally",
+//        contentType: 'application/json',
+//        data: JSON.stringify(userIdJson),
+//        async: false,
+//        type: 'POST',
+//        success: function (data) {
+//            if (data == "OK") {
+//                alert("Заявку на рецензування надіслано!");
+//                window.location.reload();
+//            }  else {
+//                alert(data);
+//            };
+//        },
+//        error: function (xhr, status, errorThrown) {
+//            alert('Виникла помилка: ' + status + ". " + errorThrown);
+//        }
+//    });
+//}
+//
+//function autocompleteReviewers() {
+//    $.ajax({
+//        type: 'GET',
+//        url: '/getAllReviewers',
+//        data: '',
+//        dataType: "json",
+//        synchronous: false,
+//        success: function (data) {
+//            var reviewer = '#firstReviewer';
+//            var new_options = '#firstOption';
+//            fillSelectedReviewers(new_options, data, reviewer);
+//            var reviewer = '#secondReviewer';
+//            var new_options = '#secondOption';
+//            fillSelectedReviewers(new_options, data, reviewer);
+//        },
+//        error: function (event, xhr, options, exc) {
+//            alert('Виникла помилка' + xhr + ' ' + options + ' ' + exc);
+//        }
+//    });
+//}
+//
+//function fillSelectedReviewers (new_options, data, reviewer){
+//    var user;
+//    var userId;
+//    var userName;
+//    for (var i in data) {
+//        user = data[i]
+//        userId = user[0];
+//        userName = user[1];
+//        new_options += "<option value='" + userId + "'>" + userName + "</option>";
+//    }
+//    $(reviewer).html(new_options);
+//}
+//

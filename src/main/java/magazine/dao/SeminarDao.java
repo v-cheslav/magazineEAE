@@ -2,6 +2,7 @@ package magazine.dao;
 
 import magazine.Exeptions.SeminarNotFoundException;
 import magazine.domain.Article;
+import magazine.domain.PublicationKeyWord;
 import magazine.domain.Seminar;
 import magazine.domain.User;
 
@@ -29,5 +30,5 @@ public interface SeminarDao {
     public void createOrUpdate(Seminar seminar);
     public List<Seminar> findBySearchQuery(Map query);
     public List<Seminar> findSeminarsByDate(Calendar date);
-
+    public List<Seminar> findSeminarsByKeywords(Seminar seminar);
 }

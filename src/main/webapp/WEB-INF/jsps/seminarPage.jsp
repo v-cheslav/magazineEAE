@@ -19,23 +19,11 @@
 <body>
 
 <div class="header">
-    <h1 id="magazineName">ЕНЕРГЕТИКА, АВТОМАТИКА І ЕНЕРГОЗБЕРЕЖЕННЯ</h1>
-    <nav id="MenuBar">
-        <ul>
-            <li><a href="index.html" class="menuButton">ГОЛОВНА</a></li>
-            <li><a href="publication.html" class="menuButton">ПУБЛІКАЦІЇ</a></li>
-            <li><a href="seminar.html" class="menuButton">СЕМІНАР</a></li>
-            <li><a href="publish.html" class="menuButton">ОПУБЛІКУВАТИ</a></li>
-            <li><a href="contacts.html" class="menuButton">КОНТАКТИ</a></li>
-        </ul>
-    </nav>
-    <hr class="horizontalLine">
     <div class="banner">
         <div class="bannerTop">
-
-            <h3 class="headerPublishDateSem">
-                ${seminar.publicationDateToString()}
-            </h3>
+            <%--<h3 class="sectionName">--%>
+                <%--${seminar.articleSection.sectionStr}--%>
+            <%--</h3>--%>
 
             <div id="authForm">
                 <sec:authorize access="isAnonymous()">
@@ -50,174 +38,215 @@
                         <a href="/j_spring_security_logout">Вийти</a>
                     </p>
                 </sec:authorize>
-                <sec:authorize access="hasRole('ADMIN')">
-                    <p>
-                        <a href="/administrator">Administrator page</a>
-                    </p>
-                </sec:authorize>
             </div>
         </div>
         <hr class="horizontalLine" id="bannerLine">
         <div class="bannerBottom">
-            <img class="userPhoto" id="imgContainer" src="getFile?name=${seminar.user.photoAddress}&type=img" alt="Photo">
+            <img class="userBannerPhoto" id="imgContainer" src="getFile?name=${seminar.user.photoAddress}&type=img" alt="Photo">
 
-            <div id="userDetails">
-                <p class="paddingBottom">
+            <div class="userDetails">
+                <p>
                     <a href="authorPage?authorId=${seminar.user.userId}">${seminar.user.toString()}</a>
                 </p>
-                <p class="paddingBottom">
+                <p>
                     <c:if test="${seminar.user.sciDegree!=null}">
                         ${seminar.user.sciDegree},
                     </c:if>
                     ${seminar.user.acadStatus}
                 </p>
-                <p class="paddingBottom"> ${seminar.user.university}</p>
+                <p> ${seminar.user.university}</p>
             </div>
-            <div id="articleNameHeader">
-                ${seminar.publicationName}
-            </div>
-            <a href="advancedSearch.html" class="menuButton" id="searchingButton">Пошук</a>
+
+            <sec:authorize access="hasRole('ADMIN')">
+                <p class="adminLink">
+                    <a href="/administrator">Сторінка адміністратора</a>
+                </p>
+            </sec:authorize>
+            <p class="currentDate">Опубліковано ${seminar.publicationDateToString()}</p>
         </div>
     </div>
-    <hr class="horizontalLine">
+    <hr>
+    <div id="topnav">
+        <ul class="nav">
+            <li><a href="index.html">Головна</a></li>
+            <li class="active"><a href="articles.html">Статті</a></li>
+            <li><a href="seminars.html">Семінари</a></li>
+            <li><a href="conference.html">Конференції</a></li>
+            <li><a href="#">Опублікувати</a>
+                <ul>
+                    <li><a href="publishArticle.html">Статтю</a></li>
+                    <li><a href="publishSeminar.html">Cемінар</a></li>
+                    <li><a href="publishConference.html">Корференцію</a></li>
+                </ul>
+            </li>
+            <li><a href="advancedSearch.html">Пошук</a></li>
+            <li><a href="contacts.html">Контакти</a></li>
+        </ul>
+    </div>
+    <hr>
 </div>
 
 <div class="content" id="content">
-    <div class="mainContent">
-        <div class="mainContentHeader">
-            <h2 id="presentationHeader">Презентація</h2>
-        </div>
+    <div class="whiteBox">
 
-        <div class="articleContent">
-            <object type="application/x-shockwave-flash" data="getFile?name=${seminar.seminarPresentationAddress}&type=seminar"
-                        width="753" height="613">
-                <param name="movie" value="getFile?name=${seminar.seminarPresentationAddress}&type=seminar"/>
-                <param name="quality" value="high"/>
-                <param name="swfversion" value="6.0.65.0"/>
-                <param name="wmode" value="transparent"/>
-                <param name="expressinstall" value="Scripts/expressInstall.swf"/>
+        <div class="mainContent">
+            <div class="mainContentHeader">
+                ${seminar.publicationName}
+            </div>
 
-                <object type="application/x-shockwave-flash" data="getFile?name=${seminar.seminarPresentationAddress}&type=seminar"
-                                width="753" height="613">
-
+            <div class="articleContent">
+                <object id="presentation" type="application/x-shockwave-flash" data="getFile?name=${seminar.publicationPath}${seminar.presentationFileName}&type=seminar"
+                            width="630" height="413">
+                    <param name="movie" value="getFile?name=${seminar.publicationPath}${seminar.presentationFileName}&type=seminar"/>
                     <param name="quality" value="high"/>
                     <param name="swfversion" value="6.0.65.0"/>
                     <param name="wmode" value="transparent"/>
                     <param name="expressinstall" value="Scripts/expressInstall.swf"/>
-                    <div>
-                        <h4>Content on this page requires a newer version of Adobe Flash Player.</h4>
-                        <p><a href="http://www.adobe.com/go/getflashplayer">
-                            <img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif"
-                                alt="Get Adobe Flash player" width="112" height="33"/>
-                        </a></p>
-                    </div>
+
+                    <object type="application/x-shockwave-flash" data="getFile?name=${seminar.publicationPath}${seminar.presentationFileName}&type=seminar"
+                                    width="630" height="413">
+
+                        <param name="quality" value="high"/>
+                        <param name="swfversion" value="6.0.65.0"/>
+                        <param name="wmode" value="transparent"/>
+                        <param name="expressinstall" value="Scripts/expressInstall.swf"/>
+                        <div>
+                            <h4>Content on this page requires a newer version of Adobe Flash Player.</h4>
+                            <p><a href="http://www.adobe.com/go/getflashplayer">
+                                <img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif"
+                                    alt="Get Adobe Flash player" width="112" height="33"/>
+                            </a></p>
+                        </div>
+                    </object>
                 </object>
-            </object>
-        </div>
-        <div class="articleContent">
-            <p id="articleSizeSwitcher">Розгорнути статтю на всю сторінку</p>
-            <object id="articlePdf" data="getFile?name=${seminar.seminarReportAddress}}&type=seminar" type="application/pdf">
-                <embed src="getFile?name=${seminar.seminarReportAddress}&type=seminar" type="application/pdf"/>
-            </object>
-        </div>
-    </div>
-    <%--leftPanel--%>
-    <div class="leftSideBar" id="leftPanel"><!-- group -->
-        <div class="currentDateHeader">
-            <p id="currentDate">&nbsp;</p>
-        </div>
-        <div class="accordionMenuWrapper">
-            <ul class="accordionMenu">
-                <li>
-                    <div class="menuHeader" id="annotationUkHeader">
-                        <p>Інформація</p>
-                    </div>
-                    <div class="menuContent" id="annotationUkContent">
-                        Тема семінару, одне, або кілька ключових слів якого відповідають даному семінару.
-                        Ще одна тема семінару..........
-                        Автор 1
-                        Автор 2
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </div>
+            </div>
+            <div class="articleContent">
+                <div class="mainContentHeader">
+                    Доповідь семінару
+                    <img id="toLargeSize" title="Розгонути на всю сторінку">
+                </div>
 
-    <div class="comments">
-        <div class="mainContentHeader">
-            <h2 id="commentsHeader">Коментарі</h2>
-        </div>
-        <div class="menuContent" id="commentsContent">
+                <iframe id="articlePdf" src="getFile?name=${seminar.publicationPath}${seminar.reportFileName}&type=article"></iframe>
 
-            <div id="allComments">
-                <c:forEach var="comment" items="${seminar.seminarCommentsSet}">
-                    <div class="commentBox">
-                        <span class="commentator">
-                            <a href="authorPage?authorId=${comment.user.userId}">${comment.user.toString()}</a>
-                        </span>
-                        <span class="commentDate">
-                                ${comment.commentDateToString()}
-                        </span>
-                        <p class="allCommentsText">${comment.comment}</p>
-                        </form>
-                        <sec:authorize access="hasRole('ADMIN')">
-                            <div class="deleteComment" onclick="deleteComment(${comment.commentId})">Видалити коментар</div>
-                        </sec:authorize>
-                    </div>
-                </c:forEach>
+                <%--<object id="articlePdf" data="getFile?name=${seminar.seminarReportAddress}&type=seminar" type="application/pdf">--%>
+                    <%--<embed src="getFile?name=${seminar.seminarReportAddress}&type=seminar" type="application/pdf"/>--%>
+                <%--</object>--%>
             </div>
 
-            <sec:authorize access="isAuthenticated()">
-                <form class="addComment" id="addComment">
-                    <textarea class="newComment" id="newComment" name="newComment"></textarea>
-                    <button id="addCommentBtn" class="button" type="button"
-                            onclick="addComment(${seminar.id}, 'seminar')">Коментувати
-                    </button>
-                </form>
-            </sec:authorize>
+
+            <div id="comments">
+                <h2>Коментарі</h2>
+
+                <ul>
+                    <c:forEach var="comment" items="${seminar.seminarCommentsSet}">
+
+                        <li>
+                            <article>
+                                <header>
+                                    <figure class="avatar"><img src="getFile?name=${comment.user.photoAddress}&type=img"
+                                                                alt=""></figure>
+                                    <address>
+                                        <a href="authorPage?authorId=${comment.user.userId}">${comment.user.toString()}</a>
+                                    </address>
+                                    <time>${comment.commentDateToString()}</time>
+                                </header>
+                                <div class="comcont">
+                                    <p>${comment.comment}</p>
+                                </div>
+                                <sec:authorize access="hasRole('ADMIN')">
+                                    <div class="delComment" onclick="deleteComment(${comment.commentId})">Видалити
+                                        коментар
+                                    </div>
+                                </sec:authorize>
+                                <div class="clear"></div>
+                            </article>
+                        </li>
+                    </c:forEach>
+                </ul>
+                <sec:authorize access="isAuthenticated()">
+                    <form class="addCommentForm">
+                        <div class="formField">
+                            <label for="newComment" class="label">
+                                Новий коментар
+                                <span>*</span>
+                            </label>
+                            <textarea class="textField" id="newComment" name="newComment"></textarea>
+                        </div>
+                        <div>
+                            <input class="button" type="button"
+                                   onclick="addComment(${seminar.id}, 'seminar')" value="Коментувати">
+                            </input>
+                        </div>
+                    </form>
+
+                </sec:authorize>
+            </div>
 
         </div>
-    </div>
+
+        <div id="rightBars">
+
+            <div class="rightSideBar"><%--rightPanel--%>
+                <c:if test="${similarSeminars.size() != 0}">
+
+                    <div class="barHeader">
+                        <span>Схожі семінари</span>
+                    </div>
+                    <div class="barContent">
+                        <ul id="similarPublicationList">
+                            <c:forEach var="similarSeminar" items="${similarSeminars}">
+                                <li>
+                                    <a href="seminarPage?publicationId=${similarSeminar.publicationId}">${similarSeminar.publicationName}</a>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </div>
+                </c:if>
+            </div>
+        </div>
+        <div class="clear"></div>
+
+        </div>
 </div>
 
 <hr class="horizontalLine">
-<div class="clearfix colelem" id="footer"><!-- column -->
-    <div class="clearfix colelem" id="footerUniversityInform"><!-- content -->
+<div class="footer" id="footer">
+    <div class="" id="footerUniversityInform">
         <p>Національний університет біоресурсів і природокористування України&nbsp; ННІ Енергетики, автоматики і
             енергозбереження</p>
     </div>
-    <div class="clearfix colelem" id="footerContacts"><!-- group -->
-        <div class="grpelem" id="addressIcon"><!-- simple frame --></div>
-        <div class="clearfix grpelem" id="footerAdsressInform"><!-- column -->
-            <div class="clearfix colelem" id="addressFooter"><!-- content -->
+    <div class="" id="footerContacts">
+        <div class="" id="addressIcon"></div>
+        <div class="" id="footerAdsressInform">
+            <div class="" id="addressFooter">
                 <p>03041, м Київ, вул Героїв Оборони 12, навчальний корпус №8</p>
             </div>
-            <div class="clearfix colelem" id="designerName"><!-- content -->
+            <div class="" id="designerName"><!-- content -->
                 <p>Дизайн та програмування: Гаврилюк В.В.</p>
             </div>
         </div>
-        <div class="grpelem" id="footerVline"><!-- simple frame --></div>
-        <div class="grpelem" id="callIcon"><!-- simple frame --></div>
-        <div class="clearfix grpelem" id="fotterPhones"><!-- column -->
-            <div class="clearfix colelem" id="institutePhone"><!-- content -->
+        <div class="" id="footerVline"><!-- simple frame --></div>
+        <div class="" id="callIcon"><!-- simple frame --></div>
+        <div class="" id="fotterPhones"><!-- column -->
+            <div class="" id="institutePhone"><!-- content -->
                 <p>(044) 527-85-80</p>
             </div>
-            <div class="clearfix colelem" id="designerPhone"><!-- content -->
+            <div class="" id="designerPhone"><!-- content -->
                 <p>(096) 115-00-83</p>
             </div>
         </div>
-        <div class="grpelem" id="fotterVline2"><!-- simple frame --></div>
-        <div class="grpelem" id="emailIcon"><!-- simple frame --></div>
-        <div class="clearfix grpelem" id="footerEmails"><!-- column -->
-            <div class="clearfix colelem" id="instituteEmail"><!-- content -->
+        <div class="" id="fotterVline2"><!-- simple frame --></div>
+        <div class="" id="emailIcon"><!-- simple frame --></div>
+        <div class="" id="footerEmails"><!-- column -->
+            <div class="" id="instituteEmail"><!-- content -->
                 <p>epafort1@ukr.net</p>
             </div>
-            <div class="clearfix colelem" id="designerEmail"><!-- content -->
+            <div class="" id="designerEmail"><!-- content -->
                 <p>v_cheslav@ukr.net</p>
             </div>
         </div>
     </div>
-    <div class="clearfix colelem" id="allRightsInform"><!-- content -->
+    <div class="" id="allRightsInform"><!-- content -->
         <p>© All rights reserved</p>
     </div>
 </div>

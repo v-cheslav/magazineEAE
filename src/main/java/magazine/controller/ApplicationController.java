@@ -61,20 +61,20 @@ public class ApplicationController {
         }
         String message = null;
         List <Article> articles;
-        List<List<String>> annotations;
+//        List<List<String>> annotations;
         try {
             articles = articleService.findNewestArticles();
-            annotations = new ArrayList<>();
-            Annotation annotation;
-            for (Article article : articles) {
-                annotation = article.getArticleAnnotations();
-                List<String> annotationUa = articleService.annotationReader(annotation.getAnnotationUa());
-                annotations.add(annotationUa);
-            }
+//            annotations = new ArrayList<>();
+//            Annotation annotation;
+//            for (Article article : articles) {
+//                annotation = article.getArticleAnnotations();
+//                List<String> annotationUa = articleService.annotationReader(annotation.getAnnotationUa());
+//                annotations.add(annotationUa);
+//            }
         } catch (ArticleNotFoundException e){
             log.info(e.getMessage());
             articles = null;
-            annotations = null;
+//            annotations = null;
             message = e.getMessage();
         }
 
@@ -86,7 +86,7 @@ public class ApplicationController {
         }
         map.addAttribute("nearestSeminars", nearestSeminars);
         map.addAttribute("articles", articles);
-        map.addAttribute("annotations", annotations);
+//        map.addAttribute("annotations", annotations);
         map.addAttribute("message", message);
 
         return "index";
@@ -94,9 +94,9 @@ public class ApplicationController {
 
 
 
-    @RequestMapping(value = "/publication", method = {RequestMethod.GET})
-    public String publication(ModelMap map) {
-        log.info("/publication controller");
+    @RequestMapping(value = "/articles", method = {RequestMethod.GET})
+    public String articles(ModelMap map) {
+        log.info("/articles controller");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             User user = (User) authentication.getPrincipal();
@@ -105,15 +105,15 @@ public class ApplicationController {
         return "articles";
     }
 
-    @RequestMapping(value = "/seminar", method = {RequestMethod.GET})
+    @RequestMapping(value = "/seminars", method = {RequestMethod.GET})
     public String seminar(ModelMap map) {
-        log.info("/seminar controller");
+        log.info("/seminars controller");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             User user = (User) authentication.getPrincipal();
             map.addAttribute("userDetails", user);
         }
-        return "seminar";
+        return "seminars";
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -129,8 +129,13 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "/contacts", method = {RequestMethod.GET})
-    public String contacts() {
+    public String contacts(ModelMap map) {
         log.info("/contacts controller");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            User user = (User) authentication.getPrincipal();
+            map.addAttribute("userDetails", user);
+        }
         return "contacts";
     }
 
@@ -151,7 +156,7 @@ public class ApplicationController {
                     DateFormat sdr = new SimpleDateFormat("dd.MM.yyyy");
                     String seminarMessage = sdr.format(calendar.getTime()) +
                             " Ви берете участь в семінарі на тему: \n" +
-                            seminar.getPublicationName();
+                            seminar.getPublicationPath();
                     map.addAttribute("seminarMessage", seminarMessage);
                 }
 
@@ -160,7 +165,7 @@ public class ApplicationController {
 
                 List<Review> reviews = reviewService.findByUser(user);
 
-                if (reviews.get(0) != null) {
+                if (reviews.size() != 0) {
                     map.addAttribute("reviews", reviews);
                 }
 
@@ -188,7 +193,7 @@ public class ApplicationController {
                     DateFormat sdr = new SimpleDateFormat("dd.MM.yyyy");
                     String seminarMessage = sdr.format(calendar.getTime()) +
                             " Ви берете участь в семінарі на тему: \n" +
-                            seminar.getPublicationName();
+                            seminar.getPublicationPath();
                     map.addAttribute("seminarMessage", seminarMessage);
                 }
 
@@ -224,21 +229,26 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "/advancedSearch", method = {RequestMethod.GET})
-    public String advancedSearch(Model model) {
+    public String advancedSearch(ModelMap map) {
         log.info("/advancedSearch controller");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            User user = (User) authentication.getPrincipal();
+            map.addAttribute("userDetails", user);
+        }
         return "advancedSearch";
     }
 
-
-    @RequestMapping(value = "/report", method = {RequestMethod.GET})
-    public String report(Model model) {
-        log.info("/report controller");
-        return "report";
-    }
+//
+//    @RequestMapping(value = "/report", method = {RequestMethod.GET})
+//    public String report(Model model) {
+//        log.info("/report controller");
+//        return "report";
+//    }
 
 
     @RequestMapping(value = "/login", method = {RequestMethod.GET})
-    public String login (Model model) {
+    public String login () {
         log.info("/login controller");
         return "login";
     }
@@ -248,10 +258,8 @@ public class ApplicationController {
         log.info("/confirmRegistration controller");
 
         User user = userService.getUserByUserName(userName);
-
         if (user.getRestoreCode().equals(regCode)){
             user.setValid(true);
-            System.err.println(user.toString());
             userService.changeUser(user);
             map.addAttribute("errorMessage", "Реєстрація відбулася успішно.");
         } else {
@@ -344,4 +352,54 @@ public class ApplicationController {
         log.info("/restorePasswordPage controller");
         return "restorePasswordPage";
     }
+
+    @PreAuthorize("hasRole('USER')")
+    @RequestMapping(value = "/publishArticle", method = {RequestMethod.GET})
+    public String publishArticle (ModelMap map) {
+        log.info("/publishArticle controller");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            User user = (User) authentication.getPrincipal();
+            map.addAttribute("userDetails", user);
+        }
+        return "publishArticle";
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @RequestMapping(value = "/publishSeminar", method = {RequestMethod.GET})
+    public String publishSeminar (ModelMap map) {
+        log.info("/publishSeminar controller");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            User user = (User) authentication.getPrincipal();
+            map.addAttribute("userDetails", user);
+        }
+        return "publishSeminar";
+    }
+
+
+    @PreAuthorize("hasRole('USER')")
+    @RequestMapping(value = "/publishConference", method = {RequestMethod.GET})
+    public String publishConference (ModelMap map) {
+        log.info("/publishConference controller");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            User user = (User) authentication.getPrincipal();
+            map.addAttribute("userDetails", user);
+        }
+        return "publishConference";
+    }
+
+    @RequestMapping(value = "/conference", method = {RequestMethod.GET})
+    public String conference (ModelMap map) {
+        log.info("/conference controller");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            User user = (User) authentication.getPrincipal();
+            map.addAttribute("userDetails", user);
+        }
+        return "conferences";
+    }
+
+
 }

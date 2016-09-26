@@ -149,6 +149,12 @@ function fillTable(data, dataType){
         tdTheme.append(linkTheme);
 
         var row = $('<tr></tr>');
+        if (i%2 == 0){
+            row.attr('class', "light");
+        }
+        if (i%2 != 0){
+            row.attr('class', "dark");
+        }
         var tdNumber = $('<td align="center" class="tableContent"></td>');
         tdNumber.html(i+1);
 
@@ -206,7 +212,7 @@ function setSearchParameters(){
         $("#selectSectionContainer").show();
         $("#tables").show();
         $("#listContent").hide();
-        document.getElementById('mainContentHeader').innerHTML = 'Статті';
+        document.getElementById('barHeader').innerHTML = 'Статті';
         while (tableContent.lastChild) {
             tableContent.removeChild(tableContent.lastChild);
         }
@@ -217,7 +223,7 @@ function setSearchParameters(){
         $("#selectSectionContainer").hide();
         $("#tables").show();
         $("#listContent").hide();
-        document.getElementById('mainContentHeader').innerHTML = 'Доповіді семінару';
+        document.getElementById('barHeader').innerHTML = 'Доповіді семінару';
         while (tableContent.lastChild) {
             tableContent.removeChild(tableContent.lastChild);
         }
@@ -228,7 +234,7 @@ function setSearchParameters(){
         $("#selectSectionContainer").hide();
         $("#tables").hide();
         $("#listContent").show();
-        document.getElementById('mainContentHeader').innerHTML = 'Автор';
+        document.getElementById('barHeader').innerHTML = 'Автор';
     }
 }
 

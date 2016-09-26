@@ -30,7 +30,7 @@ public class UserSexServiceImpl implements UserSexService {
     }
 
     @Override
-    public UserSex findByString(String userSexStr) {
+    public UserSex findUserSex(String userSexStr) {
         return userSexDao.getByString(userSexStr);
     }
 }

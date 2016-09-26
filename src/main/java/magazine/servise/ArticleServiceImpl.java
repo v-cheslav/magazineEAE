@@ -5,7 +5,7 @@ import magazine.Exeptions.ArticleNotFoundException;
 import magazine.Exeptions.SearchException;
 import magazine.dao.*;
 import magazine.domain.*;
-import magazine.utils.DateParser;
+import magazine.utils.DateService;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -63,10 +63,7 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleServiceImpl() {
     }
 
-    @Override
-    public Long createArticle(Article article) {
-        return articleDao.create(article);
-    }
+
 
     @Override
     public Article getArticle(Long id) {
@@ -77,6 +74,7 @@ public class ArticleServiceImpl implements ArticleService {
     public void changeArticle(Article article) {
         articleDao.update(article);
     }
+
 
     @Override
     public void removeArticle(Article article) {
@@ -96,6 +94,7 @@ public class ArticleServiceImpl implements ArticleService {
         articleDao.delete(article);
     }
 
+
     @Override
     public List<Article> findPublishArticleBySection(String sectionStr) {
         sectionStr = sectionStr.replace("\"", "");
@@ -107,10 +106,12 @@ public class ArticleServiceImpl implements ArticleService {
         }
     }
 
+
     @Override
     public List<Article> findByReviewerId(Long userId) {
         return articleDao.findByReviewerId(userId);
     }
+
 
     @Override
     public List<Article> findNewestArticles() throws ArticleNotFoundException{
@@ -120,129 +121,144 @@ public class ArticleServiceImpl implements ArticleService {
         } else {
             throw new ArticleNotFoundException("Опублікованих статтей ще немає.");
         }
-
     }
 
-    /**
-     * Створює статтю на основі даних JSON отриманих від користувача.
-     */
-    @Override
-    public Long createByString(String articleStr, User currentUser) throws ArticleCreationException{
-        log.info("createByString method");
 
-        /**
-         * Здійснює перевірку чи є неопублікована стаття в користувача.
-         * Стаття заноситьсься в список публікованих після надання 2-х рецензій.
-         */
-        if (findUnPublishedByUser(currentUser) != null){
+    @Override
+    public Long createArticle(Article article) throws ArticleCreationException{
+        if (findUnPublishedByUser(article.getUser()) != null){
             throw new ArticleCreationException("Ви не можете подавати заявку на публікацію ще однієї статті." +
                     "Дочекайтесь рецензування та публікації попередньої.");
         }
+        Calendar instance = Calendar.getInstance();//todo try to put here only date without time
+        article.setPublicationDate(instance);
 
-        Long articleLong = null;
-        try {
-            JSONParser parser = new JSONParser();
-            Object obj = parser.parse(articleStr);
-            JSONObject jsonObj = (JSONObject) obj;
+        User user = article.getUser();
+        userService.increaseUserPublications(user);
 
-            String articleName = (String) jsonObj.get("articleName");
-            String fileName = (String) jsonObj.get("fileName");
-            String articleSectionStr = (String) jsonObj.get("articleSection");
-            String annotationEng = (String) jsonObj.get("annotationEng");
-            String annotationUkr = (String) jsonObj.get("annotationUkr");
-            String annotationRu = (String) jsonObj.get("annotationRu");
-            String keyWordsStr = (String) jsonObj.get("keyWords");
-            String firstReviewerStr = (String) jsonObj.get("firstReviewer");
-            Long firstReviewerLong = Long.parseLong(firstReviewerStr);
-            String secondReviewerStr = (String) jsonObj.get("secondReviewer");
-            Long secondReviewerLong = Long.parseLong(secondReviewerStr);
-
-            Article article = new Article();
-
-            article.setPublicationName(articleName);
-
-            int publicationNumber = currentUser.getPublicationNumber();
-
-            String articleRelativePath =currentUser.getUserId() + "/" + publicationNumber + "/";
-
-            String articleAbsolutePath = initialPath//todo - rewrite using StringBuilder
-                    + "userArticles/"
-                    + currentUser.getUserId() + "/"
-                    + publicationNumber + "/";
-
-            article.setPublicationAddress(/*"../../userResources/" +*/ articleRelativePath + fileName);
-            currentUser.setPublicationNumber(++publicationNumber);
-            userService.changeUser(currentUser);
-            article.setUser(currentUser);
-
-            String annotationPathEng = null;
-            String annotationPathUkr = null;
-            String annotationPathRu = null;
-            try {
-                annotationPathEng = annotationWriter(annotationEng, articleAbsolutePath, "annotationEng", articleRelativePath);
-                annotationPathUkr = annotationWriter(annotationUkr, articleAbsolutePath, "annotationUkr", articleRelativePath);
-                annotationPathRu = annotationWriter(annotationRu, articleAbsolutePath, "annotationRu", articleRelativePath);
-            } catch (FileNotFoundException e) {
-                log.error("File not found", e);
-                throw new ArticleCreationException(errorMessage);
-            } catch (UnsupportedEncodingException e) {
-                log.error("UnsupportedEncodingException", e);
-                throw new ArticleCreationException(errorMessage);
-            }
-
-            Annotation annotation = new Annotation(annotationPathEng, annotationPathUkr, annotationPathRu, article);
-            article.setArticleAnnotations(annotation);
-            annotationDao.create(annotation);
-
-            Set<PublicationKeyWord> publicationKeyWords = userInterestFormer(keyWordsStr, article);
-//            Set<PublicationKeyWord> publicationKeyWords = article.getArticlesKeyWordSet();
-//            publicationKeyWords.add(null);
-//            article.setArticlesKeyWordSet(publicationKeyWords);
-            article.setPublicationKeyWords(publicationKeyWords);
-
-
-            System.err.println(article.toString());
-            articleLong = articleDao.create(article);
-
-            Section articleSection = sectionService.getSectionByName(ListSection.valueOf(articleSectionStr));
-            Set <Article> articles = articleSection.getArticles();
-            articles.add(article);
-            sectionService.changeSection(articleSection);
-            article.setArticleSection(articleSection);
-
-            Calendar instance = Calendar.getInstance();//todo try to put here only date without time
-            article.setPublicationDate(instance);
-
-
-
-            User firstReviewer = userService.getUser(firstReviewerLong);
-            firstReviewer.setIsReviewer(true);
-            userService.changeUser(firstReviewer);
-            Review firstReview = new Review(article, firstReviewer);
-
-            User secondReviewer = userService.getUser(secondReviewerLong);
-            secondReviewer.setIsReviewer(true);
-            userService.changeUser(secondReviewer);
-            Review secondReview = new Review(article, secondReviewer);
-
-            List <Review> reviews = article.getArticleReviewers();
-            reviews.add(firstReview);
-            reviews.add(secondReview);
-            reviewDao.create(firstReview);
-            reviewDao.create(secondReview);
-            article.setArticleReviewers(reviews);
-
-            articleDao.update(article);
-
-
-        } catch (ParseException e) {
-            //todo видалити завантажені файли і зробити reduce кількості публікацій
-            e.printStackTrace();
-            throw new ArticleCreationException(errorMessage);
-        }
-        return articleLong;
+        return articleDao.create(article);
     }
 
+
+
+
+
+//    @Override
+//    public Long createByString(String articleStr, User currentUser) throws ArticleCreationException{//todo change to void
+//        log.info("createByString method");
+//
+//        /**
+//         * Здійснює перевірку чи є неопублікована стаття в користувача.
+//         * Стаття заноситьсься в список публікованих після надання 2-х рецензій.
+//         */
+//        if (findUnPublishedByUser(currentUser) != null){
+//            throw new ArticleCreationException("Ви не можете подавати заявку на публікацію ще однієї статті." +
+//                    "Дочекайтесь рецензування та публікації попередньої.");
+//        }
+//
+//        Long articleLong = null;
+//        try {
+//            JSONParser parser = new JSONParser();
+//            Object obj = parser.parse(articleStr);
+//            JSONObject jsonObj = (JSONObject) obj;
+//
+//            String articleName = (String) jsonObj.get("articleName");
+//            String fileName = (String) jsonObj.get("fileName");
+//            String articleSectionStr = (String) jsonObj.get("articleSection");
+//            String annotationEng = (String) jsonObj.get("annotationEng");
+//            String annotationUkr = (String) jsonObj.get("annotationUkr");
+//            String annotationRu = (String) jsonObj.get("annotationRu");
+//            String keyWordsStr = (String) jsonObj.get("keyWords");
+
+//            String firstReviewerStr = (String) jsonObj.get("firstReviewer");
+//            Long firstReviewerLong = Long.parseLong(firstReviewerStr);
+//            String secondReviewerStr = (String) jsonObj.get("secondReviewer");
+//            Long secondReviewerLong = Long.parseLong(secondReviewerStr);
+
+//            Article article = new Article();
+//
+//            article.setPublicationPath(articleName);
+//
+//            int publicationNumber = currentUser.getPublicationNumber();
+//
+//            String articleRelativePath =currentUser.getUserId() + "/" + publicationNumber + "/";
+//
+//            String articleAbsolutePath = initialPath//todo - rewrite using StringBuilder
+//                    + "userArticles/"
+//                    + currentUser.getUserId() + "/"
+//                    + publicationNumber + "/";
+//
+//            article.setPublicationPath(articleRelativePath + fileName);
+//            currentUser.setPublicationNumber(++publicationNumber);
+//            userService.changeUser(currentUser);
+//            article.setUser(currentUser);
+
+//            String annotationPathEng = null;
+//            String annotationPathUkr = null;
+//            String annotationPathRu = null;
+//            try {
+//                annotationPathEng = annotationWriter(annotationEng, articleAbsolutePath, "annotationEng", articleRelativePath);
+//                annotationPathUkr = annotationWriter(annotationUkr, articleAbsolutePath, "annotationUkr", articleRelativePath);
+//                annotationPathRu = annotationWriter(annotationRu, articleAbsolutePath, "annotationRu", articleRelativePath);
+//            } catch (FileNotFoundException e) {
+//                log.error("File not found", e);
+//                throw new ArticleCreationException(errorMessage);
+//            } catch (UnsupportedEncodingException e) {
+//                log.error("UnsupportedEncodingException", e);
+//                throw new ArticleCreationException(errorMessage);
+//            }
+
+//            Annotation annotation = new Annotation(annotationPathEng, annotationPathUkr, annotationPathRu, article);
+//            article.setArticleAnnotations(annotation);
+//            annotationDao.create(annotation);
+
+//            Set<PublicationKeyWord> publicationKeyWords = userInterestFormer(keyWordsStr, article);
+//            article.setPublicationKeyWords(publicationKeyWords);
+
+
+//            System.err.println(article.toString());
+//            articleLong = articleDao.create(article);
+
+//            Section articleSection = sectionService.getSectionByName(ListSection.valueOf(articleSectionStr));
+//            Set <Article> articles = articleSection.getArticles();
+//            articles.add(article);
+//            sectionService.changeSection(articleSection);
+//            article.setArticleSection(articleSection);
+
+//            Calendar instance = Calendar.getInstance();//todo try to put here only date without time
+//            article.setPublicationDate(instance);
+
+
+///////////---------
+//            User firstReviewer = userService.getUser(firstReviewerLong);
+//            firstReviewer.setIsReviewer(true);
+//            userService.changeUser(firstReviewer);
+//            Review firstReview = new Review(article, firstReviewer);
+//
+//            User secondReviewer = userService.getUser(secondReviewerLong);
+//            secondReviewer.setIsReviewer(true);
+//            userService.changeUser(secondReviewer);
+//            Review secondReview = new Review(article, secondReviewer);
+//
+//            List <Review> reviews = article.getArticleReviews();
+//            reviews.add(firstReview);
+//            reviews.add(secondReview);
+//            reviewDao.create(firstReview);
+//            reviewDao.create(secondReview);
+//            article.setArticleReviews(reviews);
+
+//            articleDao.update(article);
+//
+//
+//        } catch (ParseException e) {
+//            //todo видалити завантажені файли і зробити reduce кількості публікацій
+//            e.printStackTrace();
+//            throw new ArticleCreationException(errorMessage);
+//        }
+//        return articleLong;
+//    }
+
+//todo Не видаляти переписати зберігання файлу
     private String annotationWriter (String annotation, String articleAbsolutePath, String fileName, String articleRelativePath) throws FileNotFoundException, UnsupportedEncodingException, ArticleCreationException {
         String annotationAddress = articleAbsolutePath + fileName + ".xml";
         FileOutputStream fileOutputStream = new FileOutputStream(annotationAddress);
@@ -273,6 +289,7 @@ public class ArticleServiceImpl implements ArticleService {
         return annotationAddress;
     }
 
+
     @Override//todo в AnnotationService
     public List<String> annotationReader (String annotationPath){
         String pathStr = initialPath + "userArticles/" + annotationPath;
@@ -287,7 +304,9 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     //todo дати в utils, переписати клас з дженеріками
-    private Set<PublicationKeyWord> userInterestFormer (String keyWordsStr, Article article){
+
+    @Override
+    public Set<PublicationKeyWord> userInterestFormer (String keyWordsStr, Article article){
         Set<PublicationKeyWord> keyWordsSet = new HashSet<>();
         if (keyWordsStr.length() >= 2) {//якщо пусто, пробіл або 2, або менше 2 символів то в БД не додається
             String[] keyWordsArrStr = keyWordsStr.split("\\,");
@@ -324,8 +343,23 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public List<Article> findAllUnpublished() {
+        return articleDao.findAllUnpublished();
+    }
+
+    @Override
+    public List<Article> findWithoutReviewers() {
+        return articleDao.findWithoutReviewers();
+    }
+
+    @Override
     public Article findUnPublishedByUser(User user) {
         return articleDao.findUnPublishedByUser(user);
+    }
+
+    @Override
+    public Article findUnPublishedByReviewer(User reviewer) {
+        return articleDao.findUnPublishedByReviewer(reviewer);
     }
 
     @Override
@@ -354,7 +388,7 @@ public class ArticleServiceImpl implements ArticleService {
             if (!acadStatusStr.equals("")) {
                 UserAcadStatus acadStatus = null;
                 try {
-                    acadStatus = acadStatusService.findByString(acadStatusStr);
+                    acadStatus = acadStatusService.findAcadStatus(acadStatusStr);
                 } catch (Exception e) {
                     acadStatus = null;
                     e.printStackTrace();
@@ -365,21 +399,31 @@ public class ArticleServiceImpl implements ArticleService {
             if (!sciDegreeStr.equals("")) {
                 UserSciDegree sciDegree = null;
                 try {
-                    sciDegree = sciDegreeService.findByString(sciDegreeStr);
+                    sciDegree = sciDegreeService.finSciDegree(sciDegreeStr);
                 } catch (Exception e) {
                     sciDegree = null;
                     e.printStackTrace();
                 }
                 searchQueryMap.put("sciDegree", sciDegree);
             }
-            DateParser dateParser = new DateParser();
+            DateService dateService = new DateService();
             if (!dateFromStr.equals("")) {
-                Calendar dateFromCal = dateParser.parseDate(dateFromStr);
+                Calendar dateFromCal = null;
+                try {
+                    dateFromCal = dateService.parseDate(dateFromStr);
+                } catch (java.text.ParseException e) {
+                    throw new SearchException("Не коректна дата!");
+                }
                 searchQueryMap.put("dateFrom", dateFromCal);
             }
 
             if (!dateToStr.equals("")) {
-                Calendar dateToCal = dateParser.parseDate(dateToStr);
+                Calendar dateToCal = null;
+                try {
+                    dateToCal = dateService.parseDate(dateToStr);
+                } catch (java.text.ParseException e) {
+                    throw new SearchException("Не коректна дата!");
+                }
                 searchQueryMap.put("dateTo", dateToCal);
             }
 
@@ -413,20 +457,10 @@ public class ArticleServiceImpl implements ArticleService {
         }
     }
 
-//    private Calendar dateParser (String date) throws SearchException {
-//        if (date.equals("")) return null;
-//        Calendar calendar;
-//        try {
-//            DateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-//            Date reportDate = format.parse(date);
-//            calendar = Calendar.getInstance();
-//            calendar.setTime(reportDate);
-//        } catch (java.text.ParseException ex) {
-//            throw new SearchException("Не коректна дата!");
-//        }
-//        return calendar;
-//    }
-
+    @Override
+    public List<Article> findArticlesByKeywords(Article article) {
+        return articleDao.findArticlesByKeywords(article);
+    }
 }
 
 

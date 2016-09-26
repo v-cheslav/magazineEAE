@@ -1,66 +1,31 @@
-.menuContent {
-    padding-left: 0px;
+.mainContent {
+    float: right;
+    width: 630px;
 }
-
-.wordLabels {
-    width: 250px;
-}
-
-.textField {
-    width: 260px;
-}
-
-#searchTypeBt {
-    width: 270px;
-    padding-bottom: 7px;
-    border-bottom: solid;
-    border-width: 2px;
-    border-color: #aaaaaa;
-}
-
-#searchTypeBt label {
-    margin-top: -3px;
-    margin-left: 2px;
+#advancedSearchingForm input,#advancedSearchingForm textarea {
+    width: 91%;
 }
 
 #datepickerContainer {
-    height: 65px;
-    padding-top: 4px;
-    padding-bottom: 4px;
-}
-#datepickerContainer p {
-    margin-left: 20px;
+    margin-bottom: 10px;
 }
 
-#dateFrom {
-    background-color: #FAF8F5;
-    margin-left: 5px;
-    margin-top: 4px;
-    padding: 1px;
+#keyWordsSearch {
+    height: 18px;
 }
 
-#dateTo {
-    background-color: #FAF8F5;
-    margin-left: 9px;
-    margin-top: 4px;
-    padding: 1px;
+.delimiter {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    border-bottom: 1px dotted #666666;
+    border-top: transparent;
 }
 
-.select .textField {
-    width: 270px;
+#advancedSearchingForm #searchBtn {
+    width: 150px;
+    margin-left: 53px;
 }
 
-#acadStatus, #sciDegree {
-    width: 270px;
-}
-
-.button {
-    margin: 10px 0px 20px 65px;
-}
-
-table {
-    margin-bottom: 15px;
-}
 
 .errorMessage {
     margin-left: 20px;

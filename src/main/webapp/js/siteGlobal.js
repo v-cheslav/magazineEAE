@@ -10,14 +10,17 @@ $(document).ready(function() {
         month: 'long',
         day: 'numeric'
     };
+
     var localDate = date.toLocaleString("ua", options);
     if ($("#currentDate") != null) {
         document.getElementById('currentDate').innerHTML = localDate;
     }
 
-    $('#searchingForm').click(function(){
-        alert("search");
-    });
+    //$('#searchingForm').click(function(){
+    //    alert("search");
+    //});
+
+
 
 });
 

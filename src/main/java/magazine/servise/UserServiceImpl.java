@@ -2,20 +2,19 @@ package magazine.servise;
 
 import magazine.Exeptions.RegistrationException;
 import magazine.Exeptions.SearchException;
+import magazine.Exeptions.SuchUserExistException;
 import magazine.dao.UserDao;
-import magazine.dao.UserRoleDao;
 import magazine.domain.*;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
+import magazine.utils.PasswordHelper;
+import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -23,13 +22,14 @@ import java.util.*;
  * Created by pvc on 26.10.2015.
  */
 @Service
-public class UserServiceImpl implements UserService/*, UserDetailsService*/ {
+public class UserServiceImpl implements UserService {
+    public static final Logger log = Logger.getLogger(UserServiceImpl.class);
+
+    @Value("${initialPath}")
+    private String initialPath;
 
     @Autowired
     private UserDao userDao;
-
-    @Autowired
-    private SessionFactory sessionFactory;
 
     @Autowired
     private AcadStatusService acadStatusService;
@@ -38,36 +38,33 @@ public class UserServiceImpl implements UserService/*, UserDetailsService*/ {
     private SciDegreeService sciDegreeService;
 
     @Autowired
-    private ArticleService articleService;
+    private PasswordHelper passwordHelper;
 
     @Autowired
-    private SeminarService seminarService;
+    private UserSexService userSexService;
+
+    @Autowired
+    private RegistrationService registrationService;
 
     @Autowired
     private CommentService commentService;
 
     @Autowired
-    private UserRoleDao userRoleDao;
+    private UserRoleService userRoleService;
+
+    @Autowired
+    private UserInterestService userInterestService;
+
+    @Autowired
+    private FileService fileService;
+
+    @Autowired
+    private MessageService messageService;
+
 
     public UserServiceImpl() {
     }
 
-//    @Override
-////    @Transactional
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        if (username == "Administrator") {
-//            return null;
-//        }
-//        return userDao.findByUsername(username);
-////        User user = (User) sessionFactory.getCurrentSession()
-////                .createCriteria(User.class)
-////                .add(Restrictions.eq("username", username))
-////                .uniqueResult();
-////        if (user == null){
-////            throw new UsernameNotFoundException("username: " + username +  " not found!");
-////        }
-////        return user;
-//    }
 
     @Override
     public Long createUser(User user) throws RegistrationException{
@@ -75,14 +72,107 @@ public class UserServiceImpl implements UserService/*, UserDetailsService*/ {
     }
 
     @Override
+    public void increaseUserPublications (User user) {
+        int publNumber = user.getPublicationNumber();
+        user.setPublicationNumber(++publNumber);
+        changeUser(user);
+
+    }
+
+    @Override
+    public void updateUser(User oldUser, User newUser, MultipartFile multipartFile) throws RegistrationException {
+
+        setUpdatedParameters(oldUser, newUser);
+
+        if (multipartFile.getSize() != 0){
+            fileService.changeUserImage(oldUser, multipartFile);
+        }
+
+        userDao.update(oldUser);
+
+    }
+
+
+    private void setUpdatedParameters(User oldUser, User newUser) {
+        log.info("setUpdatedParameters method");
+
+        if (oldUser == null || newUser == null){
+            throw new IllegalArgumentException("User couldn't be null");
+        }
+
+        if (!newUser.getUsername().equals("")){
+            oldUser.setUserName(newUser.getUsername());
+        }
+        if (!newUser.getPassword().equals("")){
+            String encodedPassword = passwordHelper.encode(newUser.getPassword());
+            oldUser.setPassword(encodedPassword);
+        }
+        if (!newUser.getName().equals("")){
+            oldUser.setName(newUser.getName());
+        }
+        if (!newUser.getSurname().equals("")){
+            oldUser.setSurname(newUser.getSurname());
+        }
+        if (!newUser.getMiddleName().equals("")){
+            oldUser.setMiddleName(newUser.getMiddleName());
+        }
+        if (!newUser.getUniversity().equals("")){
+            oldUser.setUniversity(newUser.getUniversity());
+        }
+        if (!newUser.getInstitute().equals("")){
+            oldUser.setInstitute(newUser.getInstitute());
+        }
+        if (!newUser.getChair().equals("")){
+            oldUser.setChair(newUser.getChair());
+        }
+        if (!newUser.getPosition().equals("")){
+            oldUser.setPosition(newUser.getPosition());
+        }
+        if (!newUser.getPhone().equals("")){
+            oldUser.setPhone(newUser.getPhone());
+        }
+        if (newUser.getAcadStatus() != null){
+            oldUser.setAcadStatus(newUser.getAcadStatus());
+        }
+        if (newUser.getSciDegree() != null){
+            oldUser.setSciDegree(newUser.getSciDegree());
+        }
+        if (newUser.getUserSex() != null){
+            oldUser.setUserSex(newUser.getUserSex());
+        }
+    }
+
+
+    @Override
+    public boolean checkIfUserExist (String username) throws SuchUserExistException {
+        log.info("checkIfUserExist method");
+        if (username.equals("")){
+            log.error("Електронна адреса username не вказана.");
+            throw new IllegalArgumentException("Електронна адреса username не вказана.");
+        }
+        try {//спробуємо знайти юзера за username
+            getUserByUserName(username);//якщо існує кидаємо RegistrationException
+            log.error("Користувач з поштою \"" + username + "\" існує. Спробуйте іншу.");
+            throw new SuchUserExistException("Користувач з поштою \"" + username + "\" існує. Спробуйте іншу.");
+        } catch (UsernameNotFoundException e) {
+            log.info("Реєстрація нового користувача, або заміна його username: " + username);
+            return false;
+        }
+    }
+
+
+
+    @Override
     public User getUser(Long id) {
         return userDao.read(id);
     }
+
 
     @Override
     public void changeUser(User user) {
         userDao.update(user);
     }
+
 
     @Override
     public void removeUser(User user) {
@@ -98,15 +188,18 @@ public class UserServiceImpl implements UserService/*, UserDetailsService*/ {
         userDao.delete(user);
     }
 
+
     @Override
     public List<User> getAllUsers() {
         return userDao.findAll();
     }
 
+
     @Override
     public List<User> getAllDoctorsAndCandidates() {
         return userDao.findAllDoctorsAndCandidates();
     }
+
 
     @Override
     public List<User> searchUsers(String userStr) throws SearchException {
@@ -120,14 +213,14 @@ public class UserServiceImpl implements UserService/*, UserDetailsService*/ {
             String nameOfUserStr = (String) jsonObj.get("nameOfUser");
             String sciDegreeStr = (String) jsonObj.get("sciDegree");
 
+
             Map<String, Object> searchQueryMap = new HashMap<>();
 
             if (!acadStatusStr.equals("")) {
                 UserAcadStatus acadStatus = null;
                 try {
-                    acadStatus = acadStatusService.findByString(acadStatusStr);
+                    acadStatus = acadStatusService.findAcadStatus(acadStatusStr);
                 } catch (Exception e) {
-                    acadStatus = null;
                     e.printStackTrace();
                 }
                 searchQueryMap.put("acadStatus", acadStatus);
@@ -136,9 +229,8 @@ public class UserServiceImpl implements UserService/*, UserDetailsService*/ {
             if (!sciDegreeStr.equals("")) {
                 UserSciDegree sciDegree = null;
                 try {
-                    sciDegree = sciDegreeService.findByString(sciDegreeStr);
+                    sciDegree = sciDegreeService.finSciDegree(sciDegreeStr);
                 } catch (Exception e) {
-                    sciDegree = null;
                     e.printStackTrace();
                 }
                 searchQueryMap.put("sciDegree", sciDegree);
@@ -155,12 +247,15 @@ public class UserServiceImpl implements UserService/*, UserDetailsService*/ {
         }
     }
 
+
     @Override
     public User getUserByUserName(String userName) throws UsernameNotFoundException{
-//        try {
-            return userDao.findByUsername(userName);
-//        } catch (IndexOutOfBoundsException ex){
-//            throw  new UsernameNotFoundException("Користувача " + userName + "не знайдено.");
-//        }
+        return userDao.findByUsername(userName);
     }
+
+
+
+
+
+
 }

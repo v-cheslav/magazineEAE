@@ -16,13 +16,16 @@ public class Review {
     private Long reviewId;
 
     @Column(name="Review_Name")
-    private String review;//todo rename to ReviewPath
+    private String reviewName;
 
     @Column(name="Review_Status")
     private Boolean status = false;
 
+    @Column(name="Review_Address")
+    private String reviewAddress;
+
     @ManyToOne
-    @OrderColumn(name="review", insertable = false, updatable = false)
+    @OrderColumn(name="reviewName", insertable = false, updatable = false)
     private Article article;
 
     @ManyToOne
@@ -31,8 +34,8 @@ public class Review {
     public Review() {
     }
 
-//    public Review(String review, Article article, User user) {
-//        this.review = review;
+//    public Review(String reviewName, Article article, User user) {
+//        this.reviewName = reviewName;
 //        this.article = article;
 //        this.user = user;
 //    }
@@ -43,17 +46,24 @@ public class Review {
     }
 
 
+    public String getReviewAddress() {
+        return reviewAddress;
+    }
+
+    public void setReviewAddress(String reviewAddress) {
+        this.reviewAddress = reviewAddress;
+    }
 
     public Long getReviewId() {
         return reviewId;
     }
 
-    public String getReview() {
-        return review;
+    public String getReviewName() {
+        return reviewName;
     }
 
-    public void setReview(String review) {
-        this.review = review;
+    public void setReviewName(String reviewName) {
+        this.reviewName = reviewName;
     }
 
     public Boolean getStatus() {

@@ -9,46 +9,32 @@
 <head>
 
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
-    <meta name="description"
-          content="Розміщення матеріалів семінару під егідою НАН Українии та внутрішніх публікацій журналу ННІ Енергетики, автоматики і енергозбереження"/>
-    <title>Он-лайн журнал &quot;Енергетика, автоматика і енергозбереження&quot;ОпублікуватиОн-лайн журнал &quot;Енергетика,
-        автоматика і енергозбереження&quot;</title>
+    <title></title>
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="../../css/jquery-ui.css"/>
-    </title>
     <link rel="stylesheet" type="text/css" href="../../css/site_global.css"/>
-    <link rel="stylesheet" type="text/css" href="../../css/registration.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/myPageNew.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/formsAndButtons.css"/>
+
     <!-- Other scripts -->
     <script src="../../js/jquery-1.11.2.min.js"></script>
     <script src="../../js/jquery-ui.js"></script>
     <script src="../../js/jquery.validate.min.js"></script>
     <script src="../../js/jquery.ajax.upload.js"></script>
-    <script src="../../js/siteGlobal.js" type="text/javascript"></script>
-    <script src="../../js/upload.js" type="text/javascript"></script>
     <script src="../../js/myPage.js" type="text/javascript"></script>
+    <script src="../../js/siteGlobal.js" type="text/javascript"></script>
+
 </head>
 <body>
+
 <div class="header">
-    <h1 id="magazineName">ЕНЕРГЕТИКА, АВТОМАТИКА І ЕНЕРГОЗБЕРЕЖЕННЯ</h1>
-    <nav id="MenuBar">
-        <ul>
-            <li><a href="index.html" class="menuButton">ГОЛОВНА</a></li>
-            <li><a href="publication.html" class="menuButton">ПУБЛІКАЦІЇ</a></li>
-            <li><a href="seminar.html" class="menuButton">СЕМІНАР</a></li>
-            <li><a href="publish.html" class="menuButton">ОПУБЛІКУВАТИ</a></li>
-            <li><a href="contacts.html" class="menuButton">КОНТАКТИ</a></li>
-        </ul>
-    </nav>
-    <hr class="horizontalLine">
     <div class="banner">
         <div class="bannerTop">
             <h3 class="headerUserName">
                 ${userDetails.name} ${userDetails.middleName} ${userDetails.surname}
             </h3>
 
-            <h3 class="headerUniversityName">Національний університет біоресурсів <br> і природокористування України
-            </h3>
+            <h3 class="headerUniversityName">${userDetails.university}</h3>
 
             <div class="authForm" id="authForm">
                 <p><a href="/j_spring_security_logout">Вийти</a></p>
@@ -56,195 +42,234 @@
         </div>
         <hr class="horizontalLine" id="bannerLine">
         <div class="bannerBottom">
-            <img class="userPhoto" id="imgContainer" src="getFile?name=${userDetails.photoAddress}&type=img" alt="Photo">
+            <img class="userPhoto" id="imgContainer" src="getFile?name=${userDetails.photoAddress}&type=img"
+                 alt="Photo">
+
             <div id="aStatAndSDegree">
                 <p class="paddingBottom"> ${userDetails.acadStatus.toString()}</p>
+
                 <p class="paddingBottom"> ${userDetails.sciDegree.toString()}</p>
+
                 <p class="paddingBottom"> ${userDetails.chair}</p>
             </div>
             <div id="instituteNameHeader">
                 <p> ${userDetails.institute}</p>
             </div>
-            <a href="advancedSearch.html" class="menuButton" id="searchingButton">Пошук</a>
         </div>
     </div>
-    <hr class="horizontalLine">
+    <hr>
+    <div id="topnav">
+        <ul class="nav">
+            <li><a href="index.html">Головна</a></li>
+            <li><a href="articles.html">Статті</a></li>
+            <li><a href="seminars.html">Семінари</a></li>
+            <li><a href="conference.html">Конференції</a></li>
+            <li class="active"><a href="#">Опублікувати</a>
+                <ul>
+                    <li><a href="publishArticle.html">Статтю</a></li>
+                    <li><a href="publishSeminar.html">Cемінар</a></li>
+                    <li><a href="publishConference.html">Корференцію</a></li>
+                </ul>
+            </li>
+            <li><a href="advancedSearch.html">Пошук</a></li>
+            <li><a href="contacts.html">Контакти</a></li>
+        </ul>
+    </div>
+    <hr>
 </div>
 
-<div class="content" id="mainContent">
+<div class="content">
+    <div class="whiteBox">
 
-    <div class="leftSideBar" id="leftSideBar">
-        <div class="currentDateHeader" id="currentDateContainer">
-            <p id="currentDate">&nbsp;</p>
-        </div>
-
-        <div class="leftButtonsMenu" id="publicationsContent">
-
-            <div class="leftButtonsHeader" id="rubricsName">
-                <p id="rubrics">Рубрики:</p>
+        <div class="leftSideBar">
+            <div class="barHeader">
+                Меню:
             </div>
 
-            <div class="leftButtonName" name="section" data-type="group" id="sections">
-                <input type="radio" name="section" id="editPage" value="EDIT" checked>
-                <label for="editPage">Редагувати сторінку</label>
+            <div class="barContent" name="section" data-type="group" id="sections">
+                <input type="radio" name="section" id="massages" value="MASSAGES" checked>
+                <label for="massages">Повідомлення</label>
                 <input type="radio" name="section" id="myPublications" value="PUBLICATIONS"
                        onclick="getUserArticles(${userDetails.userId})">
                 <label for="myPublications">Мої публікації</label>
                 <input type="radio" name="section" id="myReports" onclick="getUserSeminars(${userDetails.userId})"
                        value="REPORTS">
                 <label for="myReports">Мої доповіді</label>
-                <input type="radio" name="section" id="myReviews" onclick="getReviewersArticles(${userDetails.userId})"
+                <input type="radio" name="section" id="myReviews"
+                       onclick="getReviewersArticles(${userDetails.userId})"
                        value="REVIEW">
                 <label for="myReviews">Рецензовані статті</label>
                 <input type="radio" name="section" id="applySeminar" value="APPLY">
                 <label for="applySeminar">Подати заявку на участь в семінарі</label>
-            </div>
-        </div>
-    </div>
-
-    <div class="mainContent"<%-- id="TablesContent"--%>>
-
-        <div id="information">
-            <div class="mainContentHeader" id="userInformation">
-                <h2 id="informationDisplay">Інформаційне табло</h2>
-            </div>
-
-            <div class="menuContent">
-                <c:if test="${seminarMessage!=null}">
-                    <p>
-                        <c:out value="${seminarMessage}"/>
-                    </p>
-                    <hr>
-                </c:if>
-
-                <c:if test="${article != null}">
-                    <p>
-                        Заявка на публікацію статті
-                        "<c:out value="${article.publicationName}"/>"
-                        прийнята.
-                    </p>
-
-                    <p>
-                        Рецензія 1 від
-                        <c:out value="${article.articleReviewers.get(0).user.toString()}"/>
-                        <c:if test="${article.articleReviewers.get(0).status == false}">
-                            очікується.
-                        </c:if>
-                        <c:if test="${article.articleReviewers.get(0).status == true}">
-                            надана.
-                        </c:if>
-                        <c:if test="${article.articleReviewers.get(0).status == null}">
-                            відхилена. Ви можете обрати іншого рецензента.
-                                <span class="selectReviewer">
-                                    <select name="firstReviewer" id="firstReviewer">
-                                        <option selected='selected' name="firstOption" id="firstOption" value=''>
-                                            Рецензент
-                                        </option>
-                                    </select>
-                                </span>
-                            <span class="newReviewer" id="newReviewer1">Надіслати нову заявку.</span>
-                        </c:if>
-                    </p>
-                    <p>
-                        Рецензія 2 від
-                        <c:out value="${article.articleReviewers.get(1).user.toString()}"/>
-                        <c:if test="${article.articleReviewers.get(1).status == false}">
-                            очікується.
-                        </c:if>
-                        <c:if test="${article.articleReviewers.get(1).status == true}">
-                            надана.
-                        </c:if>
-                        <c:if test="${article.articleReviewers.get(1).status == null}">
-                            відхилена. Ви можете обрати іншого рецензента.
-                                    <span class="selectReviewer">
-                                        <select name="secondReviewer" id="secondReviewer">
-                                            <option selected='selected' name="secondOption" id="secondOption" value=''>
-                                                Рецензент
-                                            </option>
-                                        </select>
-                                    </span>
-                            <span class="newReviewer" id="newReviewer2">Надіслати нову заявку.</span>
-                        </c:if>
-                    </p>
-                    <hr>
-                </c:if>
-
-                <c:if test="${reviews != null}">
-                    <p>
-                        Вам надійшла заявка на рецензування статті:<br>
-                        <c:forEach var="review" items="${reviews}">
-                            <a href="articlePage?publicationId=${review.article.id}">
-                                <c:out value="${review.article.publicationName}"/> <%--todo--%>
-                            </a>
-                            <br>
-                        </c:forEach>
-
-                    </p>
-                    <hr>
-                </c:if>
-
+                <input type="radio" name="section" id="editPage" value="EDIT">
+                <label for="editPage">Редагувати сторінку</label>
             </div>
         </div>
 
+        <div class="mainContent">
 
-        <div class="mainContentHeader" id="TableNameLabel">
-            <h2 id="mainContentHeader">&nbsp;</h2>
-        </div>
-        <table border="1" align="center" width="700px" height="100%" class="innerTable" id="innerTable">
-            <thead>
-            <tr>
-                <th id="number" class="innerTableHead" width="35px">№</th>
-                <th id="publishDate" class="innerTableHead" width="80px">Дата</th>
-                <th id="author" class="innerTableHead" width="150px">Автор</th>
-                <th id="theme" class="innerTableHead" width="400px">Тема</th>
-            </tr>
-            </thead>
-            <tbody class="innerTableBody" name="tableContent" id="tableContent">&nbsp;</tbody>
-        </table>
+            <div class="barHeader" id="TableNameLabel">
+                <h2 id="mainContentHeader">&nbsp;</h2>
+            </div>
 
-        <div class="updateUser" id="updateUser">
+            <div id="information">
 
-            <form class="registrationForm" id="userUpdatingForm" action="null">
-                <%--<fieldset>--%>
-                <div class="leftField">
-                    <div>
-                        <label for="surname" class="label"></label>
-                        <input class="textField" type="text"
-                               id="surname" name="surname" placeholder="Прізвище"/>
+                <div class="menuContent">
+                    <c:if test="${seminarMessage!=null}">
+                        <p>
+                            <c:out value="${seminarMessage}"/>
+                        </p>
+                        <hr>
+                    </c:if>
+
+                    <c:if test="${article != null}">
+                        <p>
+                            Заявка на публікацію статті
+                            "<c:out value="${article.publicationName}"/>"
+                            прийнята.
+                        </p>
+                        <c:if test="${article.articleReviews.size() != 0}">
+                            <p>
+                                Рецензія 1 від
+                                <c:out value="${article.articleReviews.get(0).user.toString()}"/>
+                                <c:if test="${article.articleReviews.get(0).status == false}">
+                                    очікується.
+                                </c:if>
+                                <c:if test="${article.articleReviews.get(0).status == true}">
+                                    надана.
+                                </c:if>
+                            </p>
+
+                            <p>
+                                Рецензія 2 від
+                                <c:out value="${article.articleReviews.get(1).user.toString()}"/>
+                                <c:if test="${article.articleReviews.get(1).status == false}">
+                                    очікується.
+                                </c:if>
+                                <c:if test="${article.articleReviews.get(1).status == true}">
+                                    надана.
+                                </c:if>
+                                <c:if test="${article.articleReviews.get(1).status == null}">
+                                    відхилена. Ви можете обрати іншого рецензента.
+                                        <span class="selectReviewer">
+                                            <select name="secondReviewer" id="secondReviewer">
+                                                <option selected='selected' name="secondOption" id="secondOption"
+                                                        value=''>
+                                                    Рецензент
+                                                </option>
+                                            </select>
+                                        </span>
+                                    <span class="newReviewer" id="newReviewer2">Надіслати нову заявку.</span>
+                                </c:if>
+                            </p>
+                        </c:if>
+                        <hr>
+                    </c:if>
+
+                    <c:if test="${reviews != null}">
+                        <p>
+                            Вам надійшла заявка на рецензування статті:<br>
+                            <c:forEach var="reviewName" items="${reviews}">
+                                <a href="articlePage?publicationId=${reviewName.article.id}">
+                                    <c:out value="${reviewName.article.publicationName}"/> <%--todo--%>
+                                </a>
+                                <br>
+                            </c:forEach>
+
+                        </p>
+                        <hr>
+                    </c:if>
+
+                </div>
+            </div>
+
+
+            <table border="1" align="center" width="700px" height="100%" class="innerTable" id="innerTable">
+                <thead>
+                <tr>
+                    <th id="number" class="innerTableHead" width="35px">№</th>
+                    <th id="publishDate" class="innerTableHead" width="80px">Дата</th>
+                    <th id="author" class="innerTableHead" width="150px">Автор</th>
+                    <th id="theme" class="innerTableHead" width="400px">Тема</th>
+                </tr>
+                </thead>
+                <tbody class="innerTableBody" name="tableContent" id="tableContent">&nbsp;</tbody>
+            </table>
+
+
+            <div class="applySeminarContainer" id="applySeminarContainer">
+                <form class="form" id="applySeminarForm" action="null">
+                    <div class="formField">
+                        <label for="newSeminarTheme" class="label">
+                            Тема семінару<span>*</span>
+                        </label>
+                        <textarea class="textField" name="newSeminarTheme" id="newSeminarTheme"> </textarea>
                     </div>
 
-                    <div>
-                        <label for="name" class="label"></label>
-                        <input class="textField" type="text"
-                               id="name" name="name" placeholder="Ім'я"/>
+                    <div id="datepickerContainer" class="formField">
+                        <label for="datepicker" class="label">Дата доповіді:
+                            <span>*</span>
+                        </label>
+                        <input type="text" class="textField" id="datepicker" placeholder="дд.мм.рррр">
                     </div>
 
-                    <div>
-                        <label for="middleName" class="label"></label>
-                        <input class="textField" type="text"
-                               id="middleName" name="middleName" placeholder="По батькові"/>
+                    <input class="button" id="applySeminarBtn" onclick="applySeminar()" type="button"
+                           value="Подати заявку"/>
+
+                    <div id="seminarErrorMessage" class="error"></div>
+                </form>
+            </div>
+
+
+            <div class="updateUser" id="updateUser">
+
+                <form class="form" id="userUpdatingForm" action="null">
+
+
+                    <div class="formField">
+                        <label for="surname" class="label"> Прізвище </label>
+                        <div class="textField">
+                            <input class="textField" type="text" id="surname" name="surname" value="Surname"/>
+                        </div>
                     </div>
 
-                    <div>
-                        <label for="university" class="label"></label>
-                        <input class="textField" type="text"
-                               id="university" name="university" placeholder="Університет"/>
+                    <div class="formField">
+                        <label for="name" class="label"> Ім'я </label>
+                        <div class="textField">
+                            <input class="textField" type="text" id="name" name="name" value="Name"/>
+                        </div>
                     </div>
 
-                    <div>
-                        <label for="institute" class="label"></label>
-                        <input class="textField" type="text"
-                               id="institute" name="institute" placeholder="Інститут"/>
+                    <div class="formField">
+                        <label for="middleName" class="label"> По батькові </label>
+                        <div class="textField">
+                            <input class="textField" type="text" id="middleName" name="middleName" value="middleName"/>
+                        </div>
                     </div>
 
-                    <div>
-                        <label for="chair" class="label"></label>
-                        <input class="textField" type="text"
-                               id="chair" name="chair" placeholder="Кафедра"/>
+                    <div class="formField">
+                        <label for="university" class="label"> Університет </label>
+                        <div class="textField">
+                            <input class="textField" type="text" id="university" name="university" value="university"/>
+                        </div>
                     </div>
 
-                    <div>
-                        <label for="acadStatus" class="label"></label>
+                    <div class="formField">
+                        <label for="institute" class="label"> Інститут </label>
+                        <div class="textField">
+                            <input class="textField" type="text" id="institute" name="institute" value="institute"/>
+                        </div>
+                    </div>
+
+                    <div class="formField">
+                        <label for="chair" class="label"> Кафедра </label>
+                        <div class="textField">
+                            <input class="textField" type="text" id="chair" name="chair" value="chair"/>
+                        </div>
+                    </div>
+
+                    <div class="formField">
+                        <label for="acadStatus" class="label"> Вчене звання </label>
                         <select class="textField" id="acadStatus" name="acadStatus">
                             <option value="" selected="selected" class="selected">Вчене звання</option>
                             <option value="DOCENT">Доцент</option>
@@ -253,8 +278,8 @@
                         </select>
                     </div>
 
-                    <div>
-                        <label for="sciDegree" class="label"></label>
+                    <div class="formField">
+                        <label for="sciDegree" class="label"> Науковий ступінь </label>
                         <select class="textField" id="sciDegree" name="sciDegree">
                             <option value="" selected="selected" id="selected">Науковий ступінь</option>
                             <option value="CANDIDATE">Кандидат наук</option>
@@ -263,157 +288,90 @@
                         </select>
                     </div>
 
-                    <div>
-                        <label for="position" class="label"></label>
-                        <input class="textField" type="text"
-                               id="position" name="position" placeholder="Посада"/>
-                    </div>
-
-                    <div>
-                        <label for="phone" class="label"></label>
-                        <input class="textField" type="text"
-                               id="phone" name="phone" placeholder="Телефон"/>
-                    </div>
-
-                    <div>
-                        <label for="username" class="label"></label>
-                        <input class="textField" type="text"
-                               id="username" name="username" placeholder="Електронна адреса"/>
-                    </div>
-
-                    <div>
-                        <label for="password" class="label"></label>
-                        <input class="textField" type="password" id="password" name="password" placeholder="Пароль"/>
-                    </div>
-
-                    <div>
-                        <label for="passwordConfirm" class="label"></label>
-                        <input class="textField" type="password"
-                               id="passwordConfirm" name="passwordConfirm" placeholder="Підтвердження паролю"/>
-                    </div>
-                </div>
-
-                <div class="rightField">
-
-                    <div>
-                        <label for="keyWords" class="wordLabels">Наукові інтереси</label>
-                        <textarea class="textField" id="keyWords" name="keyWords"
-                                  placeholder="Введіть не більше 5-ти ключових слів."></textarea>
-                    </div>
-
-                    <div>
-                        <label for="userSex" class="wordLabels">Стать</label>
-
-                        <div class="radioButtons" id="userSex" name="userSex" data-required="false" data-type="group">
-                            <span><input type="radio" class="radioButtons" name="userSex"
-                                         value="MALE">Чоловіча</span><br>
-                            <span><input type="radio" class="radioButtons" name="userSex" value="FEMALE">Жіноча  </span>
+                    <div class="formField">
+                        <label for="position" class="label"> Посада </label>
+                        <div class="textField">
+                            <input class="textField" type="text" id="position" name="position" value="position"/>
                         </div>
                     </div>
 
-                    <div class="messageField">
-                        <p id="regErrorMessage" class="regMessage" name="message">
-                            <c:if test="${message!=null}">
-                                <c:out value="${message}"/>
-                            </c:if>
-                        </p>
+                    <div class="formField">
+                        <label for="phone" class="label"> Телефон </label>
+                        <div class="textField">
+                            <input class="textField" type="text" id="phone" name="phone"/>
+                        </div>
                     </div>
 
-                    <input class="button" id="regBtn" type="button" value="Редагувати"/>
+                    <div class="formField">
+                        <label for="username" class="label"> Електронна адреса </label>
+                        <div class="textField">
+                            <input type="text" name="username" id="username">
+                        </div>
+                    </div>
+
+                    <div class="formField">
+                        <label for="password" class="label">
+                            Пароль: <span>*</span>
+                        </label>
+                        <div class="textField">
+                            <input type="password" name="password" id="password" required="true">
+                        </div>
+                    </div>
+
+                    <div class="formField">
+                        <label for="passwordConfirm" class="label">
+                            Підтвердження паролю: <span>*</span>
+                        </label>
+                        <div class="textField">
+                            <input type="password" name="passwordConfirm" id="passwordConfirm" required="true">
+                        </div>
+                    </div>
+
+                    <div class="formField">
+                        <label for="keyWords" class="label"> Наукові інтереси (ключові слова) </label>
+                        <textarea class="textField" id="keyWords" name="keyWords"></textarea>
+                    </div>
+
+
+                    <div class="formField">
+                        <label for="photo" class="label"> Фото
+                            <img id="curentUserImg" src="getFile?name=${userDetails.photoAddress}&type=img">
+                        </label>
+                        <input type="file" class="textField" id="photo" name="userPhoto" accept="image/*">
+                    </div>
+
+                    <div class="formField" id="sexField">
+                        <label for="userSex" class="label" id="userSexLabel"> Стать: </label>
+                        <div class="radioButtons" id="userSex" name="userSex" data-required="false" data-type="group">
+                            <span><input type="radio" class="radioButtons" name="userSex" value="MALE">Чоловіча</span>
+                            <span><input type="radio" class="radioButtons" name="userSex" value="FEMALE">Жіноча</span>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+
+                    <div id="buttons">
+                        <input id="regBtn" class="button" type="button" value="Редагувати"/>
+                        <input id="btnClear" class="button" type="button" value="Очистити"/>
+                    </div>
+                </form>
+                <div class="clear"></div>
+                <div class="messageField">
+                    <p id="regErrorMessage" class="error" name="message"> </p>
                 </div>
-                </fieldset>
-            </form>
-            <form id="fileForm" class="fileForm">
-                <div>
-                    <label id="newImgContainer" for="photo" class="photoFrame">
-                        <img src="getFile?name=${userDetails.photoAddress}&type=img">
-                    </label>
-                    <input type="file" class="photoAddress" id="photo" name="file" accept="image/*">
-                    <button id="btnUpload" class="button" type="button">Завантажити фото</button>
-                    <br>
-                    <button id="btnClear" class="button" type="button">Очистити</button>
-                </div>
-            </form>
+
+            </div>
 
         </div>
 
-        <div class="applySeminarContainer" id="applySeminarContainer">
-
-            <form class="applySeminarForm" id="applySeminarForm" action="null">
-                <div>
-                    <textarea class="textField" id="newSeminarTheme" name="newSeminarTheme"
-                              placeholder="Тема семінару"></textarea>
-                </div>
-
-                <div id="datepickerContainer" class="textField">
-                    <p>Дата доповіді: <input type="text" id="datepicker" placeholder="дд.мм.рррр"></p>
-                </div>
-
-                <input class="button" id="applySeminarBtn" onclick="applySeminar()" type="button" value="Подати заявку"/>
-                <div id="seminarErrorMessage" class="error"></div>
-
-            </form>
-
-        </div>
+        <div class="clear"></div>
     </div>
-
 </div>
 
 
 </div>
 
 <hr class="horizontalLine">
-<div class="clearfix colelem" id="footer"><!-- column -->
-    <div class="clearfix colelem" id="footerUniversityInform"><!-- content -->
-        <p>Національний університет біоресурсів і природокористування України&nbsp; ННІ Енергетики, автоматики і
-            енергозбереження</p>
-    </div>
-    <div class="clearfix colelem" id="footerContacts"><!-- group -->
-        <div class="grpelem" id="addressIcon"><!-- simple frame --></div>
-        <div class="clearfix grpelem" id="footerAdsressInform"><!-- column -->
-            <div class="clearfix colelem" id="addressFooter"><!-- content -->
-                <p>03041, м Київ, вул Героїв Оборони 12, навчальний корпус №8</p>
-            </div>
-            <div class="clearfix colelem" id="designerName"><!-- content -->
-                <p>Дизайн та програмування: Гаврилюк В.В.</p>
-            </div>
-        </div>
-        <div class="grpelem" id="footerVline"><!-- simple frame --></div>
-        <div class="grpelem" id="callIcon"><!-- simple frame --></div>
-        <div class="clearfix grpelem" id="fotterPhones"><!-- column -->
-            <div class="clearfix colelem" id="institutePhone"><!-- content -->
-                <p>(044) 527-85-80</p>
-            </div>
-            <div class="clearfix colelem" id="designerPhone"><!-- content -->
-                <p>(096) 115-00-83</p>
-            </div>
-        </div>
-        <div class="grpelem" id="fotterVline2"><!-- simple frame --></div>
-        <div class="grpelem" id="emailIcon"><!-- simple frame --></div>
-        <div class="clearfix grpelem" id="footerEmails"><!-- column -->
-            <div class="clearfix colelem" id="instituteEmail"><!-- content -->
-                <p>epafort1@ukr.net</p>
-            </div>
-            <div class="clearfix colelem" id="designerEmail"><!-- content -->
-                <p>v_cheslav@ukr.net</p>
-            </div>
-        </div>
-    </div>
-    <div class="clearfix colelem" id="allRightsInform"><!-- content -->
-        <p>© All rights reserved</p>
-    </div>
-</div>
 
-<div class="confirmation" id="confirmation">
-    <div class="confirmationMessage">
-        <p>Даний рецензент відмовив вам у рецензуванні.<br>
-            Ви дійсно хочете надіслати заявку повторно?</p>
-        <div>
-            <input class="button" id="confirmBtn" type="button" value="Підтвердити"/>
-            <input class="button" id="cancelConfBtn" type="button" value="Відмінити"/>
-        </div>
-    </div>
-</div>
 <div class="uploading" id="uploading"></div>
 
 </body>

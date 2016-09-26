@@ -12,39 +12,18 @@ import java.util.*;
 * Created by pvc on 19.10.2015.
 */
 @Entity
-//@SecondaryTable(name = "Seminars")
 @DiscriminatorValue("Seminars")
 
-//@Inheritance(strategy = InheritanceType.JOINED)
 public class Seminar extends Publication {
 
-//    @Id
-//    @SequenceGenerator(name = "sequence", sequenceName = "SEMINAR_SEQ", allocationSize = 1, initialValue = 1)
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence")
-//    @Column(name="seminarId")
-//    private Long seminarId;
 
-//    @Column(name="seminarName")
-//    private String seminarName;
+    private String seminarReportAddress = super.getPublicationPath();
 
-    /**
-     * As for published seminars this date means the date of publication
-     * that seminar in magazine, but as for announced - it's a date when
-     * user is going to represent his report
-     */
-//    @Column(name = "seminarPublishDate")
-//    private Calendar seminarPublicationDate;
+    @Column(name="presentationFileName")
+    private String presentationFileName;
 
-//    @ManyToOne
-//    private User user;
-
-//    @Column(name="Report_Address")
-    private String seminarReportAddress = super.getPublicationAddress();
-
-    @Column(name="Presentation_Address")
-    private String seminarPresentationAddress;
-
-
+    @Column(name="reportFileName")
+    private String reportFileName;
 
     @Column(name = "unRegUserName")
     private String unRegUserName;
@@ -68,31 +47,26 @@ public class Seminar extends Publication {
     public Seminar() {
     }
 
-//    public Seminar(String seminarName, Calendar seminarPublicationDate, User user) {
-//        this.seminarName = seminarName;
-//        this.seminarPublicationDate = seminarPublicationDate;
-//        this.user = user;
-//    }
-
-    public Seminar(String publicationName, Calendar publicationDate, String publicationAddress, User user) {
-        super(publicationName, publicationDate, publicationAddress, user);
+    public Seminar(Calendar publicationDate, String publicationAddress, User user) {
+        super(publicationDate, publicationAddress, user);
     }
 
-//    public Long getSeminarId() {
-//        return seminarId;
-//    }
 
-//    public void setSeminarId(Long seminarId) {
-//        this.seminarId = seminarId;
-//    }
+    public String getPresentationFileName() {
+        return presentationFileName;
+    }
 
-//    public String getSeminarName() {
-//        return seminarName;
-//    }
+    public void setPresentationFileName(String presentationFileName) {
+        this.presentationFileName = presentationFileName;
+    }
 
-//    public void setSeminarName(String seminarName) {
-//        this.seminarName = seminarName;
-//    }
+    public String getReportFileName() {
+        return reportFileName;
+    }
+
+    public void setReportFileName(String reportFileName) {
+        this.reportFileName = reportFileName;
+    }
 
     public String getUnRegUserName() {
         return unRegUserName;
@@ -102,22 +76,6 @@ public class Seminar extends Publication {
         this.unRegUserName = unRegUserName;
     }
 
-//    public Calendar getSeminarPublicationDate() {
-//        return seminarPublicationDate;
-//    }
-
-//    public void setSeminarPublicationDate(Calendar seminarPublicationDate) {
-//        this.seminarPublicationDate = seminarPublicationDate;
-//    }
-
-//    public User getUser() {
-//        return user;
-//    }
-
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
-
     public Boolean getIsPublished() {
         return isPublished;
     }
@@ -126,20 +84,12 @@ public class Seminar extends Publication {
         this.isPublished = isPublished;
     }
 
-    public String getSeminarPresentationAddress() {
-        return seminarPresentationAddress;
-    }
-
-    public void setSeminarPresentationAddress(String seminarPresentationAddress) {
-        this.seminarPresentationAddress = seminarPresentationAddress;
-    }
-
     public String getSeminarReportAddress() {
         return seminarReportAddress;
     }
 
     public void setSeminarReportAddress(String seminarReportAddress) {
-        super.setPublicationAddress(seminarReportAddress);
+        super.setPublicationPath(seminarReportAddress);
         this.seminarReportAddress = seminarReportAddress;
     }
 
@@ -160,11 +110,5 @@ public class Seminar extends Publication {
     }
 
 
-
-//    public String seminarDateToString(){
-//        MySimpleDateFormat dateFormat = new MySimpleDateFormat();
-//        String seminarPublishDate = dateFormat.getDateFormat().format(this.seminarPublicationDate.getTime());
-//        return seminarPublishDate;
-//    }
 
 }

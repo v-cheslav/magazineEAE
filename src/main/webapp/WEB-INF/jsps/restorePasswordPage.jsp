@@ -11,6 +11,7 @@
     <title>Он-лайн журнал &quot;Енергетика, автоматика і енергозбереження&quot;Реєстрація</title>
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="../../css/site_global.css" charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="../../css/formsAndButtons.css" charset="utf-8"/>
     <link rel="stylesheet" type="text/css" href="../../css/login.css" charset="utf-8"/>
     <!-- Other scripts -->
     <script src="../../js/jquery-1.11.2.min.js"></script>
@@ -19,115 +20,121 @@
 </head>
 <body>
 <div class="header">
-    <h1 id="magazineName">ЕНЕРГЕТИКА, АВТОМАТИКА І ЕНЕРГОЗБЕРЕЖЕННЯ</h1>
-    <nav id="MenuBar">
-        <ul>
-            <li><a href="index.html" class="menuButton">ГОЛОВНА</a></li>
-            <li><a href="publication.html" class="menuButton">ПУБЛІКАЦІЇ</a></li>
-            <li><a href="seminar.html" class="menuButton">СЕМІНАР</a></li>
-            <li><a href="publish.html" class="menuButton">ОПУБЛІКУВАТИ</a></li>
-            <li><a href="contacts.html" class="menuButton">КОНТАКТИ</a></li>
-        </ul>
-    </nav>
-    <hr class="horizontalLine">
     <div class="banner">
         <div class="bannerTop">
             <h3 class="headerUniversityName">Національний університет біоресурсів і природокористування України</h3>
+
+            <div class="authForm" id="authForm">
+                <sec:authorize access="isAnonymous()">
+                    <p>
+                        <a href="/login">Увійти</a>
+                        <a href="/registration">Зареєструватись</a>
+                    </p>
+                </sec:authorize>
+                <sec:authorize access="isAuthenticated()">
+                    <p>
+                        <a href="/myPage">${userDetails.name} ${userDetails.surname}</a>
+                        <a href="/j_spring_security_logout">Вийти</a>
+                    </p>
+                </sec:authorize>
+            </div>
         </div>
         <hr class="horizontalLine" id="bannerLine">
         <div class="bannerBottom">
             <div class="instituteLogo"></div>
             <h3 class="instituteHeaderName">ННІ Енергетики, автоматики <br>і енергозбереження</h3>
-            <a href="advancedSearch.html" class="menuButton" id="searchingButton">Пошук</a>
+            <sec:authorize access="hasRole('ADMIN')">
+                <p class="adminLink">
+                    <a href="/administrator">Сторінка адміністратора</a>
+                </p>
+            </sec:authorize>
+            <p id="currentDate"></p>
         </div>
     </div>
-    <hr class="horizontalLine">
+    <hr>
+    <div id="topnav">
+        <ul class="nav">
+            <li><a href="index.html">Головна</a></li>
+            <li class="active"><a href="articles.html">Статті</a></li>
+            <li><a href="seminars.html">Семінари</a></li>
+            <li><a href="conference.html">Конференції</a></li>
+            <li><a href="#">Опублікувати</a>
+                <ul>
+                    <li><a href="publishArticle.html">Статтю</a></li>
+                    <li><a href="publishSeminar.html">Cемінар</a></li>
+                    <li><a href="publishConference.html">Корференцію</a></li>
+                </ul>
+            </li>
+            <li><a href="advancedSearch.html">Пошук</a></li>
+            <li><a href="contacts.html">Контакти</a></li>
+        </ul>
+    </div>
+    <hr>
 </div>
-<div class="clearfix" id="page">
 
-    <div class="contentLeft">
-        <h3 class="loginTitle">
-            <p id="titleText">Відновлення паролю!</p>
-        </h3>
-        <div class="restoreMessage">
-            На вашу електронну адресу було надіслано лист з номером.
-            Для відновлення паролю введіть отриманий листом номер та новий пароль!
-        </div>
-        <form class="restorePasswordForm" name="restorePasswordForm" id="restorePasswordForm"/>
-            <div class="login">
-                <div class="tips">Електронна пошта:</div>
-                <div class="userFiller">
+<div class="content">
+
+    <div class="whiteBox">
+        <div class="mainContent restorePassContent">
+            <div class="barHeader">
+                <h2>Відновлення паролю</h2>
+            </div>
+
+            <div class="restoreMessage">
+                На вашу електронну адресу було надіслано лист з номером.
+                Для відновлення паролю введіть отриманий листом номер та новий пароль!
+            </div>
+            <form class="form" name="restorePasswordForm" id="restorePasswordForm"/>
+
+            <div class="formField">
+                <label for="username" class="label">
+                    Електронна адреса
+                    <span>*</span>
+                </label>
+                <div class="textField">
                     <input type="text" name="username" id="username" value="v_cheslav@ukr.net">
                 </div>
             </div>
 
-            <div class="password">
-                <div class="tips">Отриманий номер:</div>
-                <div class="userFiller">
-                    <input type="password" name="restoreCodeStr" id="restoreCodeStr"><br>
+            <div class="formField">
+                <label for="restoreCodeStr" class="label">
+                    Отриманий код:
+                    <span>*</span>
+                </label>
+                <div class="textField">
+                    <input type="password" name="restoreCodeStr" id="restoreCodeStr">
                 </div>
             </div>
-            <div class="password">
-                <div class="tips">Введіть пароль:</div>
-                <div class="userFiller">
-                    <input type="password" name="newPassword" id="newPassword"><br>
+
+            <div class="formField">
+                <label for="newPassword" class="label">
+                    Пароль:
+                    <span>*</span>
+                </label>
+                <div class="textField">
+                    <input type="password" name="newPassword" id="newPassword">
                 </div>
             </div>
-            <div class="password">
-                <div class="tips">Отриманий пароль:</div>
-                <div class="userFiller">
-                    <input type="password" name="newPasswordConfirm" id="newPasswordConfirm" >
+
+            <div class="formField">
+                <label for="newPasswordConfirm" class="label">
+                    Підтвердження паролю:
+                    <span>*</span>
+                </label>
+                <div class="textField">
+                    <input type="password" name="newPasswordConfirm" id="newPasswordConfirm">
                 </div>
             </div>
 
             <div class="buttons">
-                <input class="button" id="restorePasswordBtn" value="Відновити">
+                <input class="button" type="submit" id="restorePasswordBtn" value="Відновити">
             </div>
-        </form>
+
+            </form>
+        </div>
+            <div class="clear"></div>
     </div>
 
-
-    <hr class="horizontalLine">
-    <div class="clearfix colelem" id="footer"><!-- column -->
-        <div class="clearfix colelem" id="footerUniversityInform"><!-- content -->
-            <p>Національний університет біоресурсів і природокористування України&nbsp; ННІ Енергетики, автоматики і
-                енергозбереження</p>
-        </div>
-        <div class="clearfix colelem" id="footerContacts"><!-- group -->
-            <div class="grpelem" id="addressIcon"><!-- simple frame --></div>
-            <div class="clearfix grpelem" id="footerAdsressInform"><!-- column -->
-                <div class="clearfix colelem" id="addressFooter"><!-- content -->
-                    <p>03041, м Київ, вул Героїв Оборони 12, навчальний корпус №8</p>
-                </div>
-                <div class="clearfix colelem" id="designerName"><!-- content -->
-                    <p>Дизайн та програмування: Гаврилюк В.В.</p>
-                </div>
-            </div>
-            <div class="grpelem" id="footerVline"><!-- simple frame --></div>
-            <div class="grpelem" id="callIcon"><!-- simple frame --></div>
-            <div class="clearfix grpelem" id="fotterPhones"><!-- column -->
-                <div class="clearfix colelem" id="institutePhone"><!-- content -->
-                    <p>(044) 527-85-80</p>
-                </div>
-                <div class="clearfix colelem" id="designerPhone"><!-- content -->
-                    <p>(096) 115-00-83</p>
-                </div>
-            </div>
-            <div class="grpelem" id="fotterVline2"><!-- simple frame --></div>
-            <div class="grpelem" id="emailIcon"><!-- simple frame --></div>
-            <div class="clearfix grpelem" id="footerEmails"><!-- column -->
-                <div class="clearfix colelem" id="instituteEmail"><!-- content -->
-                    <p>epafort1@ukr.net</p>
-                </div>
-                <div class="clearfix colelem" id="designerEmail"><!-- content -->
-                    <p>v_cheslav@ukr.net</p>
-                </div>
-            </div>
-        </div>
-        <div class="clearfix colelem" id="allRightsInform"><!-- content -->
-            <p>© All rights reserved</p>
-        </div>
-    </div>
 </div>
 <div class="uploading" id="uploading"></div>
 

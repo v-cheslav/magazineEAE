@@ -2,16 +2,13 @@
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>
 <html class="html" lang="uk-UA">
 <head>
 
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
-    <meta name="description"
-          content="Розміщення матеріалів семінару під егідою НАН Українии та внутрішніх публікацій журналу ННІ Енергетики, автоматики і енергозбереження"/>
-    <%--<title>Он-лайн журнал &quot;Енергетика, автоматика і енергозбереження&quot;ОпублікуватиОн-лайн журнал &quot;Енергетика,--%>
-    <%--автоматика і енергозбереження&quot;</title>--%>
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="../../css/site_global.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/contacts.css" id="pagesheet"/>
@@ -22,18 +19,8 @@
 
 </head>
 <body>
+
 <div class="header">
-    <h1 id="magazineName">ЕНЕРГЕТИКА, АВТОМАТИКА І ЕНЕРГОЗБЕРЕЖЕННЯ</h1>
-    <nav id="MenuBar">
-        <ul>
-            <li><a href="index.html" class="menuButton">ГОЛОВНА</a></li>
-            <li><a href="publication.html" class="menuButton">ПУБЛІКАЦІЇ</a></li>
-            <li><a href="seminar.html" class="menuButton">СЕМІНАР</a></li>
-            <li><a href="publish.html" class="menuButton">ОПУБЛІКУВАТИ</a></li>
-            <li><a href="contacts.html" class="menuButton menuActive">КОНТАКТИ</a></li>
-        </ul>
-    </nav>
-    <hr class="horizontalLine">
     <div class="banner">
         <div class="bannerTop">
             <h3 class="headerUniversityName">Національний університет біоресурсів і природокористування України</h3>
@@ -51,47 +38,69 @@
                         <a href="/j_spring_security_logout">Вийти</a>
                     </p>
                 </sec:authorize>
-                <sec:authorize access="hasRole('admin')">
-                    <p>
-                        <a href="/admin">Admin page</a>
-                    </p>
-                </sec:authorize>
             </div>
         </div>
         <hr class="horizontalLine" id="bannerLine">
         <div class="bannerBottom">
             <div class="instituteLogo"></div>
             <h3 class="instituteHeaderName">ННІ Енергетики, автоматики <br>і енергозбереження</h3>
-            <a href="advancedSearch.html" class="menuButton" id="searchingButton">Пошук</a>
+            <sec:authorize access="hasRole('ADMIN')">
+                <p class="adminLink">
+                    <a href="/administrator">Сторінка адміністратора</a>
+                </p>
+            </sec:authorize>
+            <p id="currentDate"></p>
         </div>
     </div>
-    <hr class="horizontalLine">
+    <hr>
+    <div id="topnav">
+        <ul class="nav">
+            <li><a href="index.html">Головна</a></li>
+            <li><a href="articles.html">Статті</a></li>
+            <li><a href="seminars.html">Семінари</a></li>
+            <li><a href="conference.html">Конференції</a></li>
+            <li><a href="#">Опублікувати</a>
+                <ul>
+                    <li><a href="publishArticle.html">Статтю</a></li>
+                    <li><a href="publishSeminar.html">Cемінар</a></li>
+                    <li><a href="publishConference.html">Корференцію</a></li>
+                </ul>
+            </li>
+            <li><a href="advancedSearch.html">Пошук</a></li>
+            <li class="active"><a href="contacts.html">Контакти</a></li>
+        </ul>
+    </div>
+    <hr>
 </div>
 
 <div class="content" id="content">
 
+    <div class="whiteBox">
+        <div class="mainContent">
 
-    <div class="information"><!-- content -->
-        <p>Журнал діє на базі навчально-наукового інституту &quot;Енергетики, автоматики і
-            енергозбереження&quot; Національного університету біоресурсів і природокористування України.
-        </p>
+            <div class="information"><!-- content -->
+                <p>Журнал діє на базі навчально-наукового інституту &quot;Енергетики, автоматики і
+                    енергозбереження&quot; Національного університету біоресурсів і природокористування України.
+                </p>
+            </div>
+            <div class="information"><!-- content -->
+                <p id="address">Наша адреса: 03041, м Київ, вул Героїв Оборони 12, навчальний корпус №8</p>
+
+                <p id="phone">Тел.: (044) 527-85-80.</p>
+
+                <p id="mail">E-mail: epafort1@ukr.net</p>
+            </div>
+            <div class="mapContainer" id="mapContainer"><!-- custom html -->
+
+                <iframe class="actAsDiv" width="960" height="400" frameborder="0" scrolling="no" marginheight="0"
+                        marginwidth="0"
+                        src="https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=uk&amp;q=%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%B0%2C%20%D0%9A%D0%B8%D1%97%D0%B2%20%D0%B2%D1%83%D0%BB%20%D0%93%D0%B5%D1%80%D0%BE%D1%97%D0%B2%20%D0%9E%D0%B1%D0%BE%D1%80%D0%BE%D0%BD%D0%B8%2012&amp;aq=0&amp;ie=UTF8&amp;t=m&amp;z=15&amp;iwloc=A&amp;output=embed"></iframe>
+
+            </div>
+        </div>
+        <div class="clear"></div>
+
     </div>
-    <div class="information"><!-- content -->
-        <p id="address">Наша адреса: 03041, м Київ, вул Героїв Оборони 12, навчальний корпус №8</p>
-
-        <p id="phone">Тел.: (044) 527-85-80.</p>
-
-        <p id="mail">E-mail: epafort1@ukr.net</p>
-    </div>
-    <div class="mapContainer" id="mapContainer"><!-- custom html -->
-
-        <iframe class="actAsDiv" width="1020" height="400" frameborder="0" scrolling="no" marginheight="0"
-                marginwidth="0"
-                src="https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=uk&amp;q=%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%B0%2C%20%D0%9A%D0%B8%D1%97%D0%B2%20%D0%B2%D1%83%D0%BB%20%D0%93%D0%B5%D1%80%D0%BE%D1%97%D0%B2%20%D0%9E%D0%B1%D0%BE%D1%80%D0%BE%D0%BD%D0%B8%2012&amp;aq=0&amp;ie=UTF8&amp;t=m&amp;z=15&amp;iwloc=A&amp;output=embed"></iframe>
-
-    </div>
-
-
 
 </div>
 

@@ -1,13 +1,12 @@
 package magazine.dao;
 
 import magazine.domain.*;
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
+import org.hibernate.internal.CriteriaImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +21,8 @@ import java.util.*;
 @Repository
 @Transactional
 public class ArticleDaoImpl implements ArticleDao {
+    public static final Logger log = Logger.getLogger(ArticleDaoImpl.class);
+
 
     @Autowired(required = true)
     private SessionFactory sessionFactory;
@@ -71,25 +72,25 @@ public class ArticleDaoImpl implements ArticleDao {
     }
 
     @Override
-    public Article findUnPublishedByUser(User user) {
-        return (Article) sessionFactory.getCurrentSession()
+    public List <Article> findAllUnpublished() {
+        return  sessionFactory.getCurrentSession()
                 .createCriteria(Article.class)
                 .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
-                .add(Restrictions.eq("user", user))
                 .add(Restrictions.eq("isPrintable", false))
-                .uniqueResult();
-    }
-
-    @Override
-    public List<Article> findNewest() {
-        return sessionFactory.getCurrentSession()
-                .createCriteria(Article.class)
-                .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
-                .add(Restrictions.eq("isPrintable", true))
-                .addOrder(Order.desc("publicationId"))
-                .setMaxResults(10)//todo
                 .list();
     }
+
+
+    @Override
+    public List <Article> findWithoutReviewers() {
+        return  sessionFactory.getCurrentSession()
+                .createCriteria(Article.class)
+                .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                .add(Restrictions.eq("isReviewersAssigned", false))
+                .list();
+    }
+
+
 
     @Override
     public  List<Article> findByUserId(Long userId) {
@@ -113,6 +114,61 @@ public class ArticleDaoImpl implements ArticleDao {
                 .list();
     }
 
+
+    @Override
+    public List<Article> findNewest() {
+        return sessionFactory.getCurrentSession()
+                .createCriteria(Article.class)
+                .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                .add(Restrictions.eq("isPrintable", true))
+                .addOrder(Order.desc("publicationId"))
+                .setMaxResults(10)//todo
+                .list();
+    }
+
+    @Override
+    public Article findUnPublishedByUser(User user) {
+                return (Article) sessionFactory.getCurrentSession()
+                .createCriteria(Article.class)
+                .add(Restrictions.eq("user", user))
+                .add(Restrictions.eq("isPrintable", false))
+                .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                .uniqueResult();
+    }
+
+    @Override
+    public Article findUnPublishedByReviewer(User reviewer) {
+        log.info("findUnPublishedByReviewer");
+        return (Article) sessionFactory.getCurrentSession()
+                .createCriteria(Article.class, "article")
+                .createAlias("article.articleReviews", "review")
+                .createAlias("review.user", "user")
+                .add(Restrictions
+                        .eq("user.userId", reviewer.getUserId()))
+                .add(Restrictions.eq("isPrintable", false))
+                .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                .uniqueResult();
+    }
+
+    @Override
+    public List<Article> findArticlesByKeywords( Article article) {
+        List<PublicationKeyWord> keywords = article.getPublicationKeyWords();
+        Session session = sessionFactory.getCurrentSession();
+
+        Criteria criteria = session.createCriteria(Article.class, "article");
+        criteria.createAlias("article.publicationKeyWords", "keyWord");
+
+        Disjunction or = Restrictions.disjunction();
+        for (PublicationKeyWord keyWord : keywords){
+            or.add(Restrictions.eq("keyWord.keyWord", keyWord.getArtKeyWord()));
+        }
+        criteria.add(or);
+        criteria.add(Restrictions.ne("publicationId", article.getPublicationId()));
+        criteria.add(Restrictions.eq("isPrintable", true));
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                .addOrder(Order.desc("publicationId"));
+        return criteria.list();
+    }
 
     @Override
     public List<Article> findBySearchQuery(Map searchQueryMap) {

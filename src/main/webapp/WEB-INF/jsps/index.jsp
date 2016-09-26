@@ -11,7 +11,7 @@
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
     <meta name="description" content="Журнал енергетика, автоматика і енергозбереження, список публікацій журналу."/>
     <meta name="generator" content="2015.0.2.310"/>
-    <title>Он-лайн журнал &quot;Енергетика, автоматика і енергозбереження&quot;ПублікаціїОн-лайн журнал &quot;Енергетика,
+    <title>Он-лайн журнал &quot;Енергетика, автоматика і енергозбереження&quot;Публікації Он-лайн журнал &quot;Енергетика,
         автоматика і енергозбереження&quot;</title>
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="../../css/site_global.css"/>
@@ -20,23 +20,14 @@
     <!-- Scripts -->
     <script src="../../js/jquery-1.11.2.min.js"></script>
     <script src="../../js/siteGlobal.js" type="text/javascript"></script>
+    <script src="../../js/index.js" type="text/javascript"></script>
+
 
 </head>
 <body>
-<%--<%= new java.util.Date() %>--%>
 <div class="header">
-    <h1 id="magazineName">ЕНЕРГЕТИКА, АВТОМАТИКА І ЕНЕРГОЗБЕРЕЖЕННЯ</h1>
-    <nav id="MenuBar">
-        <ul>
-            <li><a href="index.html" class="menuButton menuActive">ГОЛОВНА</a></li>
-            <li><a href="publication.html" class="menuButton">ПУБЛІКАЦІЇ</a></li>
-            <li><a href="seminar.html" class="menuButton">СЕМІНАРИ</a></li>
-            <%--<li><a href="conference.html" class="menuButton">КОНФЕРЕНЦІЇ</a></li>--%>
-            <li><a href="publish.html" class="menuButton">ОПУБЛІКУВАТИ</a></li>
-            <li><a href="contacts.html" class="menuButton">КОНТАКТИ</a></li>
-        </ul>
-    </nav>
-    <hr class="horizontalLine">
+    <h1 class="magazineName">ЕНЕРГЕТИКА, АВТОМАТИКА І ЕНЕРГОЗБЕРЕЖЕННЯ</h1>
+
     <div class="banner">
         <div class="bannerTop">
             <h3 class="headerUniversityName">Національний університет біоресурсів і природокористування України</h3>
@@ -54,183 +45,179 @@
                         <a href="/j_spring_security_logout">Вийти</a>
                     </p>
                 </sec:authorize>
-                <sec:authorize access="hasRole('admin')">
-                    <p>
-                        <a href="/admin">Admin page</a>
-                    </p>
-                </sec:authorize>
-                <sec:authorize access="hasRole('ADMIN')">
-                    <p>
-                        <a href="/administrator">Administrator page</a>
-                    </p>
-                </sec:authorize>
             </div>
         </div>
         <hr class="horizontalLine" id="bannerLine">
         <div class="bannerBottom">
             <div class="instituteLogo"></div>
             <h3 class="instituteHeaderName">ННІ Енергетики, автоматики <br>і енергозбереження</h3>
-            <a href="advancedSearch.html" class="menuButton" id="searchingButton">Пошук</a>
-        </div>
-    </div>
-    <hr class="horizontalLine">
-</div>
-
-<div class="content" id="content">
-
-    <%--leftPanel--%>
-    <div class="leftSideBar" id="leftPanel">
-        <div class="currentDateHeader">
+            <sec:authorize access="hasRole('ADMIN')">
+                <p class="adminLink">
+                    <a href="/administrator">Сторінка адміністратора</a>
+                </p>
+            </sec:authorize>
             <p id="currentDate"></p>
         </div>
-        <div class="accordionMenuWrapper">
-            <ul class="accordionMenu">
-                <li>
-                    <div class="menuHeader" id="sectionsMenuHeader">
-                        <p>Інформація</p>
-                    </div>
-                    <div class="menuContent" id="sectionsMenuContent">
-                        <ul class="leftMenuList">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-                            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                            cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </ul>
-                    </div>
-                </li>
-
-            </ul>
-        </div>
     </div>
-    <div class="mainContent">
-        <div class="mainContentHeader">
-            <h2>Останні публікації</h2>
-        </div>
-        <c:if test="${message != null}">
-            <c:out value="${message}"></c:out>
-        </c:if>
+    <hr>
+    <div id="topnav">
+        <ul class="nav">
+            <li class="active"><a href="index.html">Головна</a></li>
+            <li><a href="articles.html">Статті</a></li>
+            <li><a href="seminars.html">Семінари</a></li>
+            <li><a href="conference.html">Конференції</a></li>
+            <li><a href="#">Опублікувати</a>
+                <ul>
+                    <li><a href="publishArticle.html">Статтю</a></li>
+                    <li><a href="publishSeminar.html">Cемінар</a></li>
+                    <li><a href="publishConference.html">Корференцію</a></li>
+                </ul>
+            </li>
+            <li><a href="advancedSearch.html">Пошук</a></li>
+            <li><a href="contacts.html">Контакти</a></li>
+        </ul>
+    </div>
+    <hr>
+</div>
 
-        <c:if test="${articles != null}">
-            <c:set var="count" value="${articles.size()-1}"/>
-            <c:forEach var="i" begin="0" end="${count}">
-                <div class="article">
 
-                    <div class="articleName">
-                        <a href="/articlePage?publicationId=${articles.get(i).id}">
-                            <c:out value="${articles.get(i).publicationName}"/>
-                        </a>
-                    </div>
+<div class="content" id="content">
+    <div class="whiteBox">
+        <div class="mainContent">
+            <div class="mainContentHeader">
+                <h2>Останні публікації</h2>
+            </div>
+            <c:if test="${message != null}">
+                <c:out value="${message}"></c:out>
+            </c:if>
 
-                    <div class="articlePubDate">
-                        <c:out value="${articles.get(i).publicationDateToString()}"/>
-                    </div>
+            <c:if test="${articles != null}">
+                <c:set var="count" value="${articles.size()-1}"/>
+                <c:forEach var="i" begin="0" end="${count}">
+                    <div class="article">
 
-                    <c:forEach var="annotation" items="${annotations.get(i)}">
+                        <div class="articleName">
+                            <a href="/articlePage?publicationId=${articles.get(i).id}">
+                                <c:out value="${articles.get(i).publicationName}"/>
+                            </a>
+                        </div>
+
+                        <div class="articleAuthor">
+                            <p>Автор:</p>
+                            <a href="/authorPage?authorId=${articles.get(i).user.userId}">
+                                <c:out value="${articles.get(i).user.toString()}"/>.
+                            </a>
+
+                            <p>&nbsp;Ключові слова:</p>
+                        <span>
+                              <c:forEach var="keyWord" items="${articles.get(i).publicationKeyWords}">
+                                  <span class="keyWords">${keyWord.artKeyWord};</span>
+                              </c:forEach>
+                        </span>
+                        </div>
+
+
                         <div class="annotation">
-                                ${annotation}
+                             ${articles.get(i).articleAnnotations.annotationUa}
                         </div>
-                    </c:forEach>
 
-                    <div class="articleAuthor">
-                        <a href="/authorPage?authorId=${articles.get(i).user.userId}">
-                            <c:out value="${articles.get(i).user.toString()}"/>
-                        </a>
+
+                        <div class="articlePubDate">
+                            <c:out value="${articles.get(i).publicationDateToString()}"/>
+                        </div>
+
                     </div>
+                </c:forEach>
+            </c:if>
+        </div>
 
+
+        <div id="rightBars">
+            <%--rightPanel--%>
+            <c:if test="${nearestSeminars != null}">
+
+                <div class="rightSideBar">
+                    <div id="barHeader" class="barHeader">
+                        <div id="annotationHeader">Найближчий семінар</div>
+                        <h5>
+                            <c:out value="${nearestSeminars.get(0).publicationDateToString()}"/>
+                        </h5>
+                        <p class="seminars">доповідають:</p>
+                    </div>
+                    <div class="barContent" id="annotationText">
+
+                        <c:forEach var="nearestSeminar" items="${nearestSeminars}">
+                            <div class="seminar">
+                                <p class="nearestSeminarUser">
+                                    <c:if test="${nearestSeminar.user != null}">
+                                        <a href="/authorPage?authorId=${nearestSeminar.user.userId}">
+                                            <c:out value="${nearestSeminar.user.toString()}"/>
+                                        </a>
+                                    </c:if>
+                                    <c:if test="${nearestSeminar.user == null}">
+                                        <c:out value="${nearestSeminar.unRegUserName}"/>
+                                    </c:if>
+                                </p>
+
+                                <%--<p class="theme">Тема доповіді:</p>--%>
+
+                                <p class="nearestSeminarName">
+                                    "${nearestSeminar.publicationName}"</p>
+                            </div>
+                            <hr class="delimiter">
+                        </c:forEach>
+                    </div>
                 </div>
-            </c:forEach>
-        </c:if>
+
+            </c:if>
+                <%--rightPanel--%>
+        </div>
+        <div class="clear"></div>
+
     </div>
 
-    <c:if test="${nearestSeminars != null}">
 
-        <div class="rightPanel">
-            <div class="menuHeader">
-                <p>Найближчий семінар відбудеться: <br/>
-                    <c:out value="${nearestSeminars.get(0).publicationDateToString()}"/>
-                </p>
-            </div>
-
-            <div class="menuContent">
-
-                <div>
-                    <p class="seminars">Доповідають:</p>
-                    <c:forEach var="nearestSeminar" items="${nearestSeminars}">
-                        <div class="seminar">
-                            <p class="nearestSeminarUser">
-                                <c:if test="${nearestSeminar.user != null}">
-                                    <a href="/authorPage?authorId=${nearestSeminar.user.userId}">
-                                        <c:out value="${nearestSeminar.user.toString()}"/>
-                                    </a>
-                                </c:if>
-                                <c:if test="${nearestSeminar.user == null}">
-                                    <c:out value="${nearestSeminar.unRegUserName}"/>
-                                </c:if>
-                            </p>
-
-                            <p class="theme">Тема доповіді:</p>
-
-                            <p class="nearestSeminarName">
-                                "${nearestSeminar.publicationName}"</p><%--todo зробити перевірку на дату другого доповідача--%>
-                        </div>
-                    </c:forEach>
-                </div>
-            </div>
-
-        </div>
-    </c:if>
-    <c:if test="${nearestSeminars == null}">
-        <script>
-            $('.mainContentHeader').css({
-                "width": "749px"
-            });
-            $('.article').css({
-                "width": "729px"
-            });
-        </script>
-    </c:if>
 </div>
 
 
 <hr class="horizontalLine">
-<div class="clearfix colelem" id="footer"><!-- column -->
-    <div class="clearfix colelem" id="footerUniversityInform"><!-- content -->
+<div class="footer" id="footer">
+    <div class="" id="footerUniversityInform">
         <p>Національний університет біоресурсів і природокористування України&nbsp; ННІ Енергетики, автоматики і
             енергозбереження</p>
     </div>
-    <div class="clearfix colelem" id="footerContacts"><!-- group -->
-        <div class="grpelem" id="addressIcon"><!-- simple frame --></div>
-        <div class="clearfix grpelem" id="footerAdsressInform"><!-- column -->
-            <div class="clearfix colelem" id="addressFooter"><!-- content -->
+    <div class="" id="footerContacts">
+        <div class="" id="addressIcon"></div>
+        <div class="" id="footerAdsressInform">
+            <div class="" id="addressFooter">
                 <p>03041, м Київ, вул Героїв Оборони 12, навчальний корпус №8</p>
             </div>
-            <div class="clearfix colelem" id="designerName"><!-- content -->
+            <div class="" id="designerName"><!-- content -->
                 <p>Дизайн та програмування: Гаврилюк В.В.</p>
             </div>
         </div>
-        <div class="grpelem" id="footerVline"><!-- simple frame --></div>
-        <div class="grpelem" id="callIcon"><!-- simple frame --></div>
-        <div class="clearfix grpelem" id="fotterPhones"><!-- column -->
-            <div class="clearfix colelem" id="institutePhone"><!-- content -->
+        <div class="" id="footerVline"><!-- simple frame --></div>
+        <div class="" id="callIcon"><!-- simple frame --></div>
+        <div class="" id="fotterPhones"><!-- column -->
+            <div class="" id="institutePhone"><!-- content -->
                 <p>(044) 527-85-80</p>
             </div>
-            <div class="clearfix colelem" id="designerPhone"><!-- content -->
+            <div class="" id="designerPhone"><!-- content -->
                 <p>(096) 115-00-83</p>
             </div>
         </div>
-        <div class="grpelem" id="fotterVline2"><!-- simple frame --></div>
-        <div class="grpelem" id="emailIcon"><!-- simple frame --></div>
-        <div class="clearfix grpelem" id="footerEmails"><!-- column -->
-            <div class="clearfix colelem" id="instituteEmail"><!-- content -->
+        <div class="" id="fotterVline2"><!-- simple frame --></div>
+        <div class="" id="emailIcon"><!-- simple frame --></div>
+        <div class="" id="footerEmails"><!-- column -->
+            <div class="" id="instituteEmail"><!-- content -->
                 <p>epafort1@ukr.net</p>
             </div>
-            <div class="clearfix colelem" id="designerEmail"><!-- content -->
+            <div class="" id="designerEmail"><!-- content -->
                 <p>v_cheslav@ukr.net</p>
             </div>
         </div>
     </div>
-    <div class="clearfix colelem" id="allRightsInform"><!-- content -->
+    <div class="" id="allRightsInform"><!-- content -->
         <p>© All rights reserved</p>
     </div>
 </div>

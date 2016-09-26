@@ -7,78 +7,139 @@
 <html>
 <head>
     <title></title>
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="../../css/site_global.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/publish.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/formsAndButtons.css"/>
+
+
     <!-- scripts -->
     <script src="../../js/jquery-1.11.2.min.js"></script>
     <script src="../../js/jquery.validate.min.js"></script>
     <script src="../../js/publishSeminar.js"></script>
+
 </head>
 <body>
-<div class="innerContent">
-    <div class="publishRulesField">
-        <div class="publRulesHeader" id="seminarPublRulesHeader">
-            <p>Правила публікації семінару</p>
+<div class="header">
+    <div class="banner">
+        <div class="bannerTop">
+            <h3 class="headerUniversityName">Національний університет біоресурсів і природокористування України</h3>
+
+            <div class="authForm" id="authForm">
+                <sec:authorize access="isAnonymous()">
+                    <p>
+                        <a href="/login">Увійти</a>
+                        <a href="/registration">Зареєструватись</a>
+                    </p>
+                </sec:authorize>
+                <sec:authorize access="isAuthenticated()">
+                    <p>
+                        <a href="/myPage">${userDetails.name} ${userDetails.surname}</a>
+                        <a href="/j_spring_security_logout">Вийти</a>
+                    </p>
+                </sec:authorize>
+            </div>
         </div>
-        <div class="publRulesContent" id="seminarPublRulesContent">
-            Описати правила розміщення.
+        <hr class="horizontalLine" id="bannerLine">
+        <div class="bannerBottom">
+            <div class="instituteLogo"></div>
+            <h3 class="instituteHeaderName">ННІ Енергетики, автоматики <br>і енергозбереження</h3>
+            <sec:authorize access="hasRole('ADMIN')">
+                <p class="adminLink">
+                    <a href="/administrator">Сторінка адміністратора</a>
+                </p>
+            </sec:authorize>
+            <p id="currentDate"></p>
         </div>
     </div>
+    <hr>
+    <div id="topnav">
+        <ul class="nav">
+            <li><a href="index.html">Головна</a></li>
+            <li><a href="articles.html">Статті</a></li>
+            <li><a href="seminars.html">Семінари</a></li>
+            <li><a href="conference.html">Конференції</a></li>
+            <li class="active"><a href="#">Опублікувати</a>
+                <ul>
+                    <li><a href="publishArticle.html">Статтю</a></li>
+                    <li><a href="publishSeminar.html">Cемінар</a></li>
+                    <li><a href="publishConference.html">Корференцію</a></li>
+                </ul>
+            </li>
+            <li><a href="advancedSearch.html">Пошук</a></li>
+            <li><a href="contacts.html">Контакти</a></li>
+        </ul>
+    </div>
+    <hr>
+</div>
 
-    <form class="publishForm" name="publishForm" id="seminarPublishForm" method="post" action="null">
-        <div class="mainField">
-            
-            <div>
-                <label for="seminarName" class="label"></label>
-                <select class="textField" id="seminarName" name="seminarName"></select>
-            </div>
+<div class="content">
+    <div class="whiteBox">
 
-            <div>
-                <label for="seminarKeyWords" class="label"></label>
-    <textarea class="textField" id="seminarKeyWords" name="seminarKeyWords"
-              placeholder="Введіть не більше 5-ти ключових слів."></textarea>
+        <div class="leftSideBar">
+            <div class="barHeader">
+                Правила публікації
             </div>
+            <div class="barContent">
+                Описати правила розміщення.
+            </div>
+        </div>
+
+        <div class="mainContent">
+
+            <form class="form" name="publishForm" id="seminarPublishForm" method="post" action="null">
+
+                <div class="barHeader">
+                    <h2>Публікація семінару</h2>
+                </div>
+
+                <div class="formField">
+                    <label for="seminarId" class="label">
+                        Назва семінару
+                        <span>*</span>
+                    </label>
+                    <select class="textField" id="seminarId" name="seminarId"></select>
+                </div>
+
+                <div>
+                    <label for="seminarKeyWords" class="label">
+                        Ключові слова
+                        <span>*</span>
+                    </label>
+                    <textarea class="textField" id="seminarKeyWords" name="seminarKeyWords"></textarea>
+                </div>
+
+
+                <div class="formField">
+                    <label id="pickPresentationLabel" for="presentation" class="label">
+                        Обрати презентацію
+                        <span>*</span>
+                    </label>
+                    <input type="file" class="textField" id="presentation" name="presentation">
+                </div>
+
+                <div class="formField">
+                    <label id="pickReportLabel" for="presentation" class="label">
+                        Обрати доповідь
+                        <span>*</span>
+                    </label>
+                    <input type="file" class="textField" id="report" name="report">
+                </div>
+
+                <div>
+                    <input id="publSeminarBtn" class="button" name="seminar" type="button" value="Опублікувати"/>
+                    <input id="btnClear" class="button" type="button" value="Очистити"/>
+                </div>
+
+            </form>
 
             <div class="messageField">
-                <p id="seminarErrorMessage" name="message">
-                    <c:if test="${message!=null}">
-                        <c:out value="${message}"/>
-                    </c:if>
-                </p>
+                <p id="seminarErrorMessage" name="message"></p>
             </div>
-
-            <input class="button" id="publSeminarBtn" name="seminar" type="button" value="Опублікувати"/>
-
         </div>
+        <div class="clear"></div>
 
-    </form>
-
-    <%--UploadForm--%>
-    <form id="presentationUploadForm" class="fileForm">
-        <div id="presentationUploadingContent">
-            <label id="presentationImgContainer" for="presentation" class="pickFile"></label>
-            <label id="pickPresentationLabel" for="presentation" class="pickFile">Обрати файл
-                презентації</label>
-            <input type="file" class="photoAddress" id="presentation" name="presentation">
-            <button id="btnPresentationUpload" class="button" type="button">Завантажити</button>
-            <button id="btnPresentationClear" class="button" type="button">Відмінити</button>
-        </div>
-        <div id="presentationUploadMessage" class="uploadMessage">
-            Презентацію завантажено!
-        </div>
-    </form>
-
-    <form id="reportUploadForm" class="fileForm">
-        <div id="reportUploadingContent">
-            <label id="reportImgContainer" for="report" class="pickFile"></label>
-            <label id="pickReportLabel" for="report" class="pickFile">Обрати файл доповіді</label>
-            <input type="file" class="photoAddress" id="report" name="report"><%--todo rename to uploadForm--%>
-            <button id="btnReportUpload" class="button" type="button">Завантажити</button>
-            <button id="btnReportClear" class="button" type="button">Відмінити</button>
-        </div>
-        <div id="reportUploadMessage" class="uploadMessage">
-            Доповідь завантажено!
-        </div>
-    </form>
-</div>
+    </div>
 
 </body>
 </html>

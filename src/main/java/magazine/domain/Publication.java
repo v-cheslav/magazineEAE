@@ -3,9 +3,7 @@ package magazine.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import magazine.utils.MySimpleDateFormat;
 import javax.persistence.*;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
 * Created by pvc on 25.05.2016.
@@ -22,21 +20,22 @@ public class Publication {
     @Column(name="publicationId")
     private Long publicationId;
 
-    @Column(name="publicationName")
-    private String publicationName;
-
     @Column(name = "publicationDate")
     private Calendar publicationDate;
 
-    @Column(name="publicationAddress")
-    private String publicationAddress;
+    @Column(name="publicationPath")
+    private String publicationPath;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Column(name="publicationName")
+    private String publicationName;
+
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(name = "publicationKeyWords",
             joinColumns = @JoinColumn(name = "publication_id"),
             inverseJoinColumns = @JoinColumn(name = "publicationKeyWord_id"))
     @JsonIgnore(true)
-    private Set<PublicationKeyWord> publicationKeyWords = new HashSet<>();
+    private List<PublicationKeyWord> publicationKeyWords = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User user;
@@ -44,18 +43,12 @@ public class Publication {
     public Publication() {
     }
 
-    public Publication(String publicationName, Calendar publicationDate, String publicationAddress, User user) {
-        this.publicationAddress = publicationAddress;
+    public Publication(Calendar publicationDate, String publicationPath, User user) {
+        this.publicationPath = publicationPath;
         this.publicationDate = publicationDate;
-        this.publicationName = publicationName;
+        this.user = user;
     }
 
-//    public Publication getPublicationForTables (Publication publication){
-//        this.publicationId = publication.getId();
-//        this.publicationName = publication.getPublicationName();
-//        this.publicationDate = publication.getPublicationDate();
-//        return this;
-//    }
 
     public String publicationDateToString(){
         MySimpleDateFormat dateFormat = new MySimpleDateFormat();
@@ -67,17 +60,20 @@ public class Publication {
         return publicationId;
     }
 
-    public void setId(Long id) {
-        this.publicationId = id;
-    }
-
     public String getPublicationName() {
-
         return publicationName;
     }
 
     public void setPublicationName(String publicationName) {
         this.publicationName = publicationName;
+    }
+
+    public void setId(Long id) {
+        this.publicationId = id;
+    }
+
+    public Long getPublicationId() {
+        return publicationId;
     }
 
     public Calendar getPublicationDate() {
@@ -88,12 +84,12 @@ public class Publication {
         this.publicationDate = publicationDate;
     }
 
-    public String getPublicationAddress() {
-        return publicationAddress;
+    public String getPublicationPath() {
+        return publicationPath;
     }
 
-    public void setPublicationAddress(String publicationAddress) {
-        this.publicationAddress = publicationAddress;
+    public void setPublicationPath(String publicationPath) {
+        this.publicationPath = publicationPath;
     }
 
     public User getUser() {
@@ -104,11 +100,11 @@ public class Publication {
         this.user = user;
     }
 
-    public Set<PublicationKeyWord> getPublicationKeyWords() {
+    public List<PublicationKeyWord> getPublicationKeyWords() {
         return publicationKeyWords;
     }
 
-    public void setPublicationKeyWords(Set<PublicationKeyWord> publicationKeyWords) {
+    public void setPublicationKeyWords(List<PublicationKeyWord> publicationKeyWords) {
         this.publicationKeyWords = publicationKeyWords;
     }
 }

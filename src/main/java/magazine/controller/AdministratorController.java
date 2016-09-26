@@ -1,9 +1,9 @@
 package magazine.controller;
 
+import magazine.domain.Article;
 import magazine.domain.Seminar;
 import magazine.domain.User;
 import magazine.servise.*;
-import magazine.utils.MySimpleDateFormat;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -51,6 +50,9 @@ public class AdministratorController {
     private UserSexService userSexService;
 
     @Autowired
+    private ArticleService articleService;
+
+    @Autowired
     private SeminarService seminarService;
 
     @Autowired
@@ -74,9 +76,15 @@ public class AdministratorController {
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             User user = (User) authentication.getPrincipal();
             map.addAttribute("userDetails", user);
-            List<Seminar> seminars = seminarService.findAllAppyied();
+            List<Seminar> seminars = seminarService.findAllDeclared();
             map.addAttribute("applyiedSeminars", seminars);
         }
+
+        List<Article> unpublishedArticles = articleService.findWithoutReviewers();
+        if (unpublishedArticles.size() != 0) {
+            map.addAttribute("unpublishedArticles", unpublishedArticles);
+        }
+
         return "administrator";
     }
 
@@ -149,5 +157,8 @@ public class AdministratorController {
         }
         return entity;
     }
+
+
+
 
 }

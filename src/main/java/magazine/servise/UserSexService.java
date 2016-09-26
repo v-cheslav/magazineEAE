@@ -7,5 +7,5 @@ import magazine.domain.UserSex;
  */
 public interface UserSexService {
     public void fillDBWithUserSex();
-    public UserSex findByString(String userSexStr);
+    public UserSex findUserSex(String userSexStr);
 }

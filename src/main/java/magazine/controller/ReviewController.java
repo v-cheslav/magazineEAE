@@ -1,25 +1,35 @@
 package magazine.controller;
 
-import magazine.Exeptions.ReviewCreationException;
+import magazine.Exeptions.ReviewException;
 import magazine.domain.Article;
 import magazine.domain.Review;
 import magazine.domain.User;
 import magazine.servise.ArticleService;
 import magazine.servise.ReviewService;
 import magazine.servise.UserService;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import java.util.ArrayList;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -39,10 +49,38 @@ public class ReviewController {
 
     @Autowired
     ArticleService articleService;
+
+
+    @RequestMapping(value = "/dennyReview", method = RequestMethod.POST)
+    public @ResponseBody List<String> dennyReview(@RequestBody String articleIdJson){
+        log.info("/dennyReview controller");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = null;
+
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            user = (User) authentication.getPrincipal();
+        }
+
+        List<String> list;
+        JSONParser parser = new JSONParser();
+        Object obj = null;
+        try {
+            obj = parser.parse(articleIdJson);
+            JSONObject jsonObj = (JSONObject) obj;
+            Long articleId = (Long) jsonObj.get("articleId");
+            reviewService.dennyReview(articleId, user);
+            list = Arrays.asList("OK");
+        } catch (ParseException e) {
+            e.printStackTrace();
+            list = Arrays.asList("error");
+        }
+        return list;
+    }
+
+
     /**
      * Контроллер перевіряє чи має право юзер надавати рецензію
      */
-
     @RequestMapping(value = "/checkReviewer", method = RequestMethod.POST)
     public @ResponseBody
     List<String> checkReviewer(@RequestBody String reviewerIdJson) {
@@ -78,31 +116,6 @@ public class ReviewController {
         return list;
     }
 
-    @RequestMapping(value = "/dennyReview", method = RequestMethod.POST)
-    public @ResponseBody List<String> dennyReview(@RequestBody String articleIdJson){
-        log.info("/dennyReview controller");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = null;
-
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            user = (User) authentication.getPrincipal();
-        }
-
-        List<String> list;
-        JSONParser parser = new JSONParser();
-        Object obj = null;
-        try {
-            obj = parser.parse(articleIdJson);
-            JSONObject jsonObj = (JSONObject) obj;
-            Long articleId = (Long) jsonObj.get("articleId");
-            reviewService.dennyReview(articleId, user);
-            list = Arrays.asList("OK");
-        } catch (ParseException e) {
-            e.printStackTrace();
-            list = Arrays.asList("error");
-        }
-        return list;
-    }
 
     @RequestMapping(value = "/setNewReviewer", method = RequestMethod.POST)
     public @ResponseBody List<String> setNewReviewer(@RequestBody String userIdJson){
@@ -129,13 +142,13 @@ public class ReviewController {
         }
 
         Article unpublishedArticle = articleService.findUnPublishedByUser(user);
-        List <Review> reviews = unpublishedArticle.getArticleReviewers();
+        List <Review> reviews = unpublishedArticle.getArticleReviews();
 
         for (Review review : reviews) {
             if (review.getStatus() == null) {
                 User previousReviewer = review.getUser();
-                User firstReviewer = unpublishedArticle.getArticleReviewers().get(0).getUser();
-                User secondReviewer = unpublishedArticle.getArticleReviewers().get(1).getUser();
+                User firstReviewer = unpublishedArticle.getArticleReviews().get(0).getUser();
+                User secondReviewer = unpublishedArticle.getArticleReviews().get(1).getUser();
 
                 if (previousReviewer.getUserId() == newReviewer.getUserId()) {
                     list = Arrays.asList("theSameReviewer");
@@ -153,6 +166,7 @@ public class ReviewController {
 
         return list;
     }
+
 
     @RequestMapping(value = "/setNewReviewerFinally", method = RequestMethod.POST)
     public @ResponseBody List<String> setNewReviewerFinally(@RequestBody String userIdJson){
@@ -179,7 +193,7 @@ public class ReviewController {
         }
 
         Article unpublishedArticle = articleService.findUnPublishedByUser(user);
-        List <Review> reviews = unpublishedArticle.getArticleReviewers();
+        List <Review> reviews = unpublishedArticle.getArticleReviews();
 
         for (Review review : reviews) {
             if (review.getStatus() == null) {
@@ -194,52 +208,72 @@ public class ReviewController {
         return list;
     }
 
-    @RequestMapping(value = "/setReview", method = RequestMethod.POST)
-    public @ResponseBody List<String> setReview(@RequestBody String reviewJson){
-        log.info("/setReview controller");
+
+    @RequestMapping(value = "/addReviewers", method = RequestMethod.POST, consumes = "application/json; charset=UTF-8")
+    public ResponseEntity<String> addReviewers (@RequestBody String reviewersStr) {
+        log.info("/addReviewers controller");
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        ResponseEntity<String> entity;
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "text/html; charset=utf-8");
+
+        try {
+            reviewService.createReviewers(reviewersStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            entity = new ResponseEntity<String>(e.getMessage(), headers, HttpStatus.OK);
+            return entity;
+        }
+        entity = new ResponseEntity<String>("OK", headers, HttpStatus.OK);
+        return entity;
+    }
+
+
+    @RequestMapping(value = "/addReview", method = RequestMethod.POST, produces = {"application/json"})
+    public @ResponseBody
+    HashMap<String, Object> addReview(MultipartHttpServletRequest request,
+                                      HttpServletResponse response)  {
+        log.info("/addReview controller");
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = null;
-
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             user = (User) authentication.getPrincipal();
         }
-        List<String> list;
+
+        HashMap<String, Object> map = new HashMap<String, Object>();
+
+        MultipartFile multipartFile = request.getFile("reviewFile");
+        Long articleId = Long.parseLong(request.getParameter("articleId"));
+
+        Review review = reviewService.findByUserAndArticleId(articleId, user);
         try {
-            reviewService.setReview(user, reviewJson);
-            list = Arrays.asList("OK");
-        } catch (ReviewCreationException e) {
-            list = Arrays.asList(e.getMessage());
+            reviewService.addReview(review, multipartFile);
+        } catch (ReviewException e) {
+            map.put("reviewErrorMassage", e.getMessage());
+            e.printStackTrace();
         }
-        return list;
+
+//        map.put("fileoriginalsize", size);
+//        map.put("contenttype", contentType);
+//        map.put("base64", new String(Base64Utils.encode(bytes)));
+        return map;
     }
+
 
     @RequestMapping(value = "/getReview", method = RequestMethod.GET)
     public @ResponseBody List<String> getReview(@RequestParam String reviewId) {
-        log.info("/getReview controller");
+        log.info("/getReviewName controller");
         List<String> list;
         try {
             Review review = reviewService.getReview(Long.parseLong(reviewId));
-            list = reviewService.reviewReader(review.getReview());
+            list = reviewService.reviewReader(review.getReviewName());
         } catch (Exception e) {
             e.printStackTrace();
             list = Arrays.asList(e.getMessage());
         }
         return list;
     }
-
-
-
-
-//    @RequestMapping(value = "/getUserReviews", method = RequestMethod.GET)
-//    public @ResponseBody List<Review> getUserReviews(@RequestParam Long userId) {
-//        log.info("/getUserReviews controller");
-//        List<Review> reviews = null;
-//        try {
-//            reviews = seminarService.findPublishedSeminarByUserId(userId);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return reviews;
-//    }
 
 }

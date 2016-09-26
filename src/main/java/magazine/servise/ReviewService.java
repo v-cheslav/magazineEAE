@@ -1,9 +1,9 @@
 package magazine.servise;
 
-import magazine.Exeptions.ReviewCreationException;
-import magazine.domain.Article;
+import magazine.Exeptions.ReviewException;
 import magazine.domain.Review;
 import magazine.domain.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,7 +16,10 @@ public interface ReviewService {
     public void changeReview(Review review);
     public void removeReview(Review review);
     public List<Review> findByUser(User user);
+    public void addReview(Review review, MultipartFile multipartFile)throws ReviewException;
     public void dennyReview(Long articleId, User user);
-    public void setReview (User user, String reviewJson) throws ReviewCreationException;
-    public List<String> reviewReader (String reviewPath) throws ReviewCreationException;
+    public Review findByUserAndArticleId(Long articleId, User user);
+    public void createReviewers (String reviewersJson) throws ReviewException;
+//    public void addReview(User user, String reviewJson) throws ReviewException;
+    public List<String> reviewReader (String reviewPath) throws ReviewException;
 }

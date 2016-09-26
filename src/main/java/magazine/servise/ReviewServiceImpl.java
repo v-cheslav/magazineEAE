@@ -1,6 +1,6 @@
 package magazine.servise;
 
-import magazine.Exeptions.ReviewCreationException;
+import magazine.Exeptions.ReviewException;
 import magazine.dao.ArticleDao;
 import magazine.dao.ReviewDao;
 import magazine.domain.Article;
@@ -13,6 +13,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -32,6 +33,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Autowired
     ArticleDao articleDao;
+
+    @Autowired
+    UserService userService;
 
     @Value("${initialPath}")
     private String initialPath;
@@ -76,86 +80,169 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void setReview(User user, String reviewJson) throws ReviewCreationException{
-        log.info("setReview method");
-        JSONParser parser = new JSONParser();
-        Object obj = null;
+    public void createReviewers (String reviewersJson) throws ReviewException{
+
         try {
-            obj = parser.parse(reviewJson);
+            JSONParser parser = new JSONParser();
+            Object obj = parser.parse(reviewersJson);
             JSONObject jsonObj = (JSONObject) obj;
-            String reviewText = (String) jsonObj.get("review");
-            Long articleId = (Long) jsonObj.get("articleId");
+            String articleIdStr = (String) jsonObj.get("articleId");
+            Long articleId = Long.parseLong(articleIdStr);
+            String firstReviewerStr = (String) jsonObj.get("firstReviewer");
+            Long firstReviewerLong = Long.parseLong(firstReviewerStr);
+            String secondReviewerStr = (String) jsonObj.get("secondReviewer");
+            Long secondReviewerLong = Long.parseLong(secondReviewerStr);
 
-            System.err.println("articleId" + articleId);
-            Review review = reviewDao.findByUserAndArticleId(articleId, user);
-            System.err.println("articleId" + articleId);
 
-            String fileName = "review" + review.getReviewId() + ".xml";
+            Article article = articleDao.read(articleId);
 
-            String articleAddress = review.getArticle().getPublicationAddress();
-            int lastIndex = articleAddress.lastIndexOf('/');
-            String relativePath = articleAddress.substring(0, lastIndex+1) + fileName;
-//            String simplePath = relativePath.replaceAll("../../userResources/", "");
-            String absolutePath = initialPath + "userArticles/" + relativePath;
-            System.out.println(absolutePath);
+            User firstReviewer = userService.getUser(firstReviewerLong);
+            firstReviewer.setIsReviewer(true);
+            userService.changeUser(firstReviewer);
+            Review firstReview = new Review(article, firstReviewer);
 
+            User secondReviewer = userService.getUser(secondReviewerLong);
+            secondReviewer.setIsReviewer(true);
+            userService.changeUser(secondReviewer);
+            Review secondReview = new Review(article, secondReviewer);
+
+            List <Review> reviews = article.getArticleReviews();
+            reviews.add(firstReview);
+            reviews.add(secondReview);
+            reviewDao.create(firstReview);
+            reviewDao.create(secondReview);
+            article.setArticleReviews(reviews);
+            article.setIsReviewersAssigned(true);
+
+            articleDao.update(article);
+
+        } catch (ParseException e) {
+            //todo видалити завантажені файли і зробити reduce кількості публікацій
+            e.printStackTrace();
+            throw new ReviewException("Не вдалося призначити рецензентів.");
+        }
+    }
+
+    @Override
+    public void addReview(Review review, MultipartFile multipartFile) throws ReviewException {
+        saveReviewFile(review, multipartFile);
+        updateReview(review, multipartFile);
+    }
+
+    private void saveReviewFile (Review review, MultipartFile multipartFile)throws ReviewException{
+
+        String absolutePath = initialPath
+                + review.getArticle().getPublicationPath()
+                + multipartFile.getOriginalFilename();
+        System.err.println("absolutePath review " +  absolutePath);
+        Path path = Paths.get(absolutePath);
+        boolean isFileExist = Files.exists(path);
+        if (!isFileExist) {
             try {
-                reviewWriter(reviewText, absolutePath);
-            } catch (FileNotFoundException e) {
-                log.error("File not found", e);
-                throw new ReviewCreationException(errorMessage);
-            } catch (UnsupportedEncodingException e) {
-                log.error("UnsupportedEncodingException", e);
-                throw new ReviewCreationException(errorMessage);
+                multipartFile.transferTo(new File(absolutePath));
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new ReviewException("Не вдалося зберегти файл рецензії.");
             }
+        } else {
+            throw new ReviewException("Файл з назвою " + multipartFile.getName()
+                    + "існує. Змініть назву файлу!");
+        }
+    }
 
-            review.setReview(relativePath);
-            review.setStatus(true);
+    private void updateReview(Review review, MultipartFile multipartFile) throws ReviewException{
+        String fileName = multipartFile.getOriginalFilename();
+        review.setReviewName(fileName);
+
+        String articlePath = review.getArticle().getPublicationPath();
+        int lastIndex = articlePath.lastIndexOf('/');
+        String relativePath = articlePath.substring(0, lastIndex+1) + fileName;
+        review.setReviewAddress(relativePath);
+        review.setStatus(true);
+
+        try {
             reviewDao.update(review);
             Article article = review.getArticle();
-            List<Review> reviews = article.getArticleReviewers();
+            List<Review> reviews = article.getArticleReviews();
             if (reviews.get(0).getStatus() == true && reviews.get(1).getStatus()){
                 article.setIsPrintable(true);
                 articleDao.update(article);
             }
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-            throw new ReviewCreationException("Рецензію опублікувати не вдалося. Спробуйте пізніше");
-
+        } catch (Exception e) {
+            throw new ReviewException("Рецензію опублікувати не вдалося. Спробуйте пізніше");
         }
-    }
-
-    private void reviewWriter (String reviewText, String absolutePath) throws FileNotFoundException, UnsupportedEncodingException, ReviewCreationException {
-        FileOutputStream fileOutputStream = new FileOutputStream(absolutePath);
-        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream, "UTF-8"));
-        try {
-            bufferedWriter.append(reviewText);
-            bufferedWriter.flush();
-        } catch (IOException ex) {
-            log.error("File not found", ex);
-            throw new ReviewCreationException(errorMessage);
-        } finally {
-
-            try {
-                bufferedWriter.close();
-            } catch (IOException e) {
-                log.error("BufferedWriter closing error", e);
-                throw new ReviewCreationException(errorMessage);
-            }
-
-            try {
-                fileOutputStream.close();
-            } catch (IOException e) {
-                log.error("FileOutputStream closing error", e);
-                throw new ReviewCreationException(errorMessage);
-            }
-        }
-
     }
 
     @Override
-    public List<String> reviewReader (String reviewPath) throws ReviewCreationException{
+    public Review findByUserAndArticleId(Long articleId, User user){
+        return reviewDao.findByUserAndArticleId(articleId, user);
+    }
+
+
+//    @Override
+//    public void addReview(User user, String reviewJson) throws ReviewException {
+//        log.info("addReview method");
+//        JSONParser parser = new JSONParser();
+//        Object obj = null;
+//        try {
+//            obj = parser.parse(reviewJson);
+//            JSONObject jsonObj = (JSONObject) obj;
+//            Long articleId = (Long) jsonObj.get("articleId");
+//            String fileName = (String) jsonObj.get("fileName");
+//
+//            Review review = reviewDao.findByUserAndArticleId(articleId, user);
+//            String articleAddress = review.getArticle().getPublicationPath();
+//            int lastIndex = articleAddress.lastIndexOf('/');
+//            String relativePath = articleAddress.substring(0, lastIndex+1) + fileName;
+//
+//            review.setReviewAddress(relativePath);
+//            review.setReviewName(fileName);
+//            review.setStatus(true);
+//            reviewDao.update(review);
+//            Article article = review.getArticle();
+//            List<Review> reviews = article.getArticleReviews();
+//            if (reviews.get(0).getStatus() == true && reviews.get(1).getStatus()){
+//                article.setIsPrintable(true);
+//                articleDao.update(article);
+//            }
+//
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//            throw new ReviewException("Рецензію опублікувати не вдалося. Спробуйте пізніше");
+//
+//        }
+//    }
+
+//    private void reviewWriter (String reviewText, String absolutePath) throws FileNotFoundException, UnsupportedEncodingException, ReviewException {
+//        FileOutputStream fileOutputStream = new FileOutputStream(absolutePath);
+//        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream, "UTF-8"));
+//        try {
+//            bufferedWriter.append(reviewText);
+//            bufferedWriter.flush();
+//        } catch (IOException ex) {
+//            log.error("File not found", ex);
+//            throw new ReviewException(errorMessage);
+//        } finally {
+//
+//            try {
+//                bufferedWriter.close();
+//            } catch (IOException e) {
+//                log.error("BufferedWriter closing error", e);
+//                throw new ReviewException(errorMessage);
+//            }
+//
+//            try {
+//                fileOutputStream.close();
+//            } catch (IOException e) {
+//                log.error("FileOutputStream closing error", e);
+//                throw new ReviewException(errorMessage);
+//            }
+//        }
+//
+//    }
+
+    @Override
+    public List<String> reviewReader (String reviewPath) throws ReviewException {
         String pathStr = initialPath + "userArticles/" + reviewPath;
         Path path = Paths.get(pathStr);
         List<String> reviewLines = null;
@@ -163,7 +250,7 @@ public class ReviewServiceImpl implements ReviewService {
             reviewLines = Files.readAllLines(path);
         } catch (IOException ex){
             ex.printStackTrace();
-            throw new ReviewCreationException("Виникла помилка при читанні рецензії.");
+            throw new ReviewException("Виникла помилка при читанні рецензії.");
         }
         return reviewLines;
     }

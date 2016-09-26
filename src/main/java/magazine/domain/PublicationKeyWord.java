@@ -8,10 +8,7 @@ import java.util.Set;
 * Created by pvc on 27.10.2015.
 */
 @Entity
-//@SecondaryTable(name = "PublicationKeyWords")
 @DiscriminatorValue("PublKW")
-
-//@Inheritance(strategy = InheritanceType.JOINED)
 public class PublicationKeyWord extends KeyWord {
 
     @ManyToMany(mappedBy = "publicationKeyWords", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)

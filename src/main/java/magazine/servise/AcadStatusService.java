@@ -11,5 +11,5 @@ public interface AcadStatusService {
     public UserAcadStatus getAcadStatus(Long id);
     public void changeAcadStatus(UserAcadStatus acadStatus);
     public void removeAcadStatus(UserAcadStatus acadStatus);
-    public UserAcadStatus findByString(String acadStatusStr);
+    public UserAcadStatus findAcadStatus(String acadStatusStr);
 }

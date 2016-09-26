@@ -7,5 +7,5 @@ import magazine.domain.UserSciDegree;
  */
 public interface SciDegreeService {
     public void fillDBWihSciDegree();
-    public UserSciDegree findByString(String sciDegreeStr);
+    public UserSciDegree finSciDegree(String sciDegreeStr);
 }

@@ -10,6 +10,16 @@ $(document).ready(function(){
         $('#scheduleMenuContent').toggle();
     });
 
+    $(window).scroll(function(){
+        if($(this).scrollTop()>413){
+            $('#topnav').addClass('fixed');
+        }
+        else if ($(this).scrollTop()<413){
+            $('#topnav').removeClass('fixed');
+        }
+    });
+
+
 })
 //
 //function toFullPage (){

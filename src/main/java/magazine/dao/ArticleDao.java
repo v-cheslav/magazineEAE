@@ -1,6 +1,7 @@
 package magazine.dao;
 
 import magazine.domain.Article;
+import magazine.domain.PublicationKeyWord;
 import magazine.domain.Section;
 import magazine.domain.User;
 
@@ -19,8 +20,12 @@ public interface ArticleDao {
     public List<Article> findAllPublished();
     public List<Article> findAllPublishedBySection(Section section);
     public List<Article> findNewest();
+    public List<Article> findAllUnpublished();
     public Article findUnPublishedByUser(User user);
+    public Article  findUnPublishedByReviewer(User reviewer);
     public List<Article> findByUserId(Long userId);
     public List<Article> findByReviewerId(Long userId);
+    public List<Article> findWithoutReviewers();
     public List<Article> findBySearchQuery(Map query);
-}
+    public List<Article> findArticlesByKeywords(Article article);
+    }

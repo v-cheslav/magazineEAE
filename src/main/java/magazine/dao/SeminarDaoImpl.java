@@ -1,6 +1,7 @@
 package magazine.dao;
 
 import magazine.Exeptions.SeminarNotFoundException;
+import magazine.domain.PublicationKeyWord;
 import magazine.domain.Seminar;
 import magazine.domain.User;
 import org.apache.log4j.Logger;
@@ -8,6 +9,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -168,7 +170,25 @@ public class SeminarDaoImpl implements SeminarDao {
     }
 
 
+    @Override
+    public List<Seminar> findSeminarsByKeywords(Seminar seminar) {
+        List<PublicationKeyWord> keywords = seminar.getPublicationKeyWords();
+        Session session = sessionFactory.getCurrentSession();
 
+        Criteria criteria = session.createCriteria(Seminar.class, "sem");
+        criteria.createAlias("sem.publicationKeyWords", "keyWord");
+
+        Disjunction or = Restrictions.disjunction();
+        for (PublicationKeyWord keyWord : keywords){
+            or.add(Restrictions.eq("keyWord.keyWord", keyWord.getArtKeyWord()));
+        }
+        criteria.add(or);
+        criteria.add(Restrictions.ne("publicationId", seminar.getPublicationId()));
+        criteria.add(Restrictions.eq("isPublished", true));
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                .addOrder(Order.desc("publicationId"));
+        return criteria.list();
+    }
 
     @Override
     public List<Seminar> findBySearchQuery(Map searchQueryMap) {

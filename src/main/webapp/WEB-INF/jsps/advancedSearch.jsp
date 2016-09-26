@@ -17,8 +17,9 @@
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="../../css/site_global.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/jquery-ui.css"/>
-    <link rel="stylesheet" type="text/css" href="../../css/registration.css" charset="utf-8"/>
+    <%--<link rel="stylesheet" type="text/css" href="../../css/registration.css" charset="utf-8"/>--%>
     <link rel="stylesheet" type="text/css" href="../../css/advancedsearch.css" charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="../../css/formsAndButtons.css" charset="utf-8"/>
 
 
     <!-- Scripts -->
@@ -31,20 +32,10 @@
 <body>
 
 <div class="header">
-    <h1 id="magazineName">ЕНЕРГЕТИКА, АВТОМАТИКА І ЕНЕРГОЗБЕРЕЖЕННЯ</h1>
-    <nav id="MenuBar">
-        <ul>
-            <li><a href="index.html" class="menuButton">ГОЛОВНА</a></li>
-            <li><a href="publication.html" class="menuButton">ПУБЛІКАЦІЇ</a></li>
-            <li><a href="seminar.html" class="menuButton">СЕМІНАР</a></li>
-            <li><a href="publish.html" class="menuButton">ОПУБЛІКУВАТИ</a></li>
-            <li><a href="contacts.html" class="menuButton">КОНТАКТИ</a></li>
-        </ul>
-    </nav>
-    <hr class="horizontalLine">
     <div class="banner">
         <div class="bannerTop">
             <h3 class="headerUniversityName">Національний університет біоресурсів і природокористування України</h3>
+
             <div class="authForm" id="authForm">
                 <sec:authorize access="isAnonymous()">
                     <p>
@@ -58,40 +49,56 @@
                         <a href="/j_spring_security_logout">Вийти</a>
                     </p>
                 </sec:authorize>
-                <sec:authorize access="hasRole('admin')">
-                    <p>
-                        <a href="/admin">Admin page</a>
-                    </p>
-                </sec:authorize>
-                <sec:authorize access="hasRole('ADMIN')">
-                    <p>
-                        <a href="/administrator">Administrator page</a>
-                    </p>
-                </sec:authorize>
             </div>
         </div>
         <hr class="horizontalLine" id="bannerLine">
         <div class="bannerBottom">
             <div class="instituteLogo"></div>
             <h3 class="instituteHeaderName">ННІ Енергетики, автоматики <br>і енергозбереження</h3>
-        </div>
-    </div>
-    <hr class="horizontalLine">
-</div>
-
-<div class="content" id="content">
-
-    <%--leftPanel--%>
-    <div class="leftSideBar" id="leftPanel">
-        <div class="currentDateHeader">
+            <sec:authorize access="hasRole('ADMIN')">
+                <p class="adminLink">
+                    <a href="/administrator">Сторінка адміністратора</a>
+                </p>
+            </sec:authorize>
             <p id="currentDate"></p>
         </div>
-        <div class="accordionMenuWrapper">
+    </div>
+    <hr>
+    <div id="topnav">
+        <ul class="nav">
+            <li><a href="index.html">Головна</a></li>
+            <li><a href="articles.html">Статті</a></li>
+            <li><a href="seminars.html">Семінари</a></li>
+            <li><a href="conference.html">Конференції</a></li>
+            <li><a href="#">Опублікувати</a>
+                <ul>
+                    <li><a href="publishArticle.html">Статтю</a></li>
+                    <li><a href="publishSeminar.html">Cемінар</a></li>
+                    <li><a href="publishConference.html">Корференцію</a></li>
+                </ul>
+            </li>
+            <li class="active"><a href="advancedSearch.html">Пошук</a></li>
+            <li><a href="contacts.html">Контакти</a></li>
+        </ul>
+    </div>
+    <hr>
+</div>
 
-            <div class="menuHeader" id="sectionsMenuHeader">
-                <p>Вкажіть необхідні вам деталі пошуку</p>
-            </div>
-            <div class="menuContent" id="sectionsMenuContent">
+
+<div class="content">
+
+
+    <div class="whiteBox">
+
+    <%--leftPanel--%>
+        <div class="leftSideBar">
+        <div class="barHeader">
+            Деталі пошуку:
+        </div>
+
+        <div class="barContent">
+
+            <%--<div class="menuContent" id="sectionsMenuContent">--%>
 
                 <label for="searchTypeBt" class="wordLabels">Шукати</label>
                 <div class="radioButtons" id="searchTypeBt" name="searchTypeBt" data-required="false" data-type="group">
@@ -102,23 +109,26 @@
                     <input type="radio" class="radioButtons" name="searchTypeBt" id="AUTHORSrch" value="AUTHORSrch">
                     <label for="AUTHORSrch">автора</label>
                 </div>
+                <hr class="delimiter">
 
-                <form id="advancedSearchingForm">
+                <form class="form" id="advancedSearchingForm">
 
-                    <div id="publicationName">
-                        <label for="nameOfArticle"></label>
-                        <input class="textField" type="text"
-                               id="nameOfArticle" name="nameOfArticle" placeholder="Назва публікації"/>
+                    <div class="formField" >
+                        <label for="nameOfArticle" class="label"> Назва публікації </label>
+                        <div class="textField">
+                            <input class="textField" type="text" id="nameOfArticle" name="nameOfArticle"/>
+                        </div>
                     </div>
 
-                    <div>
-                        <label for="nameOfUser"></label>
-                        <input class="textField" type="text"
-                               id="nameOfUser" name="nameOfUser" placeholder="Автор"/>
+                    <div class="formField" >
+                        <label for="nameOfUser" class="label"> Автор </label>
+                        <div class="textField">
+                            <input class="textField" type="text" id="nameOfUser" name="nameOfUser"/>
+                        </div>
                     </div>
 
-                    <div class="select">
-                        <label for="acadStatus"></label>
+                    <div class="formField">
+                        <label for="acadStatus" class="label"> Вчене звання </label>
                         <select class="textField" id="acadStatus" name="acadStatus">
                             <option value="" selected="selected" class="selected">Вчене звання</option>
                             <option value="DOCENT">Доцент</option>
@@ -127,8 +137,8 @@
                         </select>
                     </div>
 
-                    <div class="select">
-                        <label for="sciDegree"></label>
+                    <div class="formField">
+                        <label for="sciDegree" class="label"> Науковий ступінь </label>
                         <select class="textField" id="sciDegree" name="sciDegree">
                             <option value="" selected="selected" id="selected">Науковий ступінь</option>
                             <option value="CANDIDATE">Кандидат наук</option>
@@ -137,24 +147,26 @@
                         </select>
                     </div>
 
-                    <div id="datepickerContainer" class="textField">
-                        Дата публікації:
-                        <label for="dateFrom"></label>
-                        <p>від<input type="text" id="dateFrom" placeholder="дд.мм.рррр"></p>
-                        <label for="dateTo"></label>
-                        <p>до<input type="text" id="dateTo" placeholder="дд.мм.рррр"></p>
-                        </div>
 
-                    <div id="keyWordsSearchContainer">
-                        <label for="keyWordsSearch"></label>
-                        <input class="textField" type="text"
-                               id="keyWordsSearch" name="keyWordsSearch" placeholder="ключові слова"/>
+                    <div id="datepickerContainer" class="formField">
+                        Дата публікації:<br>
+                        <label for="dateFrom">від</label>
+                        <input type="text" id="dateFrom" placeholder="дд.мм.рррр">
+                        <label for="dateTo">до</label>
+                        <input type="text" id="dateTo" placeholder="дд.мм.рррр">
                     </div>
 
-                    <div class="select"  id="selectSectionContainer">
-                        <label for="selectSection"></label>
+
+                    <div class="formField">
+                        <label for="keyWordsSearch" class="label"> Ключові слова </label>
+                        <textarea class="textField" id="keyWordsSearch" name="keyWordsSearch"></textarea>
+                    </div>
+
+
+                    <div class="formField">
+                        <label for="selectSection">Рубрика</label>
                         <select class="textField" id="selectSection" name="selectSection">
-                            <option value="" selected="selected" class="selected">Оберіть рубрику</option>
+                            <option value="" selected="selected" class="selected">Рубрика</option>
                             <option value="AUTOMATION">Автоматика та робототехнічні системи</option>
                             <option value="EXPLOITATION">Експлуатація електрообладнання</option>
                             <option value="MACHINES">Електричні машини</option>
@@ -165,20 +177,23 @@
                             <option value="PHYSIC">Фізика</option>
                         </select>
                     </div>
-                    <div class="errorMessage" id="errorMessage">
-                    </div>
-                    <input type="button" class="button" onclick="advancedSearch()" value="Шукати">
+
+                    <input id="searchBtn" type="button" class="button" onclick="advancedSearch()" value="Шукати">
+
                 </form>
-            </div>
+
+                <div class="errorMessage" id="errorMessage"></div>
+
         </div>
     </div>
-    <div class="mainContent">
 
-        <div class="mainContentHeader" id="mainContentHeader">
-            <h2>Статті</h2>
-        </div>
+        <div class="mainContent">
 
-        <div id="tables">
+            <div class="barHeader" >
+                <h2 id="barHeader">Статті</h2>
+            </div>
+
+           <div id="tables">
             <table border="1" align="center" width="98%" height="100%" class="innerTable" id="innerTable">
                 <thead>
                 <tr>
@@ -196,7 +211,9 @@
 
         </div>
     </div>
+        <div class="clear"></div>
 
+    </div>
 
 </div>
 

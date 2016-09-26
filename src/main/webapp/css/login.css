@@ -1,145 +1,53 @@
-.loginTitle {
-    z-index: 208;
-    margin-top: 7px;
-    position: relative;
-    width: 1017px;
-    min-height: 35px;
-    box-shadow: 6px 6px 8px rgba(0, 58, 72, 0.5);
-    background: transparent linear-gradient(to right, #ABAAAB, #EBEBEB 100%) repeat scroll 0% 0%;
-    border-width: 3px;
-    border-style: solid;
-    border-color: #7F7F7F;
-    line-height: 24px;
-    color: #2D2D2D;
-    font-size: 20px;
-    text-align: center;
-    font-family: Georgia,Palatino,Palatino Linotype,Times,Times New Roman,serif;
+.mainContent {
+    float: left;  margin: 0 auto;
+    width: 630px;
+}
+.restorePassContent {
+    margin-left: 180px;
 }
 
-
-
-#titleText
-{
-    padding-top: 6px;
+#loginForm {
+    width: 400px;
+    margin: 0 auto;
 }
-
 .errorBlock {
     border: solid;
     border-width: 2px;
     border-color: #7F7F7F;
-    border-radius: 8px;
     background-color: #ff0000;
     color: #d9e8ff;
     font-size: 16px;
-    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     text-align: center;
     margin: 16px;
     padding: 10px;
-    width: 972px;
 }
 
-
-.loginForm {
-    float: left;
-    margin-left: 180px;
-}
-.login, .password {
-    margin: 10px;
+#_spring_security_remember_me {
+    width: 10px;
+    margin-bottom: 20px;
 }
 
-.tips {
-    width: 160px;
-    height: 17px;
-    box-shadow: 6px 6px 8px rgba(0,58,72,0.5);
-    background: linear-gradient(to right, #ABABAB ,#EBEDEB 100%);
-    border-width: 2px;
-    border-style: solid;
-    border-right: hidden;
-    border-color: #7F7F7F;
-    padding: 10px;
-    color: #2D2D2D;
-    font-size: 16px;
-    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
-    position: relative;
-    float:left;
-
-}
-
-.userFiller {
-    width: 311px;
-    height: 17px;
-    box-shadow: 6px 6px 8px rgba(0,58,72,0.5);
-    background: linear-gradient(to right,#EBEDEB ,#ffffff 100%);
-    border-width: 2px;
-    border-style: solid;
-    border-left: hidden;
-    border-color: #7F7F7F;
-    padding: 10px;
-    color: #2D2D2D;
-    font-size: 16px;
-    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
-    position: relative;
-    display: inline-block;
-}
-.userFiller input {
-    background: #FAF8F5;
-    width: 290px;
-    padding-left: 15px;
-    border: solid;
-    border-width: 1px;
-    border-color: #7F7F7F;
-    border-radius: 5px;
-    margin-bottom: 15px;
-}
-
-#regButton {
-    height: 30px;
-    float: right;
-    color: #474747;
-    text-decoration:none;
-}
-#regButton :hover{
-    text-decoration:underline;
-}
-#regButton :active{
-    text-decoration:underline;
-}
-
-.buttons {
-    position: relative;
-    float: right;
-}
-.button {
-    margin: 10px;
-}
-
-.contentRight {
-    margin-top: 25px;
-}
-
-#remindPassword {
-    margin-top: 32px;
-    color: blue;
-    cursor: pointer;
-}
-
-#remindPassword:hover {
-    text-decoration: underline;
+#buttons.button {
+    margin: 10px auto;
+    height: 38px;
 }
 
 .error{
     color: red;
     font-size: 14px;
-    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+}
+
+.rightSideBar {
+    float: right;
+    background-color: #ffffff;
+
 }
 
 .restoreMessage {
     border: solid;
     border-width: 1px;
     border-color: #7F7F7F;
-    border-radius: 5px;
-    background: #FAF8F5;
-    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+    background: #E0E0E0;
     font-size: 15px;
     margin: 15px 10px;
     padding: 10px;

@@ -51,7 +51,7 @@ public class AcadStatusServiceImpl implements AcadStatusService {
     }
 
         @Override
-    public UserAcadStatus findByString(String acadStatusStr) {
+    public UserAcadStatus findAcadStatus(String acadStatusStr) {
         return acadStatusDao.getByString(acadStatusStr);
     }
 }
