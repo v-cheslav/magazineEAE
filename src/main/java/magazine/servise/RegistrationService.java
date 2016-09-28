@@ -13,7 +13,7 @@ import java.util.Set;
  * Created by pvc on 21.10.2015.
  */
 public interface RegistrationService {
-    public void regUser(User user, MultipartFile multipartFile) throws RegistrationException;
+    public void regUser(User user) throws RegistrationException;
 //    public void regUser(Map<String, String> userParameters) throws RegistrationException;
 //    public boolean checkIfUserExist(String username)throws SuchUserExistException;
     public boolean checkIfUserPasswordCorrect(String password)throws RegistrationException;

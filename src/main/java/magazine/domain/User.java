@@ -2,6 +2,7 @@ package magazine.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import magazine.utils.PasswordHelper;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
@@ -55,7 +56,7 @@ public class User implements UserDetails {
     private String phone;
 
     @Column(name="photo")
-    private String photoAddress;
+    private String photoName;
 
     @Column(name="publNumber")
     private Integer publicationNumber = 0;
@@ -115,29 +116,29 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String username, String password, String name, String surname, String university) {
-        this.username = username;
-        this.password = password;
-        this.name = name;
-        this.surname = surname;
-        this.university = university;
-    }
-
-    public User(String username, String password, String name, String surname, String middleName, String university, String institute, String chair, String position, String phone, UserAcadStatus acadStatus, UserSciDegree sciDegree, UserSex userSex) {
-        this.username = username;
-        this.password = password;
-        this.name = name;
-        this.surname = surname;
-        this.middleName = middleName;
-        this.university = university;
-        this.institute = institute;
-        this.chair = chair;
-        this.position = position;
-        this.phone = phone;
-        this.acadStatus = acadStatus;
-        this.sciDegree = sciDegree;
-        this.userSex = userSex;
-    }
+//    public User(String username, String password, String name, String surname, String university) {
+//        this.username = username;
+//        this.password = password;
+//        this.name = name;
+//        this.surname = surname;
+//        this.university = university;
+//    }
+//
+//    public User(String username, String password, String name, String surname, String middleName, String university, String institute, String chair, String position, String phone, UserAcadStatus acadStatus, UserSciDegree sciDegree, UserSex userSex) {
+//        this.username = username;
+//        this.password = password;
+//        this.name = name;
+//        this.surname = surname;
+//        this.middleName = middleName;
+//        this.university = university;
+//        this.institute = institute;
+//        this.chair = chair;
+//        this.position = position;
+//        this.phone = phone;
+//        this.acadStatus = acadStatus;
+//        this.sciDegree = sciDegree;
+//        this.userSex = userSex;
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -202,7 +203,8 @@ public class User implements UserDetails {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        PasswordHelper passwordHelper = new PasswordHelper();
+        this.password = passwordHelper.encode(password);
     }
 
     public String getName() {
@@ -269,8 +271,8 @@ public class User implements UserDetails {
         this.phone = phone;
     }
 
-    public String getPhotoAddress() {
-        return photoAddress;
+    public String getPhotoName() {
+        return photoName;
     }
 
     public boolean getIsReviewer() {
@@ -281,8 +283,8 @@ public class User implements UserDetails {
         this.isReviewer = isReviewer;
     }
 
-    public void setPhotoAddress(String photoAddress) {
-        this.photoAddress = photoAddress;
+    public void setPhotoName(String photoName) {
+        this.photoName = photoName;
     }
 
     public UserAcadStatus getAcadStatus() {
@@ -381,7 +383,7 @@ public class User implements UserDetails {
 //                ", chair='" + chair + '\'' +
 //                ", position='" + position + '\'' +
 //                ", phone='" + phone + '\'' +
-//                ", photoAddress='" + photoAddress + '\'' +
+//                ", photoName='" + photoName + '\'' +
 //                ", acadStatus=" + acadStatus +
 //                ", sciDegree=" + sciDegree +
 //                ", userSex=" + userSex +

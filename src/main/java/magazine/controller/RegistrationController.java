@@ -1,12 +1,10 @@
 package magazine.controller;
 
-import magazine.Exeptions.AdminRegistrationException;
 import magazine.Exeptions.RegistrationException;
-import magazine.domain.User;
-import magazine.domain.UserInterest;
-import magazine.domain.UserRole;
+import magazine.domain.*;
 import magazine.servise.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,7 +17,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
-import java.util.Set;
 
 /**
 * Created by pvc on 31.10.2015.
@@ -29,6 +26,9 @@ import java.util.Set;
 public class RegistrationController {
 
     public static final Logger log = Logger.getLogger(ApplicationController.class);
+
+    @Value("${adminPassword}")
+    private String adminPassword;
 
     @Autowired
     JsonParseService jsonParseService;
@@ -57,6 +57,9 @@ public class RegistrationController {
     @Autowired
     UserRoleService userRoleService;
 
+    @Autowired
+    UserBuilder userBuilder;
+
 
     @PreAuthorize("isAnonymous()")
     @RequestMapping(value = "/registration", method = {RequestMethod.GET})
@@ -73,46 +76,28 @@ public class RegistrationController {
         log.info("/regUser controller");
         HashMap<String, Object> map = new HashMap<String, Object>();
 
-        MultipartFile multipartFile = request.getFile("userPhoto");
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-
-        User user = new User(username, password,
-                request.getParameter("name"),
-                request.getParameter("surname"),
-                request.getParameter("middleName"),
-                request.getParameter("university"),
-                request.getParameter("institute"),
-                request.getParameter("chair"),
-                request.getParameter("position"),
-                request.getParameter("phone"),
-                acadStatusService.findAcadStatus(request.getParameter("acadStatus")),
-                sciDegreeService.finSciDegree(request.getParameter("sciDegree")),
-                userSexService.findUserSex(request.getParameter("userSex"))
-        );
-
-        String interestsStr = request.getParameter("keyWords");
-        Set<UserInterest> interests = userInterestService.setUserInterests(interestsStr, user);
-        user.setInterests(interests);
-
-        String adminRole = request.getParameter("adminChBox");
-        Set<UserRole> userRoles;
+        User user = null;
         try {
-            userRoles = userRoleService.setUserRoles(user, password, adminRole);//throws AdminRegistrationException
-            user.setUserRoles(userRoles);
-        } catch (AdminRegistrationException e) {
-            map.put("registrationMassage", "Ви не маєте права реєструватись як адміністратор!");
+            user = userBuilder.buildUser(request);
+            log.info("User \'" + user.toString() + "\' successfully built.");
+            fileService.saveAndSetUserPhoto(user, request);
+            log.info("User image successfully saved.");
+        } catch (RegistrationException e) {
             e.printStackTrace();
         }
 
         try {
-            registrationService.regUser(user, multipartFile);
+            registrationService.regUser(user);
+            map.put("success", "success");
         } catch (RegistrationException e) {
             map.put("registrationMassage", e.getMessage());
             e.printStackTrace();
         }
         return map;
     }
+
+
+
 
 
     @PreAuthorize("hasRole('USER')")
@@ -130,49 +115,23 @@ public class RegistrationController {
 
         HashMap<String, Object> map = new HashMap<String, Object>();
 
-        MultipartFile multipartFile = request.getFile("userPhoto");
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-
-        User newUser = new User(username, password,
-                request.getParameter("name"),
-                request.getParameter("surname"),
-                request.getParameter("middleName"),
-                request.getParameter("university"),
-                request.getParameter("institute"),
-                request.getParameter("chair"),
-                request.getParameter("position"),
-                request.getParameter("phone"),
-                acadStatusService.findAcadStatus(request.getParameter("acadStatus")),
-                sciDegreeService.finSciDegree(request.getParameter("sciDegree")),
-                userSexService.findUserSex(request.getParameter("userSex"))
-        );
-
-        String interestsStr = request.getParameter("keyWords");
-        Set<UserInterest> interests = userInterestService.setUserInterests(interestsStr, newUser);
-        newUser.setInterests(interests);
+        User newUser = null;
+        try {
+            newUser = userBuilder.buildUser(request);
+            log.info("User \'" + newUser.toString() + "\' successfully built.");
+            fileService.changeUserPhoto(oldUser, request);
+            log.info("User image successfully changed.");
+        } catch (RegistrationException e) {
+            e.printStackTrace();
+        }
 
         try {
-            userService.updateUser(oldUser, newUser, multipartFile);
+            userService.updateUser(oldUser, newUser);
         } catch (RegistrationException e) {
             map.put("errorMessage", e.getMessage());
             e.printStackTrace();
         }
         return map;
     }
-
-
-//    @RequestMapping(value = "/upload", method = RequestMethod.POST)
-//    public String uploadFile (MultipartHttpServletRequest request)throws Exception {
-//        log.info("/upload controller");
-//        MultipartFile multipartFile = request.getFile("file");
-//        StringBuilder sb = new StringBuilder();
-//        String username = multipartFile.getName();
-//        String type = multipartFile.getContentType();
-//        sb.append("../userPhotos/").append(username).append(type);
-//        String photoAddress = sb.toString();
-//        multipartFile.transferTo(new File(photoAddress));//todo do exception, if it occurs redirect to another page
-//        return "OK";
-//    }
 
 }

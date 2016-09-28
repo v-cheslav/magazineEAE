@@ -22,7 +22,7 @@ public interface UserService {
     public User getUser(Long id);
     public User getUserByUserName(String userName);
     public void changeUser(User user);
-    public void updateUser(User oldUser, User newUser, MultipartFile multipartFile) throws RegistrationException;
+    public void updateUser(User oldUser, User newUser) throws RegistrationException;
 //    public void updateUser(Map<String, String> userParameters, User user) throws RegistrationException;
     public boolean checkIfUserExist (String username) throws SuchUserExistException;
     public void removeUser(User user);

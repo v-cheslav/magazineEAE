@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by pvc on 18.02.2016.
@@ -37,27 +37,31 @@ public class UserRoleServiceImpl implements UserRoleService {
         }
     }
 
-//    @Override
-//    public UserRole findUserRole(ListRole listRole){
-//        return userRoleDao.getUserRole(listRole);
-//    }
-
     @Override
-    public Set<UserRole> setUserRoles(User user, String password, String adminRole) throws AdminRegistrationException {
-        log.info("setUserRoles method");
-        Set<UserRole> userRoles = user.getUserRoles();
-        if (adminRole != null) {//todo change if != null
-            if (!password.equals(adminPassword)) {
-                throw new AdminRegistrationException("Ви не маєте права реєструватись як адміністратор!");
-            }
-            UserRole superAdmin = userRoleDao.getUserRole(ListRole.SUPERADMIN);
-            UserRole admin = userRoleDao.getUserRole(ListRole.ADMIN);
-            userRoles.add(admin);
-            userRoles.add(superAdmin);
-        }
-        UserRole userRole = userRoleDao.getUserRole(ListRole.USER);
-        userRoles.add(userRole);
-        return userRoles;
+    public UserRole findUserRole(ListRole listRole){
+        return userRoleDao.getUserRole(listRole);
     }
+
+
+
+
+//    @Override
+//    public List<UserRole> setUserRoles(User user, String password, String adminRole) throws AdminRegistrationException {
+//        log.info("setUserRoles method");
+//        List<UserRole> userRoles = user.getUserRoles();
+//
+//        if (adminRole != null) {
+//            if (!password.equals(adminPassword)) {
+//                throw new AdminRegistrationException("Ви не маєте права реєструватись як адміністратор!");
+//            }
+//            UserRole superAdmin = userRoleDao.getUserRole(ListRole.SUPERADMIN);
+//            UserRole admin = userRoleDao.getUserRole(ListRole.ADMIN);
+//            userRoles.add(admin);
+//            userRoles.add(superAdmin);
+//        }
+//        UserRole userRole = userRoleDao.getUserRole(ListRole.USER);
+//        userRoles.add(userRole);
+//        return userRoles;
+//    }
 
 }

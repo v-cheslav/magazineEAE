@@ -45,7 +45,7 @@
         </div>
         <hr class="horizontalLine" id="bannerLine">
         <div class="bannerBottom">
-            <img class="userBannerPhoto" id="imgContainer" src="getFile?name=${article.user.photoAddress}&type=img"
+            <img class="userBannerPhoto" id="imgContainer" src="getFile?name=${article.user.photoName}&type=img"
                  alt="Photo">
 
             <div class="userDetails">
@@ -120,7 +120,7 @@
                         <li>
                             <article>
                                 <header>
-                                    <figure class="avatar"><img src="getFile?name=${comment.user.photoAddress}&type=img"
+                                    <figure class="avatar"><img src="getFile?name=${comment.user.photoName}&type=img"
                                                                 alt=""></figure>
                                     <address>
                                         <a href="authorPage?authorId=${comment.user.userId}">${comment.user.toString()}</a>
@@ -200,7 +200,7 @@
                         <c:if test="${article.articleReviews.get(0).status != null}">
 
                             <img class="reviewerPhoto"
-                                 src="getFile?name=${article.articleReviews.get(0).user.photoAddress}&type=img"
+                                 src="getFile?name=${article.articleReviews.get(0).user.photoName}&type=img"
                                  alt="Photo">
 
                             <div class="reviewerDetails">
@@ -235,7 +235,7 @@
                         <c:if test="${article.articleReviews.get(1).status != null}">
 
                             <img class="reviewerPhoto"
-                                 src="getFile?name=${article.articleReviews.get(1).user.photoAddress}&type=img"
+                                 src="getFile?name=${article.articleReviews.get(1).user.photoName}&type=img"
                                  alt="Photo">
 
                             <div class="reviewerDetails">

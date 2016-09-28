@@ -3,6 +3,7 @@ package magazine.servise;
 import magazine.domain.User;
 import magazine.domain.UserInterest;
 
+import java.util.List;
 import java.util.Set;
 
 /**

@@ -42,7 +42,7 @@
         </div>
         <hr class="horizontalLine" id="bannerLine">
         <div class="bannerBottom">
-            <img class="userBannerPhoto" id="imgContainer" src="getFile?name=${seminar.user.photoAddress}&type=img" alt="Photo">
+            <img class="userBannerPhoto" id="imgContainer" src="getFile?name=${seminar.user.photoName}&type=img" alt="Photo">
 
             <div class="userDetails">
                 <p>
@@ -143,7 +143,7 @@
                         <li>
                             <article>
                                 <header>
-                                    <figure class="avatar"><img src="getFile?name=${comment.user.photoAddress}&type=img"
+                                    <figure class="avatar"><img src="getFile?name=${comment.user.photoName}&type=img"
                                                                 alt=""></figure>
                                     <address>
                                         <a href="authorPage?authorId=${comment.user.userId}">${comment.user.toString()}</a>

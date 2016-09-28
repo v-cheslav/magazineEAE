@@ -50,11 +50,12 @@ function addUser(){
         processData: false,
         contentType: false
     }).done(function(data) {
-        if (data.registrationMassage == null){
+        alert("reg message"  + data.registrationMassage)
+        if (data.registrationMassage == undefined){
             $('#regContent').hide();
             $('#message').show();
         };
-        if (data.registrationMassage != null){
+        if (data.registrationMassage != un){
             var errorMessage = $('#regErrorMessage');
             errorMessage.html(data.registrationMassage);
         };

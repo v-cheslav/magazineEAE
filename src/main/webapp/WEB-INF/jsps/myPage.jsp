@@ -42,7 +42,7 @@
         </div>
         <hr class="horizontalLine" id="bannerLine">
         <div class="bannerBottom">
-            <img class="userPhoto" id="imgContainer" src="getFile?name=${userDetails.photoAddress}&type=img"
+            <img class="userPhoto" id="imgContainer" src="getFile?name=${userDetails.photoName}&type=img"
                  alt="Photo">
 
             <div id="aStatAndSDegree">
@@ -335,7 +335,7 @@
 
                     <div class="formField">
                         <label for="photo" class="label"> Фото
-                            <img id="curentUserImg" src="getFile?name=${userDetails.photoAddress}&type=img">
+                            <img id="curentUserImg" src="getFile?name=${userDetails.photoName}&type=img">
                         </label>
                         <input type="file" class="textField" id="photo" name="userPhoto" accept="image/*">
                     </div>

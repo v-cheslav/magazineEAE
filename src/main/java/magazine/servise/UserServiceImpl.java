@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -80,16 +79,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(User oldUser, User newUser, MultipartFile multipartFile) throws RegistrationException {
-
+    public void updateUser(User oldUser, User newUser) throws RegistrationException {
         setUpdatedParameters(oldUser, newUser);
-
-        if (multipartFile.getSize() != 0){
-            fileService.changeUserImage(oldUser, multipartFile);
-        }
-
         userDao.update(oldUser);
-
     }
 
 
@@ -155,7 +147,7 @@ public class UserServiceImpl implements UserService {
             log.error("Користувач з поштою \"" + username + "\" існує. Спробуйте іншу.");
             throw new SuchUserExistException("Користувач з поштою \"" + username + "\" існує. Спробуйте іншу.");
         } catch (UsernameNotFoundException e) {
-            log.info("Реєстрація нового користувача, або заміна його username: " + username);
+            log.debug("Реєстрація нового користувача, або заміна його username: " + username);
             return false;
         }
     }

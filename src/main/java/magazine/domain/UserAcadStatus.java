@@ -21,12 +21,11 @@ public class UserAcadStatus {
     private Long acadStatusId;
 
 //    @Enumerated(EnumType.STRING)
-@Column(name="acadStatus")
+    @Column(name="acadStatus")
     private String acadStatus;
 
     @OneToMany(mappedBy = "acadStatus", fetch= FetchType.LAZY, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
-//    @JsonManagedReference
     private Set<User> user = new HashSet<>();
 
     public UserAcadStatus() {

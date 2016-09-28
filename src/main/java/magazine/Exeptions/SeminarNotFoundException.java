@@ -3,7 +3,7 @@ package magazine.Exeptions;
 /**
  * Created by pvc on 12.05.2016.
  */
-public class SeminarNotFoundException extends Exception {
+public class SeminarNotFoundException extends PublicationException {
     public SeminarNotFoundException() {
     }
 

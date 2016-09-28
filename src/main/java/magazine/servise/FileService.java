@@ -3,15 +3,14 @@ package magazine.servise;
 import magazine.Exeptions.ArticleCreationException;
 import magazine.Exeptions.PublicationException;
 import magazine.Exeptions.RegistrationException;
-import magazine.domain.Article;
 import magazine.domain.Publication;
-import magazine.domain.Seminar;
 import magazine.domain.User;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,15 +33,14 @@ public class FileService {
     public String saveFile(Publication publication, MultipartFile multipartFile) throws PublicationException {
         log.info("saveFile");
 
-        String articlePath = getAbsolutePath(publication);
-        String relativePath = getRelativePath(publication);
-
+        String articlePath = getAbsolutePath(publication) + multipartFile.getOriginalFilename();
         try {
-            fileWriter(articlePath, multipartFile);
+            writeFile(articlePath, multipartFile);
         } catch (IOException e) {
             e.printStackTrace();
             throw new ArticleCreationException("Не вдалося завантажити файл статті!");
         }
+        String relativePath = getRelativePath(publication);
         return relativePath;
     }
 
@@ -77,45 +75,81 @@ public class FileService {
         return publicationRelativePath;
     }
 
-    private void fileWriter(String path, MultipartFile file) throws IOException{
-        String fileName = file.getOriginalFilename();
-        file.transferTo(new File(path + fileName));
+    private void writeFile(String path, MultipartFile file) throws IOException{
+        file.transferTo(new File(path));
     }
 
 
-    public void saveUserImage (User user, MultipartFile userImage)throws RegistrationException {
+    public void saveAndSetUserPhoto(User user, MultipartHttpServletRequest request)throws RegistrationException {
+        log.info("saveAndSetUserPhoto.method");
 
-        String imageName = userImage.getOriginalFilename();
+        MultipartFile userImage = request.getFile("userPhoto");
+        if (isNewPhotoFileExists(userImage)){
 
-        int index = imageName.lastIndexOf(".");
-        String fileType = imageName.substring(index);
-        System.out.println("fileType " +fileType);
-        String newImageName = user.getUsername() + fileType;
-        user.setPhotoAddress(newImageName);
-        System.out.println("newImageName " + newImageName);
+            String imageName = userImage.getOriginalFilename();
+            String newImageName = getNewImageName(user, imageName);
+            log.info("newImageName \'" + newImageName + "\'");
 
-        String userImagePath = initialPath + "userPhotos/" + newImageName;
+            String userImagePath = initialPath + "userPhotos/" + newImageName;
+            log.info("userImagePath \'" + userImagePath + "\'");
 
-        try {
-//            fileWriter(userImagePath, userImage);
-            userImage.transferTo(new File(userImagePath));
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RegistrationException("Перевірте вірність вказаної адреси!");
+            try {
+                writeFile(userImagePath, userImage);
+            } catch (IOException e) {
+                log.warn("User image wasn't saved.", e);
+                user.setPhotoName("default.png");
+            }
+            user.setPhotoName(newImageName);
+        } else {
+            user.setPhotoName("default.png");
+            log.info("Photo name set default");
+        }
+
+    }
+
+    private String getNewImageName (User user, String oldImageName){
+        int index = oldImageName.lastIndexOf(".");
+        String fileType = oldImageName.substring(index);
+        return user.getUsername() + fileType;
+    }
+
+    private boolean isNewPhotoFileExists(MultipartFile userImage) {
+        if (userImage.getSize() != 0){
+            return true;
+        } else {
+            return false;
         }
     }
 
-    public void changeUserImage(User user, MultipartFile multipartFile)throws RegistrationException {
-        String imagePath = initialPath + "userPhotos/" + user.getPhotoAddress();
-        deleteImage(imagePath);
-        saveUserImage(user, multipartFile);
+    public void changeUserPhoto(User user, MultipartHttpServletRequest request)throws RegistrationException {
+        log.info("changeUserPhoto.method");
+        String imagePath = initialPath + "userPhotos/" + user.getPhotoName();
+        log.info("imagePath " +imagePath);
+
+        MultipartFile userImageFile = request.getFile("userPhoto");
+        if (isNewPhotoFileExists(userImageFile) && !isCurrentPhotoDefault(user)){
+            deleteOldImage(imagePath);
+            saveAndSetUserPhoto(user, request);
+        }
     }
 
-    private void deleteImage (String path){
-        File file = new File(path);
+    public boolean isCurrentPhotoDefault(User user) {
+        if (user.getPhotoName().equals("default.png")){
+            log.info("User photo is default");
+            return true;
+        }
+        log.info("User photo isn't default");
+        return false;
+    }
+
+    private void deleteOldImage (String path){
+        log.info("deleteOldImage.method");
+//        File file = new File(path);
         try {
-            file.delete();
+            new File(path).delete();
+            log.info("image is deleted");
         } catch (Exception e) {
+            log.error("Failed to delete file " + path);
             e.printStackTrace();
         }
     }

@@ -3,6 +3,7 @@ package magazine.controller;
 
 
 import magazine.Exeptions.ArticleNotFoundException;
+import magazine.Exeptions.PublicationException;
 import magazine.Exeptions.SeminarNotFoundException;
 import magazine.domain.*;
 import magazine.servise.*;
@@ -54,41 +55,40 @@ public class ApplicationController {
 
     @RequestMapping(value = {"/", "/index"}, method = {RequestMethod.GET, RequestMethod.HEAD})
     public String index(ModelMap map) {
+        log.info("/index");
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             User user = (User) authentication.getPrincipal();
             map.addAttribute("userDetails", user);
+            log.info("user \"" + user + "\" in the main page.");
         }
+
         String message = null;
-        List <Article> articles;
-//        List<List<String>> annotations;
+        List <Article> articles = null;
+        List <Seminar> nearestSeminars = null;
+
         try {
             articles = articleService.findNewestArticles();
-//            annotations = new ArrayList<>();
-//            Annotation annotation;
-//            for (Article article : articles) {
-//                annotation = article.getArticleAnnotations();
-//                List<String> annotationUa = articleService.annotationReader(annotation.getAnnotationUa());
-//                annotations.add(annotationUa);
-//            }
-        } catch (ArticleNotFoundException e){
+            log.debug("articles found: " + articles.toString());
+        } catch (PublicationException e){
             log.info(e.getMessage());
-            articles = null;
-//            annotations = null;
             message = e.getMessage();
         }
 
-        List <Seminar> nearestSeminars = null;
         try {
             nearestSeminars = seminarService.findNearestSeminars();
-        } catch (SeminarNotFoundException e){
+            log.debug("seminars found: " + nearestSeminars.toString());
+        } catch (PublicationException e){
             log.info(e.getMessage());
+            message = e.getMessage();
         }
+
         map.addAttribute("nearestSeminars", nearestSeminars);
         map.addAttribute("articles", articles);
-//        map.addAttribute("annotations", annotations);
         map.addAttribute("message", message);
 
+        log.debug("return index.jsp");
         return "index";
     }
 
@@ -258,9 +258,11 @@ public class ApplicationController {
         log.info("/confirmRegistration controller");
 
         User user = userService.getUserByUserName(userName);
+        log.info(user.toString() + ": username " + user.getUsername());
         if (user.getRestoreCode().equals(regCode)){
             user.setValid(true);
             userService.changeUser(user);
+            log.info("user " + user.toString() + "set valid");
             map.addAttribute("errorMessage", "Реєстрація відбулася успішно.");
         } else {
             map.addAttribute("errorMessage", "Помилка авторизації.");
@@ -288,13 +290,13 @@ public class ApplicationController {
                     + "<br> Ваш код для відновлення паролю: " + restoreCode
                     + "<br><br> Regards, Admin";
 
-        try {
-            messenger.sendMessage(email, message);
-        } catch (MessagingException ex) {
-            ex.printStackTrace();
-            map.addAttribute("errorMessage", "Неможливо відправити повідомлення на пошту. " +
-                    "Перевірте правильність вашої електронної адреси і повторіть спробу.");
-        }
+            try {
+                messenger.sendMessage(email, message);
+            } catch (MessagingException ex) {
+                ex.printStackTrace();
+                map.addAttribute("errorMessage", "Неможливо відправити повідомлення на пошту. " +
+                        "Перевірте правильність вашої електронної адреси і повторіть спробу.");
+            }
 
             entity = new ResponseEntity<String>("OK", headers, HttpStatus.OK);
         } catch (Exception e) {

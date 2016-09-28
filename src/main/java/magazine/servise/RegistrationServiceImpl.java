@@ -38,25 +38,21 @@ public class RegistrationServiceImpl implements RegistrationService {
     public RegistrationServiceImpl() {
     }
 
-
     @Override
-    public void regUser(User user, MultipartFile userImage) throws RegistrationException {
+    public void regUser(User user) throws RegistrationException {
         log.info("RegistrationServiceImpl.regUser method");
 
         checkIfUserCorrect(user);
         userService.checkIfUserExist(user.getUsername());
 
-        String encodedPassword = passwordHelper.encode(user.getPassword());
-        user.setPassword(encodedPassword);
-
         int registrationCode = messageService.sendRegistrationMessage(user);
         user.setRestoreCode(registrationCode);
 
-        fileService.saveUserImage(user, userImage);
-
         try {
             userService.createUser(user);
+            log.info("User \'" + user.toString() + "\' successfully created.");
         } catch (Exception e) {
+            log.info("Failed to save user \'" + user.toString() + "\'.");
             e.printStackTrace();
             throw new RegistrationException("Виникли проблеми з реєстрацією." +
                     "Спробуйте будь-ласка пізніше. Якщо проблема повториться - зверніться до адміністратора");
@@ -65,6 +61,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
 
     private boolean checkIfUserCorrect(User user) throws RegistrationException{
+        log.info("checkIfUserCorrect.method");
 
         if (user == null){
             throw new IllegalArgumentException("User couldn't be null");
@@ -95,7 +92,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (university.toCharArray().length < 3){
             throw new IllegalArgumentException("Університет вказаний не вірно.");
         }
-
+        log.debug("User fields are correct.");
         return true;
     }
 

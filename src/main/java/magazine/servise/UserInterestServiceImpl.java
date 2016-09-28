@@ -3,17 +3,18 @@ package magazine.servise;
 import magazine.dao.UserInterestDao;
 import magazine.domain.User;
 import magazine.domain.UserInterest;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by pvc on 26.10.2015.
  */
 @Service
 public class UserInterestServiceImpl implements UserInterestService {
+    public static final Logger log = Logger.getLogger(UserInterestServiceImpl.class);
 
     @Autowired
     UserInterestDao userInterestDao;
@@ -34,6 +35,8 @@ public class UserInterestServiceImpl implements UserInterestService {
 
     @Override
     public Set<UserInterest> setUserInterests(String interestsStr, User user){
+        log.info("setUserInterests.class");
+
         String[] interestsArrStr = interestsStr.split("\\,");
         Set<UserInterest> interests = new HashSet<>();
         if (interestsStr.length() >= 2) {//якщо пусто, пробіл або 2, або менше 2 символів то в БД не додається
@@ -44,7 +47,7 @@ public class UserInterestServiceImpl implements UserInterestService {
                 UserInterest userInterest;
                 try {
                     userInterest = userInterestDao.getInterest(interest.toLowerCase());
-                    Set <User> userSet = userInterest.getUsers();//todo catch exception above and throw another one
+                    Set<User> userSet = userInterest.getUsers();//todo catch exception above and throw another one
                     userSet.add(user);
                     userInterestDao.update(userInterest);
                 } catch (NullPointerException e) {//якщо в БД немає interest
