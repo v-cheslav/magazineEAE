@@ -13,9 +13,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by pvc on 27.09.2016.
- */
+
 @Service
 public class UserBuilderImpl implements UserBuilder {
     public static final Logger log = Logger.getLogger(UserBuilderImpl.class);
@@ -43,26 +41,8 @@ public class UserBuilderImpl implements UserBuilder {
     public User buildUser(MultipartHttpServletRequest userHttpRequest) throws RegistrationException {
         log.info("buildUser.method");
 
-
-//        String username = userHttpRequest.getParameter("username");
-//        String password = userHttpRequest.getParameter("password");
-//        User user = new User(username, password,
-//                userHttpRequest.getParameter("name"),
-//                userHttpRequest.getParameter("surname"),
-//                userHttpRequest.getParameter("middleName"),
-//                userHttpRequest.getParameter("university"),
-//                userHttpRequest.getParameter("institute"),
-//                userHttpRequest.getParameter("chair"),
-//                userHttpRequest.getParameter("position"),
-//                userHttpRequest.getParameter("phone"),
-//                acadStatusService.findAcadStatus(userHttpRequest.getParameter("acadStatus")),
-//                sciDegreeService.finSciDegree(userHttpRequest.getParameter("sciDegree")),
-//                userSexService.findUserSex(userHttpRequest.getParameter("userSex"))
-//        );
         user = new User();
-
         user.setUserName(userHttpRequest.getParameter("username"));
-        user.setPassword(userHttpRequest.getParameter("password"));
         user.setName(userHttpRequest.getParameter("name"));
         user.setSurname(userHttpRequest.getParameter("surname"));
         user.setMiddleName(userHttpRequest.getParameter("middleName"));
@@ -78,6 +58,8 @@ public class UserBuilderImpl implements UserBuilder {
         user.setArticlesSet(new HashSet<>());
         user.setReviewSet(new HashSet<>());
         user.setAuthorCommentsSet(new HashSet<>());
+
+        user.setPassword(passwordHelper.encode(userHttpRequest.getParameter("password")));
 
         user.setAcadStatus(acadStatusService.findAcadStatus(userHttpRequest.getParameter("acadStatus")));
         log.info("User academic status added");
@@ -120,11 +102,12 @@ public class UserBuilderImpl implements UserBuilder {
     private boolean checkAdminRights (MultipartHttpServletRequest userHttpRequest) throws AdminRegistrationException{
         log.info("checkAdminRights.method");
         String adminRole = userHttpRequest.getParameter("adminChBox");
-        String password = userHttpRequest.getParameter("password");
         if (adminRole == null) {
             log.info("User don't has \'ADMIN\' rights.");
             return false;
         }
+
+        String password = userHttpRequest.getParameter("password");
         if (!password.equals(adminPassword)) {
             log.warn("Attempt to register as admin without admin rights!");
             throw new AdminRegistrationException("Ви не маєте права реєструватись як адміністратор!");

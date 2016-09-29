@@ -5,7 +5,6 @@ import magazine.Exeptions.SearchException;
 import magazine.Exeptions.SuchUserExistException;
 import magazine.dao.UserDao;
 import magazine.domain.*;
-import magazine.utils.PasswordHelper;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -17,9 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-/**
- * Created by pvc on 26.10.2015.
- */
 @Service
 public class UserServiceImpl implements UserService {
     public static final Logger log = Logger.getLogger(UserServiceImpl.class);
@@ -37,28 +33,7 @@ public class UserServiceImpl implements UserService {
     private SciDegreeService sciDegreeService;
 
     @Autowired
-    private PasswordHelper passwordHelper;
-
-    @Autowired
-    private UserSexService userSexService;
-
-    @Autowired
-    private RegistrationService registrationService;
-
-    @Autowired
     private CommentService commentService;
-
-    @Autowired
-    private UserRoleService userRoleService;
-
-    @Autowired
-    private UserInterestService userInterestService;
-
-    @Autowired
-    private FileService fileService;
-
-    @Autowired
-    private MessageService messageService;
 
 
     public UserServiceImpl() {
@@ -75,7 +50,6 @@ public class UserServiceImpl implements UserService {
         int publNumber = user.getPublicationNumber();
         user.setPublicationNumber(++publNumber);
         changeUser(user);
-
     }
 
     @Override
@@ -96,8 +70,8 @@ public class UserServiceImpl implements UserService {
             oldUser.setUserName(newUser.getUsername());
         }
         if (!newUser.getPassword().equals("")){
-            String encodedPassword = passwordHelper.encode(newUser.getPassword());
-            oldUser.setPassword(encodedPassword);
+            System.err.println("password " + newUser.getPassword());
+            oldUser.setPassword(newUser.getPassword());
         }
         if (!newUser.getName().equals("")){
             oldUser.setName(newUser.getName());

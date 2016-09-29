@@ -12,15 +12,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.apache.log4j.Logger;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 
-/**
-* Created by pvc on 31.10.2015.
-*/
 
 @Controller
 public class RegistrationController {
@@ -71,10 +66,9 @@ public class RegistrationController {
 
     @RequestMapping(value = "/regUser", method = RequestMethod.POST, produces = {"application/json"})
     public @ResponseBody
-    HashMap<String, Object> regUser(MultipartHttpServletRequest request,
-                                      HttpServletResponse response)  {
+    HashMap<String, Object> regUser(MultipartHttpServletRequest request)  {
         log.info("/regUser controller");
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
 
         User user = null;
         try {
@@ -97,14 +91,10 @@ public class RegistrationController {
     }
 
 
-
-
-
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/updateUser", method = RequestMethod.POST, produces = {"application/json"})
     public @ResponseBody
-    HashMap<String, Object> updateUser(MultipartHttpServletRequest request,
-                                    HttpServletResponse response)  {
+    HashMap<String, Object> updateUser(MultipartHttpServletRequest request)  {
         log.info("/updateUser controller");
 
         User oldUser = null;
@@ -113,7 +103,7 @@ public class RegistrationController {
             oldUser = (User) authentication.getPrincipal();
         }
 
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
 
         User newUser = null;
         try {

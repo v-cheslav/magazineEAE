@@ -31,7 +31,7 @@ $(document).ready(function () {
             addUser();
         } else {
             alert("Заповніть будь-ласка коректно форму реєстрації.")
-        };
+        }
     });
 
     $('#btnClear').on('click', function() {
@@ -50,15 +50,14 @@ function addUser(){
         processData: false,
         contentType: false
     }).done(function(data) {
-        alert("reg message"  + data.registrationMassage)
-        if (data.registrationMassage == undefined){
+        if (data.registrationMassage == null){
             $('#regContent').hide();
             $('#message').show();
-        };
-        if (data.registrationMassage != un){
+        }
+        if (data.registrationMassage != null){
             var errorMessage = $('#regErrorMessage');
             errorMessage.html(data.registrationMassage);
-        };
+        }
 
     }).fail(function(jqXHR, textStatus) {
         alert(jqXHR + textStatus + 'Помилка завантаження! Спробуйте змінити назву файлу.');

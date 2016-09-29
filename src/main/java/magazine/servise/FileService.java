@@ -15,9 +15,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * Created by pvc on 01.07.2016.
- */
+
 @Service
 public class FileService {
     public static final Logger log = Logger.getLogger(FileService.class);
@@ -40,8 +38,8 @@ public class FileService {
             e.printStackTrace();
             throw new ArticleCreationException("Не вдалося завантажити файл статті!");
         }
-        String relativePath = getRelativePath(publication);
-        return relativePath;
+
+        return getRelativePath(publication);
     }
 
     private String getAbsolutePath(Publication publication){
@@ -49,17 +47,17 @@ public class FileService {
 
         String userFolderPath = initialPath + "publications/" + user.getUserId();
 
-        File userFolder = new File(userFolderPath);
-        if (!userFolder.exists()){
-            userFolder.mkdir();
-        }//todo спробувати чи буде працювати без цього
+//        File userFolder = new File(userFolderPath);
+//        if (!userFolder.exists()){
+//            userFolder.mkdir();
+//        }//todo спробувати чи буде працювати без цього
 
         int publicationNumber = user.getPublicationNumber();
 
         String publicationPath = userFolderPath + "/" + publicationNumber;
 
-        File publicationFolder = new File(publicationPath);
-        publicationFolder.mkdir();
+//        File publicationFolder = new File(publicationPath);
+//        publicationFolder.mkdir();
 
         return publicationPath + "/" ;
     }
@@ -68,7 +66,7 @@ public class FileService {
         User user = publication.getUser();
         int publicationNumber = user.getPublicationNumber();
 
-        String publicationRelativePath ="publications/"
+        String publicationRelativePath = "publications/"
                 + user.getUserId() + "/"
                 + publicationNumber + "/";
 
@@ -84,7 +82,7 @@ public class FileService {
         log.info("saveAndSetUserPhoto.method");
 
         MultipartFile userImage = request.getFile("userPhoto");
-        if (isNewPhotoFileExists(userImage)){
+        if (photoNeedToUpdate(userImage)){
 
             String imageName = userImage.getOriginalFilename();
             String newImageName = getNewImageName(user, imageName);
@@ -113,10 +111,12 @@ public class FileService {
         return user.getUsername() + fileType;
     }
 
-    private boolean isNewPhotoFileExists(MultipartFile userImage) {
+    private boolean photoNeedToUpdate(MultipartFile userImage) {
         if (userImage.getSize() != 0){
+            log.info("New file exists");
             return true;
         } else {
+            log.info("New file don't exists");
             return false;
         }
     }
@@ -127,24 +127,15 @@ public class FileService {
         log.info("imagePath " +imagePath);
 
         MultipartFile userImageFile = request.getFile("userPhoto");
-        if (isNewPhotoFileExists(userImageFile) && !isCurrentPhotoDefault(user)){
+        if (photoNeedToUpdate(userImageFile)){
             deleteOldImage(imagePath);
             saveAndSetUserPhoto(user, request);
         }
     }
 
-    public boolean isCurrentPhotoDefault(User user) {
-        if (user.getPhotoName().equals("default.png")){
-            log.info("User photo is default");
-            return true;
-        }
-        log.info("User photo isn't default");
-        return false;
-    }
 
     private void deleteOldImage (String path){
         log.info("deleteOldImage.method");
-//        File file = new File(path);
         try {
             new File(path).delete();
             log.info("image is deleted");

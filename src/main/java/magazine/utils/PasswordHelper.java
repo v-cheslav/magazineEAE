@@ -23,7 +23,7 @@ public class PasswordHelper implements PasswordEncoder {
 
     @Override
     public String encode(CharSequence rawPassword) {
-        if (md == null){
+        if (md == null || rawPassword.length() == 0){
             return rawPassword.toString();
         }
         md.update(rawPassword.toString().getBytes());

@@ -2,7 +2,6 @@ package magazine.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import magazine.utils.PasswordHelper;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
@@ -102,11 +101,11 @@ public class User implements UserDetails {
     private Set<Publication> articlesSet = new HashSet<>();
 
 
-
     @OneToMany(mappedBy = "user", fetch= FetchType.LAZY, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
     @JsonIgnore(true)
     private Set<Review> reviewSet = new HashSet<>();
+
 
     @OneToMany(mappedBy = "user", fetch= FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
@@ -116,29 +115,6 @@ public class User implements UserDetails {
     public User() {
     }
 
-//    public User(String username, String password, String name, String surname, String university) {
-//        this.username = username;
-//        this.password = password;
-//        this.name = name;
-//        this.surname = surname;
-//        this.university = university;
-//    }
-//
-//    public User(String username, String password, String name, String surname, String middleName, String university, String institute, String chair, String position, String phone, UserAcadStatus acadStatus, UserSciDegree sciDegree, UserSex userSex) {
-//        this.username = username;
-//        this.password = password;
-//        this.name = name;
-//        this.surname = surname;
-//        this.middleName = middleName;
-//        this.university = university;
-//        this.institute = institute;
-//        this.chair = chair;
-//        this.position = position;
-//        this.phone = phone;
-//        this.acadStatus = acadStatus;
-//        this.sciDegree = sciDegree;
-//        this.userSex = userSex;
-//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -203,8 +179,7 @@ public class User implements UserDetails {
     }
 
     public void setPassword(String password) {
-        PasswordHelper passwordHelper = new PasswordHelper();
-        this.password = passwordHelper.encode(password);
+        this.password = password;
     }
 
     public String getName() {
@@ -331,16 +306,9 @@ public class User implements UserDetails {
         this.interests = interests;
     }
 
-    public Set<Publication> getArticlesSet() {
-        return articlesSet;
-    }
 
     public void setArticlesSet(Set<Publication> articlesSet) {
         this.articlesSet = articlesSet;
-    }
-
-    public Set<Review> getReviewSet() {
-        return reviewSet;
     }
 
     public void setReviewSet(Set<Review> reviewSet) {
