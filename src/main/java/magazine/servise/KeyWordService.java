@@ -10,5 +10,7 @@ import java.util.Set;
  * Created by pvc on 17.09.2016.
  */
 public interface KeyWordService {
-    public List<PublicationKeyWord> splitKeyWords (String keyWordsStr, Publication publication);
+    public boolean isStringCorrect (String keyWords);
+    public String removeBlanksFromBeginning(String keyWord);
+    public List<PublicationKeyWord> getKeyWordsFromString(String keyWordsStr, Publication publication);
 }

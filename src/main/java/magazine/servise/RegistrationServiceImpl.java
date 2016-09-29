@@ -2,20 +2,15 @@ package magazine.servise;
 
 import magazine.Exeptions.RegistrationException;
 import magazine.domain.User;
-import magazine.utils.PasswordHelper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-/**
- * Created by pvc on 30.10.2015.
- */
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
     public static final Logger log = Logger.getLogger(RegistrationServiceImpl.class);
@@ -25,9 +20,6 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Autowired
     UserService userService;
-
-    @Autowired
-    private PasswordHelper passwordHelper;
 
     @Autowired
     MessageService messageService;

@@ -81,7 +81,7 @@ public class PublicationController {
         String keyWords = null;
         try {
             keyWords = request.getParameter("keyWords");
-            List<PublicationKeyWord> keyWordSet = keyWordService.splitKeyWords(keyWords, article);
+            List<PublicationKeyWord> keyWordSet = keyWordService.getKeyWordsFromString(keyWords, article);
             article.setPublicationKeyWords(keyWordSet);
         } catch (Exception e) {
             map.put("articleMassage", "Виникли проблеми з додаванням статті! Не вдалося додати ключові слова: " + keyWords);
@@ -154,7 +154,7 @@ public class PublicationController {
         String keyWords = null;
         try {
             keyWords = request.getParameter("seminarKeyWords");
-            List<PublicationKeyWord> keyWordSet = keyWordService.splitKeyWords(keyWords, seminar);
+            List<PublicationKeyWord> keyWordSet = keyWordService.getKeyWordsFromString(keyWords, seminar);
             seminar.setPublicationKeyWords(keyWordSet);
         } catch (Exception e) {
             map.put("seminarMassage", "Не вдалося додати ключові слова: " + keyWords);

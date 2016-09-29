@@ -19,6 +19,9 @@ public class UserInterestServiceImpl implements UserInterestService {
     @Autowired
     UserInterestDao userInterestDao;
 
+    @Autowired
+    KeyWordService keyWordService;
+
     public UserInterestServiceImpl() {
     }
 
@@ -37,32 +40,46 @@ public class UserInterestServiceImpl implements UserInterestService {
     public Set<UserInterest> setUserInterests(String interestsStr, User user){
         log.info("setUserInterests.class");
 
-        String[] interestsArrStr = interestsStr.split("\\,");
+        if (!keyWordService.isStringCorrect(interestsStr)) return null;
+        String[] interestsStrArr = interestsStr.split("\\,");
+
         Set<UserInterest> interests = new HashSet<>();
-        if (interestsStr.length() >= 2) {//якщо пусто, пробіл або 2, або менше 2 символів то в БД не додається
-            for (String interest : interestsArrStr) {
-                if (interest.charAt(0) == ' ') {
-                    interest = interest.replaceFirst(" ", "");
-                }
-                UserInterest userInterest;
-                try {
-                    userInterest = userInterestDao.getInterest(interest.toLowerCase());
-                    Set<User> userSet = userInterest.getUsers();//todo catch exception above and throw another one
-                    userSet.add(user);
-                    userInterestDao.update(userInterest);
-                } catch (NullPointerException e) {//якщо в БД немає interest
-                    userInterest = new UserInterest(interest.toLowerCase());
-                    Set<User> userSet = new HashSet<>();
-                    userInterest.setUsers(userSet);
-                    userSet.add(user);
-                    userInterestDao.create(userInterest);
-                }
-                interests.add(userInterest);
-            }
-        } else {
-            interests = null;
+        for (String interest : interestsStrArr) {
+            interest = keyWordService.removeBlanksFromBeginning(interest);
+            UserInterest userInterest = getInterestByString(interest, user);
+            interests.add(userInterest);
         }
         return interests;
     }
+
+
+    private UserInterest getInterestByString(String interest, User user) {
+        log.info("convertStringToInterest.method");
+        try {
+            return getInterestFromDbAndAddUser(interest, user);
+        } catch (NullPointerException e) {//якщо в БД немає interest
+            return createNewInterestAndAddUser(interest, user);
+        }
+    }
+
+    private UserInterest getInterestFromDbAndAddUser(String interest, User user) {
+        log.info("getting interest from DB");
+        UserInterest userInterest = userInterestDao.getInterest(interest.toLowerCase());
+        Set<User> userSet = userInterest.getUsers();
+        userSet.add(user);
+        userInterestDao.update(userInterest);
+        return userInterest;
+    }
+
+    private UserInterest createNewInterestAndAddUser(String interest, User user) {
+        log.info("creating a new interest");
+        UserInterest userInterest = new UserInterest(interest.toLowerCase());
+        Set<User> userSet = new HashSet<>();
+        userInterest.setUsers(userSet);
+        userSet.add(user);
+        userInterestDao.create(userInterest);
+        return userInterest;
+    }
+
 
 }

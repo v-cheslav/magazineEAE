@@ -27,41 +27,67 @@ public class KeyWordsServiceImpl implements KeyWordService {
 
 
     @Override
-    public List<PublicationKeyWord> splitKeyWords (String keyWordsStr, Publication publication){
-        log.info("splitKeyWords.method");
+    public List<PublicationKeyWord> getKeyWordsFromString(String keyWordsStr, Publication publication){
+        log.info("getKeyWordsFromString.method");
+
+        if (!isStringCorrect(keyWordsStr)) return null;
+        String[] keyWordsArrStr = keyWordsStr.split("\\,");
 
         List<PublicationKeyWord> keyWordsSet = new ArrayList<>();
-        if (keyWordsStr.length() >= 2) {//якщо пусто, пробіл або 2, або менше 2 символів то в БД не додається
-            String[] keyWordsArrStr = keyWordsStr.split("\\,");
-            for (String keyWordStr : keyWordsArrStr) {
-                if (keyWordStr.charAt(0) == ' ') {
-                    keyWordStr = keyWordStr.replaceFirst(" ", "");
-                }
-                PublicationKeyWord publicationKeyWord;
-                try {
-                    publicationKeyWord = publicationKeyWordDao.getKeyWord(keyWordStr.toLowerCase());
-                    Set <Publication> publications = publicationKeyWord.getPublications();
-                    publications.add(publication);
-                    publicationKeyWordDao.update(publicationKeyWord);
-                } catch (NullPointerException e) {//todo
-                    publicationKeyWord = new PublicationKeyWord(keyWordStr.toLowerCase());
-                    Set<Publication> publications = new HashSet<>();
-                    publicationKeyWord.setPublications(publications);
-                    publications.add(publication);
-                    publicationKeyWordDao.create(publicationKeyWord);
-                }
-//                catch (Exception ex) {
-//                    System.err.println("Exception");
-//                    ex.printStackTrace();
-//                    return null;
-//                }
-
-                keyWordsSet.add(publicationKeyWord);
-            }
-        } else {
-            keyWordsSet = null;
+        for (String keyWordStr : keyWordsArrStr) {
+            keyWordStr = removeBlanksFromBeginning(keyWordStr);
+            PublicationKeyWord publicationKeyWord = getKeyWordByString(keyWordStr, publication);
+            keyWordsSet.add(publicationKeyWord);
         }
         return keyWordsSet;
+    }
+
+    @Override
+    public boolean isStringCorrect (String keyWords){
+        log.info("isStringCorrect.method");
+        if (keyWords.length() >= 2) return true;
+        log.info("key words string isn't correct");
+        return false;
+    }
+
+
+    @Override
+    public String removeBlanksFromBeginning(String keyWord){
+        log.info("removeBlanksFromBeginning.method");
+        while (keyWord.charAt(0) == ' ') {
+            keyWord = keyWord.replaceFirst(" ", "");
+            log.info("blank was removed");
+        }
+        return keyWord;
+    }
+
+
+    private PublicationKeyWord getKeyWordByString(String keyWordStr, Publication publication) {
+        log.info("convertStringToInterest.method");
+        try {
+            return getKeyWordFromDbAndAddUser(keyWordStr, publication);
+        } catch (NullPointerException e) {//якщо в БД немає KeyWord
+            return createKeyWordAndAddUser(keyWordStr, publication);
+        }
+    }
+
+    private PublicationKeyWord getKeyWordFromDbAndAddUser(String keyWordStr, Publication publication) {
+        log.info("getting key word from DB");
+        PublicationKeyWord publicationKeyWord = publicationKeyWordDao.getKeyWord(keyWordStr.toLowerCase());
+        Set<Publication> publications = publicationKeyWord.getPublications();
+        publications.add(publication);
+        publicationKeyWordDao.update(publicationKeyWord);
+        return publicationKeyWord;
+    }
+
+    private PublicationKeyWord createKeyWordAndAddUser(String keyWordStr, Publication publication) {
+        log.info("creating a new key word");
+        PublicationKeyWord publicationKeyWord = new PublicationKeyWord(keyWordStr.toLowerCase());
+        Set<Publication> publications = new HashSet<>();
+        publicationKeyWord.setPublications(publications);
+        publications.add(publication);
+        publicationKeyWordDao.create(publicationKeyWord);
+        return publicationKeyWord;
     }
 
 }
