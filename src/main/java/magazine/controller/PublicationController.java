@@ -99,7 +99,7 @@ public class PublicationController {
         String keyWords = null;
         try {
             keyWords = request.getParameter("seminarKeyWords");
-            List<PublicationKeyWord> keyWordSet = keyWordService.getKeyWordsFromString(keyWords, seminar);
+            List<PublicationKeyWord> keyWordSet = keyWordService.getAndSetKeyWordsFromString(keyWords, seminar);
             seminar.setPublicationKeyWords(keyWordSet);
         } catch (Exception e) {
             map.put("seminarMassage", "Не вдалося додати ключові слова: " + keyWords);

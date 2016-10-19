@@ -42,7 +42,7 @@ public class ArticleBuilderImpl implements ArticleBuilder {
     private List<PublicationKeyWord> getPublicationKeyWords (MultipartHttpServletRequest request){
         log.info("getPublicationKeyWords.method");
         String keyWords = request.getParameter("keyWords");
-        return keyWordService.getKeyWordsFromString(keyWords, article);
+        return keyWordService.getAndSetKeyWordsFromString(keyWords, article);
     }
 
     private Section getArticleSection (MultipartHttpServletRequest request){

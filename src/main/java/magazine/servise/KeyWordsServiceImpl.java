@@ -27,8 +27,8 @@ public class KeyWordsServiceImpl implements KeyWordService {
 
 
     @Override
-    public List<PublicationKeyWord> getKeyWordsFromString(String keyWordsStr, Publication publication){
-        log.info("getKeyWordsFromString.method");
+    public List<PublicationKeyWord> getAndSetKeyWordsFromString(String keyWordsStr, Publication publication){
+        log.info("getAndSetKeyWordsFromString.method");
 
         if (!isStringCorrect(keyWordsStr)) return null;
         String[] keyWordsArrStr = keyWordsStr.split("\\,");

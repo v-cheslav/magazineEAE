@@ -12,5 +12,5 @@ import java.util.Set;
 public interface KeyWordService {
     public boolean isStringCorrect (String keyWords);
     public String removeBlanksFromBeginning(String keyWord);
-    public List<PublicationKeyWord> getKeyWordsFromString(String keyWordsStr, Publication publication);
+    public List<PublicationKeyWord> getAndSetKeyWordsFromString(String keyWordsStr, Publication publication);
 }
