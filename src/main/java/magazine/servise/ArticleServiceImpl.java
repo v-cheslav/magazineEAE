@@ -2,7 +2,7 @@ package magazine.servise;
 
 import magazine.Exeptions.ArticleCreationException;
 import magazine.Exeptions.ArticleNotFoundException;
-import magazine.Exeptions.SearchException;
+//import magazine.Exeptions.SearchException;
 import magazine.dao.*;
 import magazine.domain.*;
 import magazine.utils.DateService;
@@ -126,12 +126,14 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Long createArticle(Article article) throws ArticleCreationException{
+        log.info("createArticle.method");
         if (findUnPublishedByUser(article.getUser()) != null){
             throw new ArticleCreationException("Ви не можете подавати заявку на публікацію ще однієї статті." +
                     "Дочекайтесь рецензування та публікації попередньої.");
         }
         Calendar instance = Calendar.getInstance();//todo try to put here only date without time
         article.setPublicationDate(instance);
+        log.info("publication date was set");
 
         User user = article.getUser();
         userService.increaseUserPublications(user);
@@ -139,6 +141,15 @@ public class ArticleServiceImpl implements ArticleService {
         return articleDao.create(article);
     }
 
+    @Override
+    public void setUser (Article article, User user){
+        Set<Publication> articles = user.getArticlesSet();
+        articles.add(article);
+        userService.changeUser(user);
+        log.info("user was changed successfully");
+        article.setUser(user);
+        log.info("user was set successfully");
+    }
 
 
 
@@ -368,7 +379,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> searchArticles(String articleStr) throws SearchException  {
+    public List<Article> searchArticles(String articleStr) /*throws SearchException*/  {
         try {
             JSONParser parser = new JSONParser();
             Object obj = parser.parse(articleStr);
@@ -412,7 +423,7 @@ public class ArticleServiceImpl implements ArticleService {
                 try {
                     dateFromCal = dateService.parseDate(dateFromStr);
                 } catch (java.text.ParseException e) {
-                    throw new SearchException("Не коректна дата!");
+                    throw new RuntimeException("Не коректна дата!");
                 }
                 searchQueryMap.put("dateFrom", dateFromCal);
             }
@@ -422,7 +433,7 @@ public class ArticleServiceImpl implements ArticleService {
                 try {
                     dateToCal = dateService.parseDate(dateToStr);
                 } catch (java.text.ParseException e) {
-                    throw new SearchException("Не коректна дата!");
+                    throw new RuntimeException("Не коректна дата!");
                 }
                 searchQueryMap.put("dateTo", dateToCal);
             }
@@ -453,7 +464,7 @@ public class ArticleServiceImpl implements ArticleService {
             return articleDao.findBySearchQuery(searchQueryMap);
         } catch (ParseException e) {
             e.printStackTrace();
-            throw new SearchException ("Не вдалося виконати пошук. " + e.getMessage());
+            throw new RuntimeException ("Не вдалося виконати пошук. " + e.getMessage());
         }
     }
 

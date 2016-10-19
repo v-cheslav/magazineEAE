@@ -2,9 +2,7 @@ package magazine.controller;
 
 
 
-import magazine.Exeptions.ArticleNotFoundException;
 import magazine.Exeptions.PublicationException;
-import magazine.Exeptions.SeminarNotFoundException;
 import magazine.domain.*;
 import magazine.servise.*;
 import magazine.utils.Messenger;
@@ -91,6 +89,8 @@ public class ApplicationController {
         log.debug("return index.jsp");
         return "index";
     }
+
+
 
 
 
@@ -313,7 +313,6 @@ public class ApplicationController {
         ResponseEntity<String> entity;
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "text/html; charset=utf-8");
-        String errorMessage;
 
         try {
             JSONParser parser = new JSONParser();

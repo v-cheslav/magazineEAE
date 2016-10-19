@@ -112,11 +112,11 @@ public class Article extends Publication {
     @Override
     public String toString() {
         return "Article{" + '\'' +
-                "articleId=" + super.getId() + '\'' +
-                ", articleFileName='" + super.getPublicationPath() + '\'' +
-                ", user='" + super.getUser().toString() + '\'' +
-                ", articleAddress='" + super.getPublicationPath() + '\'' +
-                ", articlePublicationDate='" + super.getPublicationDate() + '\'' +
+//                "articleId=" + super.getId() + '\'' +
+                ", articleName='" + super.getPublicationName() + '\'' +
+//                ", user='" + super.getUser().toString() + '\'' +
+//                ", articleAddress='" + super.getPublicationPath() + '\'' +
+//                ", articlePublicationDate='" + super.getPublicationDate() + '\'' +
                 ", articleSection='" + articleSection + '\'' +
                 ", articleKeyWords='" +  + '\'' +
                 '}';

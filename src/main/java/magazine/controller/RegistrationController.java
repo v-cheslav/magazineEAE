@@ -69,23 +69,16 @@ public class RegistrationController {
     HashMap<String, Object> regUser(MultipartHttpServletRequest request)  {
         log.info("/regUser controller");
         HashMap<String, Object> map = new HashMap<>();
-
-        User user = null;
         try {
-            user = userBuilder.buildUser(request);
+            User user = userBuilder.buildUser(request);
             log.info("User \'" + user.toString() + "\' successfully built.");
             fileService.saveAndSetUserPhoto(user, request);
             log.info("User image successfully saved.");
-        } catch (RegistrationException e) {
-            e.printStackTrace();
-        }
-
-        try {
             registrationService.regUser(user);
             map.put("success", "success");
         } catch (RegistrationException e) {
+            log.info("RegistrationException.", e);
             map.put("registrationMassage", e.getMessage());
-            e.printStackTrace();
         }
         return map;
     }

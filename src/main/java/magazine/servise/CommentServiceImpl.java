@@ -1,6 +1,5 @@
 package magazine.servise;
 
-import magazine.Exeptions.ArticleCreationException;
 import magazine.Exeptions.CommentCreationException;
 import magazine.dao.ArticleDao;
 import magazine.dao.CommentDao;
@@ -16,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Created by pvc on 30.03.2016.

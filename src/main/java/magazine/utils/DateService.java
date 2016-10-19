@@ -1,6 +1,5 @@
 package magazine.utils;
 
-import magazine.Exeptions.SearchException;
 import org.apache.log4j.Logger;
 
 import java.text.DateFormat;

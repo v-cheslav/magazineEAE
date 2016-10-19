@@ -1,16 +1,12 @@
 package magazine.servise;
 
-import magazine.Exeptions.AdminRegistrationException;
 import magazine.dao.UserRoleDao;
 import magazine.domain.ListRole;
-import magazine.domain.User;
 import magazine.domain.UserRole;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Created by pvc on 18.02.2016.

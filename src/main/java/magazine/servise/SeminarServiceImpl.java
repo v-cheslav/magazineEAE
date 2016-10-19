@@ -1,7 +1,7 @@
 package magazine.servise;
 
 import magazine.Exeptions.DataNotFoundException;
-import magazine.Exeptions.SearchException;
+//import magazine.Exeptions.SearchException;
 import magazine.Exeptions.SeminarException;
 //import magazine.dao.PublishedSeminarDao;
 import magazine.Exeptions.SeminarNotFoundException;
@@ -172,7 +172,6 @@ public class SeminarServiceImpl implements SeminarService {
     @Override
     public void advertiseSeminar(String seminarStr) throws SeminarException {
         log.info("createUnPublishedSeminarByString method");
-        Long seminarLong = null;
         try {
             JSONParser parser = new JSONParser();
             Object obj = parser.parse(seminarStr);
@@ -183,7 +182,6 @@ public class SeminarServiceImpl implements SeminarService {
             String userId = (String) jsonObj.get("userId");
             String unRegUserName = (String) jsonObj.get("unRegUserName");
             String reportDateStr = (String) jsonObj.get("reportDate");
-
 
             Seminar seminar = null;
 
@@ -227,64 +225,6 @@ public class SeminarServiceImpl implements SeminarService {
 
     @Override
     public void publishSeminar(String seminarStr, User currentUser) throws SeminarException {
-        log.info("publishSeminar method");
-//        Long seminarLong = null;
-//        try {
-//            JSONParser parser = new JSONParser();
-//            Object obj = parser.parse(seminarStr);
-//            JSONObject jsonObj = (JSONObject) obj;
-//
-//            String seminarId = (String) jsonObj.get("seminarId");
-//            String swfFileName = (String) jsonObj.get("swfFileName");
-//            String pdfFileName = (String) jsonObj.get("pdfFileName");
-//            String keyWordsStr = (String) jsonObj.get("seminarKeyWords");
-//
-//            Seminar seminar = seminarDao.read(Long.parseLong(seminarId));
-//
-//            /**
-//             *  Перевірка на право публікації доповіді семінару.
-//             *  Має право публікувати користувач що зазначений як доповідач
-//             *  або користувач не зареєстрований на момент подачі адміністратором
-//             *  заявки на участь у семінарі (getUser() == null).
-//             */
-//            if(seminar.getUser() != null) {
-//                if (!currentUser.getUserId().equals(seminar.getUser().getUserId())) {
-//                    throw new SeminarException("Ви не є доповідачем цього семінару!");
-//                }
-//            } else {
-//                seminar.setUser(currentUser);
-//            }
-//
-//            int publicationNumber = currentUser.getPublicationNumber();
-//
-//            String seminarPresentationPath =
-//                    currentUser.getUserId() + "/"
-//                    + publicationNumber + "/";
-//            seminar.setSeminarPresentationAddress(seminarPresentationPath + swfFileName);
-//
-//            String seminarReportPath =
-//                    currentUser.getUserId() + "/"
-//                    + publicationNumber + "/";
-//
-//            seminar.setSeminarReportAddress(seminarReportPath + pdfFileName);
-//            currentUser.setPublicationNumber(++publicationNumber);
-//            userService.changeUser(currentUser);
-//
-//
-//            Set<PublicationKeyWord> publicationKeyWords = userInterestFormer(keyWordsStr, seminar);
-//            seminar.setSeminarKeyWords(publicationKeyWords);
-//
-//            Calendar instance = Calendar.getInstance();
-//            seminar.setPublicationDate(instance);
-//            seminar.setIsPublished(true);
-//            seminarDao.update(seminar);
-//
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//            throw new SeminarException(errorMessage);
-//        }
-
-//        return seminarLong;
     }
 
 
@@ -315,7 +255,7 @@ public class SeminarServiceImpl implements SeminarService {
     }
 
     @Override
-    public List<Seminar> searchSeminars(String articleStr) throws SearchException {
+    public List<Seminar> searchSeminars(String articleStr) /*throws SearchException*/ {
         try {
             JSONParser parser = new JSONParser();
             Object obj = parser.parse(articleStr);
@@ -360,7 +300,7 @@ public class SeminarServiceImpl implements SeminarService {
                 try {
                     dateFromCal = dateService.parseDate(dateFromStr);
                 } catch (java.text.ParseException e) {
-                    throw new SearchException("Не коректна дата!");
+                    throw new RuntimeException("Не коректна дата!");
                 }
                 System.err.println(dateFromCal);
 
@@ -372,7 +312,7 @@ public class SeminarServiceImpl implements SeminarService {
                 try {
                     dateToCal = dateService.parseDate(dateToStr);
                 } catch (java.text.ParseException e) {
-                    throw new SearchException("Не коректна дата!");
+                    throw new RuntimeException("Не коректна дата!");
                 }
                 System.err.println(dateToCal);
 
@@ -400,7 +340,7 @@ public class SeminarServiceImpl implements SeminarService {
             return seminarDao.findBySearchQuery(searchQueryMap);
         } catch (ParseException e) {
             e.printStackTrace();
-            throw new SearchException ("Не вдалося виконати пошук. " + e.getMessage());
+            throw new RuntimeException ("Не вдалося виконати пошук. " + e.getMessage());
         }
     }
 

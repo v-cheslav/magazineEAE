@@ -2,11 +2,9 @@ package magazine.servise;
 
 import magazine.Exeptions.ArticleCreationException;
 import magazine.Exeptions.ArticleNotFoundException;
-import magazine.Exeptions.SearchException;
+//import magazine.Exeptions.SearchException;
 import magazine.domain.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 
@@ -29,7 +27,9 @@ public interface ArticleService {
     public Set<PublicationKeyWord> userInterestFormer (String keyWordsStr, Article article);
     public List<Article> findByUserId(Long userId);
     public List<Article> findByReviewerId(Long userId);
-    public List<Article> searchArticles(String articleStr) throws SearchException;
+    public List<Article> searchArticles(String articleStr) /*throws SearchException*/;
     public List<Article> findArticlesByKeywords(Article article);
+    public void setUser (Article article, User user);
+
 //    public void saveFile (Publication article, MultipartFile multipartFile) throws ArticleCreationException;
 }

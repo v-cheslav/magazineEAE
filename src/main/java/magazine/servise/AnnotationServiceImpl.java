@@ -21,11 +21,13 @@ public class AnnotationServiceImpl implements AnnotationService {
 
     @Override
     public Long createAnnotation(Annotation annotation) {
+        log.info("createAnnotation.class");
         return annotationDao.create(annotation);
     }
 
     @Override
     public Annotation getAnnotation(Long id) {
+        log.info("getAnnotation.class");
         return annotationDao.reade(id);
     }
 

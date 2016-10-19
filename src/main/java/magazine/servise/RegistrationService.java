@@ -1,13 +1,7 @@
 package magazine.servise;
 
 import magazine.Exeptions.RegistrationException;
-import magazine.Exeptions.SuchUserExistException;
 import magazine.domain.User;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by pvc on 21.10.2015.

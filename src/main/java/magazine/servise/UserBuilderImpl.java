@@ -18,7 +18,6 @@ import java.util.Set;
 public class UserBuilderImpl implements UserBuilder {
     public static final Logger log = Logger.getLogger(UserBuilderImpl.class);
 
-
     @Value("${adminPassword}")
     private String adminPassword;
 
@@ -36,6 +35,9 @@ public class UserBuilderImpl implements UserBuilder {
     UserInterestService userInterestService;
 
     User user;
+
+    public UserBuilderImpl() {
+    }
 
     @Override
     public User buildUser(MultipartHttpServletRequest userHttpRequest) throws RegistrationException {

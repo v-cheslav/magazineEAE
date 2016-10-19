@@ -3,6 +3,7 @@ package magazine.servise;
 import magazine.Exeptions.ArticleCreationException;
 import magazine.Exeptions.PublicationException;
 import magazine.Exeptions.RegistrationException;
+import magazine.domain.Article;
 import magazine.domain.Publication;
 import magazine.domain.User;
 import org.apache.log4j.Logger;
@@ -19,7 +20,9 @@ import java.io.IOException;
 @Service
 public class FileService {
     public static final Logger log = Logger.getLogger(FileService.class);
-
+// todo створити при ініціалізації всієї програми папки UserResourses та ін. необхідні.
+//     todo Замінити абсолютне адресування на відносте, інакше в Unix не працюватиме
+//     todo Замінити всюди слеші та початкові на File.separator  File.pathSeparator
     @Value("${initialPath}")
     private String initialPath;
 
@@ -28,52 +31,64 @@ public class FileService {
     UserService userService;
 
 
+    public void saveAndSetArticleFile (Article article, MultipartHttpServletRequest request)throws PublicationException{
+        log.info("saveAndSetArticleFile");
+        MultipartFile multipartFile = request.getFile("articleFile");
+        String relativePath = saveFile(article, multipartFile);
+        article.setPublicationPath(relativePath);
+        article.setArticleFileName(multipartFile.getOriginalFilename());
+    }
+
+
+
+
     public String saveFile(Publication publication, MultipartFile multipartFile) throws PublicationException {
         log.info("saveFile");
-
         String articlePath = getAbsolutePath(publication) + multipartFile.getOriginalFilename();
+        log.info("articlePath " + articlePath);
         try {
             writeFile(articlePath, multipartFile);
         } catch (IOException e) {
             e.printStackTrace();
             throw new ArticleCreationException("Не вдалося завантажити файл статті!");
         }
-
         return getRelativePath(publication);
     }
 
     private String getAbsolutePath(Publication publication){
+        log.info("getAbsolutePath");
         User user = publication.getUser();
 
-        String userFolderPath = initialPath + "publications/" + user.getUserId();
+        String userFolderPath = initialPath + "publications" + File.separator + user.getUserId();
 
-//        File userFolder = new File(userFolderPath);
-//        if (!userFolder.exists()){
-//            userFolder.mkdir();
-//        }//todo спробувати чи буде працювати без цього
+        File userFolder = new File(userFolderPath);
+        if (!userFolder.exists()){
+            userFolder.mkdir();
+        }//todo спробувати чи буде працювати без цього
 
         int publicationNumber = user.getPublicationNumber();
 
-        String publicationPath = userFolderPath + "/" + publicationNumber;
+        String publicationPath = userFolderPath + File.separator + publicationNumber;
 
-//        File publicationFolder = new File(publicationPath);
-//        publicationFolder.mkdir();
+        File publicationFolder = new File(publicationPath);
+        publicationFolder.mkdir();
 
-        return publicationPath + "/" ;
+        return publicationPath + File.separator;
     }
 
     private String getRelativePath(Publication publication){
         User user = publication.getUser();
         int publicationNumber = user.getPublicationNumber();
 
-        String publicationRelativePath = "publications/"
-                + user.getUserId() + "/"
-                + publicationNumber + "/";
+        String publicationRelativePath = "publications" + File.separator
+                + user.getUserId() + File.separator
+                + publicationNumber + File.separator;
 
         return publicationRelativePath;
     }
 
     private void writeFile(String path, MultipartFile file) throws IOException{
+        log.info("writeFile");
         file.transferTo(new File(path));
     }
 
@@ -123,8 +138,8 @@ public class FileService {
 
     public void changeUserPhoto(User user, MultipartHttpServletRequest request)throws RegistrationException {
         log.info("changeUserPhoto.method");
-        String imagePath = initialPath + "userPhotos/" + user.getPhotoName();
-        log.info("imagePath " +imagePath);
+        String imagePath = initialPath + "userPhotos" + File.separator + user.getPhotoName();
+        log.info("imagePath " + imagePath);
 
         MultipartFile userImageFile = request.getFile("userPhoto");
         if (photoNeedToUpdate(userImageFile)){

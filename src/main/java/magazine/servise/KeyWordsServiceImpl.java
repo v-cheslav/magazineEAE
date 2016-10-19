@@ -63,7 +63,7 @@ public class KeyWordsServiceImpl implements KeyWordService {
 
 
     private PublicationKeyWord getKeyWordByString(String keyWordStr, Publication publication) {
-        log.info("convertStringToInterest.method");
+        log.info("getKeyWordByString.method");
         try {
             return getKeyWordFromDbAndAddUser(keyWordStr, publication);
         } catch (NullPointerException e) {//якщо в БД немає KeyWord

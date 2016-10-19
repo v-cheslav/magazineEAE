@@ -8,5 +8,5 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
  * Created by pvc on 27.09.2016.
  */
 public interface UserBuilder {
-    public User buildUser(MultipartHttpServletRequest userHttpRequest) throws RegistrationException;
+    public User buildUser(MultipartHttpServletRequest request) throws RegistrationException;
 }

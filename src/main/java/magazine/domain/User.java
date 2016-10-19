@@ -61,13 +61,13 @@ public class User implements UserDetails {
     private Integer publicationNumber = 0;
 
     @Column(name = "isReviewer")
-    private boolean isReviewer = false;
+    private boolean isReviewer;
 
     @Column(name="restoreCode")
     private Integer restoreCode;
 
     @Column(name="isValid")
-    private boolean isValid = false;
+    private boolean isValid;
 
     @ManyToOne
     @JsonIgnore(true)
@@ -306,6 +306,9 @@ public class User implements UserDetails {
         this.interests = interests;
     }
 
+    public Set<Publication> getArticlesSet() {
+        return articlesSet;
+    }
 
     public void setArticlesSet(Set<Publication> articlesSet) {
         this.articlesSet = articlesSet;

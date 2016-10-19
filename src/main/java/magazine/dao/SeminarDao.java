@@ -1,8 +1,6 @@
 package magazine.dao;
 
 import magazine.Exeptions.SeminarNotFoundException;
-import magazine.domain.Article;
-import magazine.domain.PublicationKeyWord;
 import magazine.domain.Seminar;
 import magazine.domain.User;
 

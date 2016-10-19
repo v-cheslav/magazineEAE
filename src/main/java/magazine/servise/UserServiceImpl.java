@@ -1,7 +1,7 @@
 package magazine.servise;
 
 import magazine.Exeptions.RegistrationException;
-import magazine.Exeptions.SearchException;
+//import magazine.Exeptions.SearchException;
 import magazine.Exeptions.SuchUserExistException;
 import magazine.dao.UserDao;
 import magazine.domain.*;
@@ -168,7 +168,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<User> searchUsers(String userStr) throws SearchException {
+    public List<User> searchUsers(String userStr) /*throws SearchException*/ {
 
         try {
             JSONParser parser = new JSONParser();
@@ -209,7 +209,7 @@ public class UserServiceImpl implements UserService {
             return userDao.findBySearchQuery(searchQueryMap);
         } catch (ParseException e) {
             e.printStackTrace();
-            throw new SearchException("Не вдалося виконати пошук. " + e.getMessage());
+            throw new RuntimeException("Не вдалося виконати пошук. " + e.getMessage());
         }
     }
 

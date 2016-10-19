@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by pvc on 28.01.2016.
@@ -94,18 +93,6 @@ public class ArticleController {
         try {
             article = articleService.getArticle(Long.parseLong(publicationId));
             map.addAttribute("article", article);
-
-//            Annotation annotation = article.getArticleAnnotations();
-//            String annotationUa = annotation.getAnnotationUa();
-//            String annotationEng = annotation.getAnnotationEng();
-//            String annotationRu = annotation.getAnnotationRu();
-//
-//            map.addAttribute("annotationUa", annotationUa);
-//            map.addAttribute("annotationEng", annotationEng);
-//            map.addAttribute("annotationRu", annotationRu);
-//
-//
-
         } catch (Exception e) {
             map.addAttribute("errorMessage", e.getMessage());
         }
@@ -116,7 +103,6 @@ public class ArticleController {
             e.printStackTrace();
             map.addAttribute("errorMessage", e.getMessage());
         }
-
         return "articlePage";
     }
 
@@ -176,10 +162,10 @@ public class ArticleController {
         try {
             Comment comment = commentService.getComment(commentId);
             commentService.removeComment(comment);
-            entity = new ResponseEntity<String>("OK", headers, HttpStatus.OK);
+            entity = new ResponseEntity<>("OK", headers, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            entity = new ResponseEntity<String>(e.getMessage(), headers, HttpStatus.OK);
+            entity = new ResponseEntity<>(e.getMessage(), headers, HttpStatus.OK);
         }
 
         return entity;

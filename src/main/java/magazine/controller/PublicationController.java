@@ -51,84 +51,29 @@ public class PublicationController {
     @Autowired
     FileService fileService;
 
+    @Autowired
+    ArticleBuilder articleBuilder;
+
 
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/addArticle", method = RequestMethod.POST, produces = {"application/json"})
     public @ResponseBody
-    HashMap<String, Object> addArticle(MultipartHttpServletRequest request,
-                                       HttpServletResponse response)  {
+    HashMap<String, Object> addArticle(MultipartHttpServletRequest request)  {
         log.info("/addArticle controller");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
-
         HashMap<String, Object> map = new HashMap<String, Object>();
-
-        Article article = new Article();
-        article.setPublicationName(request.getParameter("articleName"));
-        article.setUser(currentUser);
-
-        String sectionStr = null;
         try {
-            sectionStr = request.getParameter("articleSection");
-            Section articleSection = sectionService.getSectionByName(ListSection.valueOf(sectionStr));
-            article.setArticleSection(articleSection);
-        } catch (Exception e) {
-            map.put("articleMassage", "Виникли проблеми з додаванням статті! Не вдалося знайти секцію: " + sectionStr);
-            e.printStackTrace();
-            return map;
-        }
-
-        String keyWords = null;
-        try {
-            keyWords = request.getParameter("keyWords");
-            List<PublicationKeyWord> keyWordSet = keyWordService.getKeyWordsFromString(keyWords, article);
-            article.setPublicationKeyWords(keyWordSet);
-        } catch (Exception e) {
-            map.put("articleMassage", "Виникли проблеми з додаванням статті! Не вдалося додати ключові слова: " + keyWords);
-            e.printStackTrace();
-            return map;
-        }
-
-
-        try {
-            Annotation annotation = new Annotation(
-                    request.getParameter("annotationEng"),
-                    request.getParameter("annotationUa"),
-                    request.getParameter("annotationRu"),
-                    article
-            );
-            article.setArticleAnnotations(annotation);
-            annotationService.createAnnotation(annotation);
-        } catch (Exception e) {
-            map.put("articleMassage", "Виникли проблеми з додаванням статті! Не вдалося додати анотацію.");
-            e.printStackTrace();
-            return map;
-        }
-
-
-        String relativePath;
-        MultipartFile multipartFile;
-        try {
-            multipartFile = request.getFile("articleFile");
-            relativePath = fileService.saveFile(article, multipartFile);
-        } catch (PublicationException e) {
-            map.put("articleMassage", e.getMessage());
-            e.printStackTrace();
-            return map;
-        }
-
-        article.setPublicationPath(relativePath);
-        article.setArticleFileName(multipartFile.getOriginalFilename());
-
-        try {
+            Article article = articleBuilder.buildPublication(request);
+            article.setUser(currentUser);
+            fileService.saveAndSetArticleFile(article, request);
             articleService.createArticle(article);
-        } catch (Exception e) {
-            map.put("articleMassage", e.getMessage());
-            e.printStackTrace();
-            return map;
-        }
 
-        map.put("articleId", article.getPublicationId());
+            map.put("articleId", article.getPublicationId());
+        } catch (PublicationException e) {
+            log.info("RegistrationException.", e);
+            map.put("articleMassage", e.getMessage());
+        }
         return map;
     }
 
@@ -212,9 +157,6 @@ public class PublicationController {
             sb.delete(0, sb.length());
             usersStr.add(idAndName);
         }
-//        for (String [] str : usersStr){
-//            System.err.println("userId=" + str[0] +" userName=" + str[1]);
-//        }
         return usersStr;
     }
     //todo put a link on the publish page to see a detail information about Reviewers
@@ -260,32 +202,6 @@ public class PublicationController {
 
 
 
-
-
-    /**
-     * Розміщує матеріали семінару на сайті згідно з аннонсованими адміністратором датою та темою.
-     */
-//    @RequestMapping(value = "/publishSeminar", method = RequestMethod.POST, consumes = "application/json; charset=UTF-8")
-//    public ResponseEntity<String> seminarPublication (@RequestBody String seminarStr) {
-//        log.info("/publishSeminar controller");
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        User currentUser = (User) authentication.getPrincipal();
-//
-//        ResponseEntity<String> entity;
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add("Content-Type", "text/html; charset=utf-8");
-//
-//        try {
-//            seminarService.publishSeminar(seminarStr, currentUser);
-//        } catch (SeminarException e) {
-//            e.printStackTrace();
-//            entity = new ResponseEntity<String>(e.getMessage(), headers, HttpStatus.OK);
-//            return entity;
-//        }
-//        entity = new ResponseEntity<String>("OK", headers, HttpStatus.OK);
-//        return entity;
-//    }
-
     /**
      * додається в список анонсованих на основі надісланої юзером інформації
      * або інформації наданої іншим чином.
@@ -293,8 +209,6 @@ public class PublicationController {
     @RequestMapping(value = "/announceSeminar", method = RequestMethod.POST, consumes = "application/json; charset=UTF-8")
     public ResponseEntity<String> unRegSeminarPublication (@RequestBody String seminarStr) {
         log.info("/announceSeminar controller");
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        User currentUser = (User) authentication.getPrincipal();
 
         ResponseEntity<String> entity;
         HttpHeaders headers = new HttpHeaders();
@@ -336,43 +250,4 @@ public class PublicationController {
     }
 
 
-
-//    @PreAuthorize("hasRole('USER')")
-//    @RequestMapping(value = "/articlePublicationContent", method = {RequestMethod.GET})
-//    public String publishArticle () {
-//        log.info("/articlePublicationContent controller");
-//        return "publishArticle";
-//    }
-
-//    @PreAuthorize("hasRole('USER')")
-//    @RequestMapping(value = "/seminarPublicationContent", method = {RequestMethod.GET})
-//    public String publishSeminar () {
-//        log.info("/seminarPublicationContent controller");
-//        return "publishSeminar";
-//    }
-
-
-
-
-
-    //    @RequestMapping(value = "/publishArticle", method = RequestMethod.POST, consumes = "application/json; charset=UTF-8")
-//    public ResponseEntity<String> articlePublication (@RequestBody String articleJson) {
-//        log.info("/publishArticle controller");
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        User currentUser = (User) authentication.getPrincipal();
-//
-//        ResponseEntity<String> entity;
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add("Content-Type", "text/html; charset=utf-8");
-//
-//        try {
-//            articleService.createByString(articleJson, currentUser);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            entity = new ResponseEntity<String>(e.getMessage(), headers, HttpStatus.OK);
-//            return entity;
-//        }
-//        entity = new ResponseEntity<String>("OK", headers, HttpStatus.OK);
-//        return entity;
-//    }
 }
